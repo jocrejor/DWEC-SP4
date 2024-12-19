@@ -1,20 +1,21 @@
 import { useState } from 'react'
 import './App.css'
-import { Container} from 'react-bootstrap/';
+import Lateral from './components/Lateral'
 import Login from './components/login';
 import Logout from './components/logout';
 import Main from './components/Main'
 import { Routes,Route} from "react-router-dom";
-
+import Footer from './components/Footer'
 
 function App() {
 
 
   return (
     <>
-      <div><p>Header</p></div>
-       <h1>EStructura</h1>
-       <Container>
+     <div className="container-fluid">
+     <div className="row">
+        <Lateral />
+      
        <Routes>
        
        <Route path="/login" element={<Login/>}/>  
@@ -28,12 +29,15 @@ function App() {
        <Route path="*" element={<Error404/>} />
 
        </Routes>
-       </Container>
 
       <div>
-        <p>Footer</p>
+        <Footer />
       </div>
-      
+
+
+
+    </div>
+    </div>  
       
     </>
   )

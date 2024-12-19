@@ -6,6 +6,8 @@ import Logout from './components/logout';
 import Main from './components/Main'
 import { Routes,Route} from "react-router-dom";
 import Footer from './components/Footer'
+import Productes from './components/Productes';
+
 
 function App() {
 
@@ -21,6 +23,8 @@ function App() {
        <Route path="/login" element={<Login/>}/>  
 
        <Route path="/logout" element={<Logout/>}/>  
+
+       <Route path="/productes" element={<Productes/>}/>  
        
        <Route path="/" element={<Main/>} />
           

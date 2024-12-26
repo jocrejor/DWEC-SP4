@@ -1,7 +1,7 @@
 <div class="col-2">
 <div id="menu" class="fondo-azul">
     <div class="centrat separacio">
-        <img src="../../../img/logo_footer2.png" alt="Logo Stockflow" id="logo">
+        <img src="../../../img/logo_footer2.png" alt="Logo Stockflow" id="logo"/>
     </div>
     <nav class="fondo-azul">
         <ul id="opciones" class="padding-izq-zero">

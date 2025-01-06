@@ -17,7 +17,6 @@ import Proveidors from './components/Proveidors';
 import OrdesRecepcio from './components/OrdesRecepcio';
 import EstatsOrdre from './components/EstatsOrdre';
 import EstatsLinia from './components/EstatsLinia';
-import Productes from './components/Productes';
 import Lots from './components/Lots';
 import GestioMagatzem from './components/GestioMagatzem';
 import Inventaris from './components/Inventaris';

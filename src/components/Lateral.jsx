@@ -1,11 +1,13 @@
 import React from 'react'
+import logo from '../assets/logo_footer2.png';
+
 
 function Lateral() {
   return (
     <div className="col-2">
 <div id="menu" className="fondo-azul">
     <div className="centrat separacio">
-        <img src="../../../img/logo_footer2.png" alt="Logo Stockflow" id="logo"/>
+        <img src={logo} alt="Logo Stockflow" id="logo"/>
     </div>
     <nav className="fondo-azul">
         <ul id="opciones" className="padding-izq-zero">
@@ -30,7 +32,7 @@ function Lateral() {
                 <ul className="padding-izq-zero">
                     <li><a href="../../../recepcio/proveidors/proveidors.html"><i className="fa-solid fa-circle-chevron-right"></i>Proveidors</a></li>
                     <li><a href="../../../recepcio/ordesRecepcio/llistar/llistar.html"><i className="fa-solid fa-circle-chevron-right"></i>Ordres de recepció</a></li>
-                    <li><a href="../../../recepcio/estatsOrdesRecepcio/estatOrdre/listar/listar.html"><i className="fa-solid fa-circle-chevron-right"></i>Estats Ordre</a></li>
+                    <li><a href="/estatsOrdre"><i className="fa-solid fa-circle-chevron-right"></i>Estats Ordre</a></li>
                     <li><a href="../../../recepcio/estatsOrdesRecepcio/estatLinia/listar/listar.html"><i className="fa-solid fa-circle-chevron-right"></i>Estats Línia</a></li>
                     <li><a className="paginaActiva" href="../../../recepcio/productes/productes.html"><i className="fa-solid fa-circle-chevron-right paginaActiva"></i>Productes</a></li>
                     <li><a href="../../../recepcio/lots/lots.html"><i className="fa-solid fa-circle-chevron-right"></i>Lots</a></li>

@@ -4,7 +4,7 @@ function Footer() {
         return (
         
     <footer className="mt-5">
-          <p className="mx-auto">&copy; {new Date().getFullYear()} Copyright - Tenda Ciclista  - <strong>Exercici Final React </strong></p>
+          <p className="mx-auto">&copy; {new Date().getFullYear()} <strong>Footer provissional </strong></p>
           
     </footer>
     )

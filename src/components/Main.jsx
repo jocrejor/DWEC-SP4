@@ -1,5 +1,4 @@
 import React from 'react'
-import Header from './Header'
 
 function Main() {
 
@@ -7,7 +6,6 @@ function Main() {
     <>
         <div className="col-10 padding-zero">
             <div>
-                <Header title="Llistat de productes" />
                 <div className="container-fluid">
                     <div className="row rowFiltres">
                         <div className="col-4">

@@ -44,6 +44,17 @@ const canviEstatModal = () =>{
     setShowModal(!showModal)
 }
 
+const grabar = async (values)=>{
+  if(tipoModal==="Crear"){
+    await postData(url,'Product', values)
+  }else{
+    await updateId(url,'Product',values.id,values)
+    }
+  const data = await getData(url, "Product")
+  await setProducts(data)
+  canviEstatModal()
+}
+
 
   return (
     <>
@@ -95,18 +106,7 @@ const canviEstatModal = () =>{
       <Formik
         initialValues= {(tipoModal==='Modificar'?valorsInicials: {name: '', description: '', volume: 0, weight: 0, lotorserial: 'Non', sku: '', image_url: '' })}
         validationSchema={ProducteSchema}
-        onSubmit={async values => {
-          console.log(values)
-          if(tipoModal==="Crear"){
-            postData(url,'Product', values)
-          }else{
-            updateId(url,'Product',values.id,values)
-            }
-          const data = await getData(url, "Product")
-          setProducts(data)
-          canviEstatModal()
-          
-        }}
+        onSubmit={ values => { grabar(values)} }
       >
         {({
           values,
@@ -148,8 +148,7 @@ const canviEstatModal = () =>{
                 name="volume"
                 step="0.001"
                 placeholder="0"
-                autoComplete="off"
-
+                
                 value={values.volume}
               />
               {errors.volume && touched.volume ? <div>{errors.volume}</div> : null}
@@ -164,8 +163,7 @@ const canviEstatModal = () =>{
                 name="weight"
                 step="1"
                 placeholder="0"
-                autoComplete="off"
-
+               
                 value={values.weight}
               />
               {errors.weight && touched.weight ? <div>{errors.weight}</div> : null}

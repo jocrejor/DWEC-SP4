@@ -22,8 +22,8 @@ import GestioMagatzem from './components/GestioMagatzem';
 import Inventaris from './components/Inventaris';
 import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';
-import OrderPickingShipping from './components/OrderPickingShipping';
-import OrderPickingReception from './components/OrderPickingReception';
+// import OrderPickingShipping from './components/OrderPickingShipping';
+// import OrderPickingReception from './components/OrderPickingReception';
 
 function App() {
 

@@ -1,6 +1,6 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import './App.css'
-import Lateral from './components/Lateral'
+// import Lateral from './components/Lateral'
 import Login from './components/login';
 import Logout from './components/logout';
 import Main from './components/Main'
@@ -22,6 +22,8 @@ import GestioMagatzem from './components/GestioMagatzem';
 import Inventaris from './components/Inventaris';
 import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';
+import OrderPickingShipping from './components/OrderPickingShipping';
+// import OrderPickingReception from './components/OrderPickingReception';
 
 function App() {
 
@@ -30,7 +32,7 @@ function App() {
     <>
      <div className="container-fluid">
      <div className="row">
-        <Lateral />
+        {/* <Lateral /> */}
       
        <Routes>
        
@@ -71,6 +73,10 @@ function App() {
        <Route path="/moviments" element={<Moviments/>}/>  
        
        <Route path="/" element={<Main/>} />
+
+       <Route path="/orderPickingShipping" element={<OrderPickingShipping/>}/>  
+
+       {/* <Route path="/orderPickingReception" element={<OrderPickingReception/>}/> */}
           
        <Route path="/404" element={<Error404/>} />
           

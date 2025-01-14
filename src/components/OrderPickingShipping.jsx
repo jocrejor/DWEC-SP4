@@ -6,7 +6,7 @@ import { url, getData, postData, deleteData } from "../apiAccess/crud";
 function OrderPickingShipping() {
   const [ships, setShips] = useState([]);
   const [show, setShow] = useState(false);
-  const [products, setProducts] = useState([]);
+  const [lines, setLines] = useState([]);
   const [tipoModal, setTipoModal] = useState();
   const [shipToShow, setShipToShow] = useState();
 
@@ -15,8 +15,8 @@ function OrderPickingShipping() {
       try {
         const orderPicking = await getData(url, "OrderPickingshipping");
         setShips(orderPicking);
-        const productes = await getData(url, "Product");
-        setProducts(productes);
+        const lineas = await getData(url, "OrderLineShipping");
+        setLines(lineas);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -120,7 +120,7 @@ function OrderPickingShipping() {
               pickingList: [],
             }}
             onSubmit={(values) => {
-              console.log(products);
+              console.log(lines);
               console.log(values);
               createOrderPicking(values);
               handleModal();
@@ -131,27 +131,25 @@ function OrderPickingShipping() {
                 <thead>
                   <tr>
                     <th>Sel.</th>
-                    <th>Nom</th>
-                    <th>Volum</th>
-                    <th>Pes</th>
-                    <th>SKU</th>
+                    <th>Prducte</th>
+                    <th>Quantitat</th>
+                    <th>Id Ordre</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tipoModal === "Alta"
-                    ? products.map((product) => (
-                        <tr key={product.id}>
+                    ? lines.map((line) => (
+                        <tr key={line.id}>
                           <td>
                             <Field
                               type="checkbox"
                               name="pickingList"
-                              value={product.id}
+                              value={line.id}
                             />
                           </td>
-                          <td>{product.name}</td>
-                          <td>{product.volume}</td>
-                          <td>{product.weight}</td>
-                          <td>{product.sku}</td>
+                          <td>{line.product_id}</td>
+                          <td>{line.quantity}</td>
+                          <td>{line.shipping_order_id}</td>
                         </tr>
                       ))
                     : showShip(shipToShow)}

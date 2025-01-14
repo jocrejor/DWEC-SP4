@@ -22,6 +22,8 @@ import GestioMagatzem from './components/GestioMagatzem';
 import Inventaris from './components/Inventaris';
 import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';
+import OrderPickingShipping from './components/OrderPickingShipping';
+import OrderPickingReception from './components/OrderPickingReception';
 
 function App() {
 
@@ -69,6 +71,10 @@ function App() {
        <Route path="/incidencies" element={<Incidencies/>}/>  
 
        <Route path="/moviments" element={<Moviments/>}/>  
+
+       <Route path="/orderPickingShipping" element={<OrderPickingShipping/>}/>  
+
+       <Route path="/orderPickingReception" element={<OrderPickingReception/>}/>  
        
        <Route path="/" element={<Main/>} />
           

@@ -31,9 +31,9 @@ function Lateral() {
                 <a><i className="fa-solid fa-boxes-stacked"></i>Recepció</a>
                 <ul className="padding-izq-zero">
                     <li><a href="../../../recepcio/proveidors/proveidors.html"><i className="fa-solid fa-circle-chevron-right"></i>Proveidors</a></li>
-                    <li><a href="../../../recepcio/ordesRecepcio/llistar/llistar.html"><i className="fa-solid fa-circle-chevron-right"></i>Ordres de recepció</a></li>
-                    <li><a href="/estatsOrdre"><i className="fa-solid fa-circle-chevron-right"></i>Estats Ordre</a></li>
-                    <li><a href="../../../recepcio/estatsOrdesRecepcio/estatLinia/listar/listar.html"><i className="fa-solid fa-circle-chevron-right"></i>Estats Línia</a></li>
+                    <li><a href="/OrdesRecepcio/"><i className="fa-solid fa-circle-chevron-right"></i>Ordres de recepció</a></li>
+                    <li><a href="/estatsOrdre/"><i className="fa-solid fa-circle-chevron-right"></i>Estats Ordre</a></li>
+                    <li><a href="/estatsLinia"><i className="fa-solid fa-circle-chevron-right"></i>Estats Línia</a></li>
                     <li><a className="paginaActiva" href="/productes/"><i className="fa-solid fa-circle-chevron-right paginaActiva"></i>Productes</a></li>
                     <li><a href="../../../recepcio/lots/lots.html"><i className="fa-solid fa-circle-chevron-right"></i>Lots</a></li>
                 </ul>

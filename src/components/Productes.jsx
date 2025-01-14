@@ -50,20 +50,23 @@ const canviEstatModal = () =>{
 
 <div><h2>Llistat productes</h2></div>
     <Button variant='success' onClick={()=>{canviEstatModal(); setTipoModal("Crear")}}>Alta Producte</Button>
-      <table>
+      <table className="table">
+        <thead>
         <tr>
-          <th>Id</th>
-          <th>Nom</th>
-          <th>Descripció</th>
-          <th>Volume</th>
-          <th>Pes</th>
-          <th>Control</th>
-          <th>SKU</th>
-          <th>Modificar</th>
+          <th scope="col">Id</th>
+          <th scope="col">Nom</th>
+          <th scope="col">Descripció</th>
+          <th scope="col">Volume</th>
+          <th scope="col">Pes</th>
+          <th scope="col">Control</th>
+          <th scope="col">SKU</th>
+          <th scope="col">Modificar</th>
           <th>Eliminar</th>
         </tr>
+        </thead>
+        <tbody>
         {(products.length == 0)?
-          <div>No hi han articles</div>
+          <tr><th>No hi han articles</th></tr>
         :products.map((valors) => {
           return (
           <tr key={valors.id}>
@@ -79,6 +82,7 @@ const canviEstatModal = () =>{
 
           </tr>)
         })}
+        </tbody>
       </table>
 
       <Modal show={showModal} onHide={canviEstatModal}>
@@ -91,9 +95,15 @@ const canviEstatModal = () =>{
       <Formik
         initialValues= {(tipoModal==='Modificar'?valorsInicials: {name: '', description: '', volume: 0, weight: 0, lotorserial: 'Non', sku: '', image_url: '' })}
         validationSchema={ProducteSchema}
-        onSubmit={values => {
+        onSubmit={async values => {
           console.log(values)
-          tipoModal==="Crear"?postData(url,"Product", values):updateId(url,"Product",values.id,values)  
+          if(tipoModal==="Crear"){
+            postData(url,'Product', values)
+          }else{
+            updateId(url,'Product',values.id,values)
+            }
+          const data = await getData(url, "Product")
+          setProducts(data)
           canviEstatModal()
           
         }}
@@ -125,7 +135,6 @@ const canviEstatModal = () =>{
                 type="text"
                 name="description"
                 placeholder="Descripció del producte"
-                autoComplete="off"
 
                 value={values.description}
               />

@@ -43,7 +43,7 @@ function Lateral() {
                 <ul className="padding-izq-zero">
                     <li><a href="../../../magatzem/gestioMagatzem/Magatzem/Llistat/LlistaMagatzem.html"><i className="fa-solid fa-circle-chevron-right"></i>Gestió del magatzem</a></li>
                     <li><a href="../../../magatzem/inventari/processarInventari/processarInventari.html"><i className="fa-solid fa-circle-chevron-right"></i>Inventaris</a></li>
-                    <li><a href="../../../magatzem/incidents/incidencies.html"><i className="fa-solid fa-circle-chevron-right"></i>Incidències</a></li>
+                    <li><a href="/incidencies/"><i className="fa-solid fa-circle-chevron-right"></i>Incidències</a></li>
                     <li><a href="../../../magatzem/moviments/moviments.html"><i className="fa-solid fa-circle-chevron-right"></i>Moviments</a></li>
                 </ul>
             </li>

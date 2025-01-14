@@ -30,7 +30,7 @@ function App() {
     <>
      <div className="container-fluid">
      <div className="row">
-        <Lateral />
+        {/* <Lateral /> */}
       
        <Routes>
        

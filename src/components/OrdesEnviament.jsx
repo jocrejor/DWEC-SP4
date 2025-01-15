@@ -32,10 +32,10 @@ function OrdesEnviament() {
     setUsers(dataUsers)
   }, [])
 
-  const eliminarProducte = (id) => {
-    deleteData(url,'Product', id)
-    const newproducts = products.filter(product => product.id !== id)
-    setProducts(newproducts)
+  const eliminarOrder = (id) => {
+    deleteData(url,'OrderShipping', id)
+    const newOrders = orders.filter(order => order.id !== id)
+    setOrder(newOrders)
   }
   
   const modificarProducte = (valors) => {
@@ -73,7 +73,7 @@ function OrdesEnviament() {
              <td>{valors.shipping_date}</td>
              <td>{valors.ordershipping_status_id}</td>
              <td><Button variant='warning' onClick={() => {modificarProducte(valors); canviEstatModal()}}>Modificar</Button></td>
-             <td><Button className='btn btn-primary' onClick={() => eliminarProducte(valors.id)}>Eliminar</Button></td>
+             <td><Button className='btn btn-primary' onClick={() => eliminarOrder(valors.id)}>Eliminar</Button></td>
            </tr>
        ))}
      </table>
@@ -92,12 +92,12 @@ function OrdesEnviament() {
               carrier_id: '', 
               prepared_by: '', 
               shipping_date: '',
-              ordershipping_status_id:''
+              ordershipping_status_id: 1
             })}
             validationSchema={ProducteSchema}
             onSubmit={values => {
               console.log(values)
-              tipoModal === "Crear"?postData(url,'OrderShipping/', values):updateId(url,"OrderShipping",values.id,values)
+              tipoModal === "Modificar"?updateId(url,"OrderShipping",values.id,values):postData(url,'OrderShipping', values)
               canviEstatModal()
             }}
           >
@@ -112,33 +112,33 @@ function OrdesEnviament() {
 
                 {/* NOM PRODUCTE */}
                 <div>
-                  <label htmlFor='client'>Cliente</label>
-                  <Field as="select" name="client">
+                  <label htmlFor='client_id'>Cliente</label>
+                  <Field as="select" name="client_id">
                     {clientes.map(cliente => {
                       return <option key={cliente.id} value={cliente.id}>{cliente.name}</option>
                     }) }
                   </Field>
-                    {errors.client && touched.client ? <div>{errors.client}</div> : null}
+                    {errors.client_id && touched.client_id ? <div>{errors.client_id}</div> : null}
                 </div>
 
                 <div>
-                  <label htmlFor='carrier'>Transportista</label>
-                  <Field as="select" name="carrier">
+                  <label htmlFor='carrier_id'>Transportista</label>
+                  <Field as="select" name="carrier_id">
                     {carriers.map(carrier => {
                       return <option key={carrier.id} value={carrier.id}>{carrier.name}</option>
                     }) }
                   </Field>
-                    {errors.carrier && touched.carrier ? <div>{errors.carrier}</div> : null}
+                    {errors.carrier_id && touched.carrier_id ? <div>{errors.carrier_id}</div> : null}
                 </div>
 
                 <div>
-                  <label htmlFor='user'>Preparado por</label>
-                  <Field as="select" name="user">
+                  <label htmlFor='prepared_by'>Preparado por</label>
+                  <Field as="select" name="prepared_by">
                     {users.map(user => {
                       return <option key={user.id} value={user.id}>{user.name}</option>
                     }) }
                   </Field>
-                    {errors.user && touched.user ? <div>{errors.user}</div> : null}
+                    {errors.prepared_by && touched.prepared_by ? <div>{errors.prepared_by}</div> : null}
                 </div>
 
                 <div>
@@ -150,7 +150,7 @@ function OrdesEnviament() {
                   <div>
                     <Button onClick={() => canviEstatModal()} variant="secondary">Close</Button>
                     
-                    <Button variant={tipoModal==='Modificar'?"success":"info"} type='submit'>{tipoModal}</Button>
+                    <Button variant={tipoModal=== "Crear" ? "success" : "info"} type='submit'>{tipoModal}</Button>
                                     
                   </div>
               </Form>

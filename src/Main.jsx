@@ -1,12 +1,10 @@
 import React from 'react'
-
+import '../common.css'
 function Main() {
 
-  return (
-    <>
-        
-   </>
-  )
+    return (
+        <div></div>
+    )
 }
 
 export default Main

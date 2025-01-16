@@ -62,6 +62,7 @@ function Transportistes() {
       </div>
       <Button
         variant="success"
+        className='btn btn-primary'
         onClick={() => {
           canviEstatModal();
           setTipoModal('Crear');

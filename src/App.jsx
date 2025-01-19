@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import './App.css'
 import Lateral from './components/Lateral'
+import Header from './components/Header';
 import Login from './components/login';
 import Logout from './components/logout';
 import Main from './components/Main'
-import { Routes,Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Footer from './components/Footer'
 import Productes from './components/Productes';
 import Usuaris from './components/Usuaris';
@@ -22,81 +23,89 @@ import GestioMagatzem from './components/GestioMagatzem';
 import Inventaris from './components/Inventaris';
 import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';
+import OrderPickingShipping from './components/OrderPickingShipping';
+import OrderPickingReception from './components/OrderPickingReception';
+import Filtres from './components/Filtres';
+import './App.js';
 
 function App() {
 
 
   return (
     <>
-     <div className="container-fluid">
-     <div className="row">
-        {/* <Lateral /> */}
-      
-       <Routes>
-       
-       <Route path="/login" element={<Login/>}/>  
+      <div className="container-fluid">
+        <div className="row">
+          <Lateral />
+          <div className="col-12 col-xl-10 px-0">
 
-       <Route path="/logout" element={<Logout/>}/> 
+            <Header title="Titulo" />
 
-       <Route path="/usuaris" element={<Usuaris/>}/>
+            <Filtres />
 
-       <Route path="/rols" element={<Rols/>}/> 
+            <Routes>
 
-       <Route path="/dadesGeografiques" element={<DadesGeografiques/>}/>
+              <Route path="/login" element={<Login />} />
 
-       <Route path="/transportistes" element={<Transportistes/>}/>
+              <Route path="/logout" element={<Logout />} />
 
-       <Route path="/clients" element={<Clients/>}/>
+              <Route path="/usuaris" element={<Usuaris />} />
 
-       <Route path="/ordesEnviament" element={<OrdesEnviament/>}/>
+              <Route path="/rols" element={<Rols />} />
 
-       <Route path="/proveidors" element={<Proveidors/>}/>
+              <Route path="/dadesGeografiques" element={<DadesGeografiques />} />
 
-       <Route path="/ordesRecepcio" element={<OrdesRecepcio/>}/>
+              <Route path="/transportistes" element={<Transportistes />} />
 
-       <Route path="/estatsOrdre" element={<EstatsOrdre/>}/>
+              <Route path="/clients" element={<Clients />} />
 
-       <Route path="/estatsLinia" element={<EstatsLinia/>}/>
-       
-       <Route path="/productes" element={<Productes/>}/>
+              <Route path="/ordesEnviament" element={<OrdesEnviament />} />
 
-       <Route path="/lots" element={<Lots/>}/>  
+              <Route path="/proveidors" element={<Proveidors />} />
 
-       <Route path="/gestioMagatzem" element={<GestioMagatzem/>}/>  
+              <Route path="/ordesRecepcio" element={<OrdesRecepcio />} />
 
-       <Route path="/inventaris" element={<Inventaris/>}/>  
+              <Route path="/estatsOrdre" element={<EstatsOrdre />} />
 
-       <Route path="/incidencies" element={<Incidencies/>}/>  
+              <Route path="/estatsLinia" element={<EstatsLinia />} />
 
-       <Route path="/moviments" element={<Moviments/>}/>  
-       
-       <Route path="/" element={<Main/>} />
-          
-       <Route path="/404" element={<Error404/>} />
-          
-       <Route path="*" element={<Error404/>} />
+              <Route path="/productes" element={<Productes />} />
 
-       </Routes>
+              <Route path="/lots" element={<Lots />} />
 
-      <div>
-        <Footer />
+              <Route path="/gestioMagatzem" element={<GestioMagatzem />} />
+
+              <Route path="/inventaris" element={<Inventaris />} />
+
+              <Route path="/incidencies" element={<Incidencies />} />
+
+              <Route path="/moviments" element={<Moviments />} />
+
+              <Route path="/orderPickingShipping" element={<OrderPickingShipping />} />
+
+              <Route path="/orderPickingReception" element={<OrderPickingReception />} />
+
+              <Route path="/" element={<Main />} />
+
+              <Route path="/404" element={<Error404 />} />
+
+              <Route path="*" element={<Error404 />} />
+
+            </Routes>
+          </div>
+
+        </div>
       </div>
 
-
-
-    </div>
-    </div>  
-      
     </>
   )
 }
 
-function Error404 (){
+function Error404() {
   return (
     <div>
-    <h2>ERROR 404</h2>
+      <h2>ERROR 404</h2>
     </div>
-    );
+  );
 }
 
 export default App

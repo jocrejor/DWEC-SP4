@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
-import { Row, Col, Modal, Table, Button } from 'react-bootstrap/'
+import { Row, Col, Modal, Table, Button, Tab } from 'react-bootstrap/'
 import Header from './Header'
 import Filtres from './Filtres'
 
@@ -20,18 +20,22 @@ function Inventaris() {
   const [availableStreets, setAvailableStreets] = useState([]);
   const [spaces, setSpaces] = useState([]);
   const [modalType, setModalType] = useState('Iventariar');
-  const [showModal, setShowModal] = useState(false);
+  const [showInventoryModal, setShowInventoryModal] = useState(false);
+  const [selectedInventory, setSelectedInventory] = useState(null);
+  const [inventoryLines, setInventoryLines] = useState([])
 
   useEffect(async () => {
     const stock = await getData(url, "Inventory");
     const store = await getData(url, "Storage");
     const street = await getData(url, "Street");
-    const space = await getData(url, "Space")
+    const space = await getData(url, "Space");
+    const lines = await getData(url, "InventoryLine")
 
     setInventory(stock);
     setStorages(store);
     setStreets(street);
     setSpaces(space);
+    setInventoryLines(lines);
   }, []);
 
   useEffect(() => {
@@ -42,6 +46,7 @@ function Inventaris() {
       setAvailableStreets([]);
     }
   }, [selectedStoragerId, streets]);
+
 
   /**************** CREAR INVENTARIO ****************/
   const createInventory = async (values) => {
@@ -88,12 +93,14 @@ function Inventaris() {
     }
   }
 
-  const displayInvetory = (id) => {
-    //setShowModal(true);
-  }
+  const displayInventoryModal = (values) => {
+    setSelectedInventory(values);
 
-  const changeModalStatus = () => {
-    setShowModal(!showModal);
+    const filteredInvetoryLines = inventoryLines.filter(line => line.inventory_id === values.id);
+    setInventoryLines(filteredInvetoryLines);
+
+    changeModalStatus();
+
   }
 
   //********* MODAL *********
@@ -101,7 +108,12 @@ function Inventaris() {
   const handleClose = () => {
     setShow(false)
   };
+
   const handleShow = () => setShow(true);
+
+  const changeModalStatus = () => {
+    setShowInventoryModal(!showInventoryModal);
+  }
 
   return (
     <>
@@ -129,7 +141,7 @@ function Inventaris() {
                   {({ errors, touched, setFieldValue }) => (
                     <Form>
                       <div>
-                        <label htmlFor="storage_" className='py-3'>Magatzem:</label>
+                        <label htmlFor="storage_" className='py-3 text-light-blue'>Magatzem:</label>
                         <Field
                           as='select'
                           name='storage_id'
@@ -151,7 +163,7 @@ function Inventaris() {
                         {errors.storage_id && touched.storage_id ? <div>{errors.storage_id}</div> : null}
                       </div>
                       <div>
-                        <label htmlFor="street_" className='py-3'>Carrer:</label>
+                        <label htmlFor="street_" className='py-3 text-light-blue'>Carrer:</label>
                         <Field
                           as='select'
                           name='street_id'
@@ -162,7 +174,7 @@ function Inventaris() {
                           {
                             availableStreets.map((street) => {
                               return (
-                                <option key={street.id} value={street.id}>{street.name}</option>
+                                <option key={street.id} value={street.id} >{street.name}</option>
                               );
                             })
                           }
@@ -172,7 +184,7 @@ function Inventaris() {
 
                       <div className='py-3 text-end'>
                         <Button variant='secondary' onClick={changeModalStatus}>Cerrar</Button>
-                        <Button type='submit' className='ms-2'>Generar Inventari</Button>
+                        <Button type='submit' className='ms-2 orange-button'>Generar Inventari</Button>
                       </div>
                     </Form>
                   )}
@@ -211,14 +223,14 @@ function Inventaris() {
                           <td>
                             {
                               (values.inventory_status === 'Pendent') ?
-                                <a className='text-decoration-none text-orange' href="">Inventariar</a> :
+                                <a className='text-decoration-none text-orange cursor-pointer' onClick={() => { displayInventoryModal(values); setModalType('Inventariar') }}>Inventariar</a> :
                                 (values.inventory_status === 'Fent-se') ?
-                                  <a className='text-decoration-none text-orange' href="">Completar</a> :
+                                  <a className='text-decoration-none text-orange cursor-pointer' onClick={() => { displayInventoryModal(values); setModalType('Completar') }}>Completar</a> :
                                   ""
                             }
                           </td>
                           <td>
-                            <Button variant='link' onClick={() => changeModalStatus()}><i className="bi bi-eye text-light-blue"></i></Button>
+                            <Button variant='link' onClick={() => { changeModalStatus(); setModalType('Detall') }}><i className="bi bi-eye text-light-blue"></i></Button>
                             <Button variant='link' onClick={() => deleteInventory(values.id)}><i className="bi bi-trash text-light-blue"></i></Button>
                           </td>
                         </tr>
@@ -229,48 +241,82 @@ function Inventaris() {
               </tbody>
             </Table>
 
-            <Modal show={showModal} onHide={changeModalStatus} animation={true} size='xl'>
+            <Modal show={showInventoryModal} onHide={changeModalStatus} animation={true} size='xl'>
               <Modal.Header closeButton>
-                <Modal.Title>{modalType} Inventari</Modal.Title>
+                <Modal.Title className='text-light-blue'>{modalType} Inventari</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <Table striped bordered hover>
-                  <thead>
-                    <tr>
-                      <th>ID Inventari</th>
-                      <th>Data</th>
-                      <th>Estat</th>
-                      <th>Magatzem</th>
-                    </tr>
-                    <tbody>
 
-                    </tbody>
-                  </thead>
-                </Table>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th scope="col">Carrer</th>
-                      <th scope="col">Estanteria</th>
-                      <th scope="col">Espacio</th>
-                      <th scope="col">Producte</th>
-                      <th scope="col">Quantitat Real</th>
-                    </tr>
-                  </thead>
-                  <tbody i>
+                {selectedInventory && (
+                  <>
+                    <Table striped bordered hover>
+                      <thead>
+                        <tr>
+                          <th className='text-light-blue'>ID Inventari</th>
+                          <th className='text-light-blue'>Data</th>
+                          <th className='text-light-blue'>Estat</th>
+                          <th className='text-light-blue'>Magatzem</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{selectedInventory.id}</td>
+                          <td>{selectedInventory.date}</td>
+                          <td>{selectedInventory.inventory_status}</td>
+                          <td>{(storages.find(storage => storage.id === selectedInventory.storage_id)).name}</td>
+                        </tr>
+                      </tbody>
+                    </Table>
 
-                  </tbody>
-                </Table>
+                    {
+                      ((modalType === 'Completar') ?
+                        <Table>
+                          <thead>
+                            <tr>
+                              <th scope="col" className='text-light-blue'>Producte</th>
+                              <th scope="col" className='text-light-blue'>Quantitat Estimada</th>
+                              <th scope="col" className='text-light-blue'>Quantitat Real</th>
+                              <th scope="col" className='text-light-blue'>Justificació</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+
+                          </tbody>
+                        </Table>
+                        :
+                        <Table>
+                          <thead>
+                            <tr>
+                              <th scope="col" className='text-light-blue'>Carrer</th>
+                              <th scope="col" className='text-light-blue'>Estanteria</th>
+                              <th scope="col" className='text-light-blue'>Espacio</th>
+                              <th scope="col" className='text-light-blue'>Producte</th>
+                              <th scope="col" className='text-light-blue'>Quantitat Real</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+
+                          </tbody>
+
+                        </Table>
+                      )}
+
+                  </>
+                )}
 
                 <div className='py-3 text-end'>
-                  <Button variant='secondary' onClick={changeModalStatus}>Cerrar</Button>
-                  <Button type='submit' className='ms-2 orange-button'>Inventariar</Button>
+                  <Button variant='secondary' onClick={() => changeModalStatus()}>Cerrar</Button>
+                  {
+                    ((modalType === 'Inventariar' || modalType === 'Completar') ? <Button type='submit' className='ms-2 orange-button'>{modalType}</Button> : "")
+
+                  }
+
                 </div>
               </Modal.Body>
             </Modal>
           </div>
         </Col>
-      </Row>
+      </Row >
     </>
   )
 }

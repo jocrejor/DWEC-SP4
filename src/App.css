@@ -45,6 +45,10 @@ td, th{
     border-color: var(--taronja);
 }
 
+.cursor-pointer{
+    cursor: pointer;
+}
+
 .orange-button:hover{
     background-color: var(--blauClar);
     border-color: var(--blauClar);

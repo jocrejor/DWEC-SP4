@@ -136,12 +136,26 @@ function Lots() {
                   }
             }
             validationSchema={LotSchema}
+            /** SE ACTUALIZA LA TABLA AL MODIFICAR O CREAR */
             onSubmit={(values) => {
-              tipoModal === 'Crear'
-                ? postData(url, 'Lot', values)
-                : updateId(url, 'Lot', values.id, values);
+              if (tipoModal === 'Crear') {
+                postData(url, 'Lot', values).then((nuevoLote) => {
+                  setLot(prevLot => [...prevLot, nuevoLote]); 
+                });
+              } else {
+                updateId(url, 'Lot', values.id, values).then(() => {
+                  setLot(prevLot => prevLot.map(lot => (lot.id === values.id ? values : lot)));
+                });
+              }
               canviEstatModal();
             }}
+            /** SIN ACTUALIZAR (VERSIÓN ANTERIOR) */
+            // onSubmit={(values) => {
+            //   tipoModal === 'Crear'
+            //     ? postData(url, 'Lot', values)
+            //     : updateId(url, 'Lot', values.id, values);
+            //   canviEstatModal();
+            // }}
           >
             {({ values, errors, touched }) => (
               <Form>

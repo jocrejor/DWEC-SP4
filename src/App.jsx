@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import Lateral from './components/Lateral'
-import Header from './components/Header';
+
 import Login from './components/login';
 import Logout from './components/logout';
 import Main from './components/Main'
@@ -37,10 +37,6 @@ function App() {
         <div className="row">
           <Lateral />
           <div className="col-12 col-xl-10 px-0">
-
-            <Header title="Titulo" />
-
-            <Filtres />
 
             <Routes>
 

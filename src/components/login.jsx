@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import {useNavigate} from 'react-router-dom';
+import { url, getData } from '../apiAccess/crud';
+import Header from './Header';
 
 
 const SignupSchema = Yup.object().shape({
@@ -14,51 +16,44 @@ const SignupSchema = Yup.object().shape({
 function Login() {
   // Declara una nueva variable de estado, que llamaremos "count".
   const [error, setError] = useState("");
+  const [users,setUsers] = useState({});
   const navigate = useNavigate();
 
   
+  useEffect ( async ()=>{
+      const data = await getData(url,"User")
+      setUsers(data)
+  },[])
+
 
   const formik = useFormik({
     initialValues: { email: '',password:""},
     onSubmit: values => {
-      // 
-      const url = "https://api.tendaciclista.ccpegoilesvalls.es/api/login";
-      const url2 = "http://localhost:3003/api/login";
       
-      fetch(url, {
-          method: 'POST',
-          body: JSON.stringify(values, null, 2), 
-          headers:{
-            'Accept': 'application/json, text/plain, */*',  
-            'Content-Type': 'application/json'
-          },
-          mode: 'cors', // no-cors, *cors, same-origin
-      }).then(response => response.json())
-      .then(data => {
-          if(data.error != null){
-              console.log(data.error);
-              setError(data.error);
-          }else{
-          console.error("succes",data.data.token);
-          //setError("succes" + data.data.token)
-          // si tot es correste guardar el token i enviar a areaPresonal 
-          localStorage.setItem("tk",JSON.stringify(data.data.token));    
+
+      setTimeout(() => {
+      
+        //setSubmitting(false); // Reactivar el botó d'enviament
+      //Comprobar si esisteix l'email i la contrasenya aamb els usuaris regitrats 
+        const usuariRegistrat =  users.find(users => users.email === values.email && users.password === values.password);
+        if (usuariRegistrat === undefined)
+           {
+              setError("Email  o password incorrecte")
+           } else {
+           localStorage.setItem("usuariActiu",JSON.stringify(usuariRegistrat))
+            //console.log(usuariRegistrat)
           // enviar a inici
           navigate('/');
-      }
-      })
-      .catch((errorajax) => {
-        console.error('Error:', errorajax);
-        setError(errorajax)
-          
-      });
+        }
+      }, 1000);
+      
     },
     validationSchema: SignupSchema,
   });
 
   return (
     <div>
-      <h1>Login</h1>
+      <Header title="Login" ></Header>
       <div className="text-danger">{error}</div>
       <Form onSubmit={formik.handleSubmit}>
   <Form.Group className="mb-3" >

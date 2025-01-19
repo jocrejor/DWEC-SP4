@@ -53,9 +53,6 @@ function Lots() {
 
   return (
     <>
-      <div>
-        <h2>Llistat Lots</h2>
-      </div>
       <Button
         variant="success"
         className='btn btn-primary'

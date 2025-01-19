@@ -16,7 +16,7 @@ function Lateral() {
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Usuaris</a></li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Rols</a></li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Dades geogràfiques</a></li>
-                        <li className="list-group-item px-0 opacity-75 activo"><a className="text-decoration-none d-block" href="#"><i className="bi bi-caret-right-fill pe-1"></i>Transportistes</a></li>
+                        <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Transportistes</a></li>
                         <li className="list-group-item py-3 px-1 text-white fondo-azul border-top no-hover"><i className="bi bi-send px-1 text-white"></i>Enviament</li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Clients</a></li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Ordres d'enviament <span className="badge rounded-pill bg-danger px-3 ms-2 text-white">9</span></a></li>
@@ -25,7 +25,7 @@ function Lateral() {
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Estats Ordres</a></li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Estats Línia</a></li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Productes</a></li>
-                        <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Lots</a></li>
+                        <li className="list-group-item px-0 opacity-75 activo"><a className="text-decoration-none d-block" href="#"><i className="bi bi-caret-right-fill pe-1"></i>Lots</a></li>
                         <li className="list-group-item py-3 px-1 text-white fondo-azul border-top no-hover"><i className="bi bi-shop-window px-1 text-white"></i>Magatzem</li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Gestió de magatzem</a></li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="#">Inventaris</a></li>

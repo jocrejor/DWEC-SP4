@@ -38,7 +38,7 @@ function App() {
           <Lateral />
           <div className="col-12 col-xl-10 px-0">
 
-            <Header title="Titulo" />
+            <Header title="Llistat Lots" />
 
             <Filtres />
 

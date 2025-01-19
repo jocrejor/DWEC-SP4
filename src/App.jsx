@@ -35,9 +35,6 @@ function App() {
           <Lateral />
           <div className="col-12 col-xl-10 px-0">
             <div>
-              <Header title='Productos'></Header>
-              <Filtres/>
-              <Inventaris/>
 
               <Routes>
 
@@ -55,11 +52,11 @@ function App() {
 
                 <Route path="/clients" element={<Clients />} />
 
-                <Route path="/ordesEnviament" element={<OrdesEnviament />} />
+                <Route path="/ordresEnviament" element={<OrdesEnviament />} />
 
                 <Route path="/proveidors" element={<Proveidors />} />
 
-                <Route path="/ordesRecepcio" element={<OrdesRecepcio />} />
+                <Route path="/ordreRecepcio" element={<OrdesRecepcio />} />
 
                 <Route path="/estatsOrdre" element={<EstatsOrdre />} />
 

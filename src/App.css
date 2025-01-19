@@ -12,6 +12,9 @@ body{
     font-family: "Noto Serif", serif;
 }
 
+td, th{
+    color: var(--lightBlue) !important;
+}
 
 /********* BARRA LATERAL CON BOOTSTRAP *********/
 .fondo-azul{
@@ -58,6 +61,10 @@ li:hover i{
 
 .text-light-blue{
     color: var(--blauClar) !important;
+}
+
+.text-orange{
+    color: var(--taronja) !important;
 }
 
 .activo{

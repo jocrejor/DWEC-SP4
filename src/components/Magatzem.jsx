@@ -22,45 +22,51 @@ function Storage() {
     setStorage(data)
   }, [])
 
-const eliminarStorage = (id) =>{
-  deleteData(url, "Storage", id) 
-  const newstorages = storages.filter(item => item.id != id)
-  setProducts(newstorages)
-}
+  const eliminarStorage = (id) => {
+    deleteData(url, "Storage", id)
+    const newstorages = storages.filter(item => item.id != id)
+    setStorage(newstorages)
+  }
 
-const modificarProducte = (valors) =>{
- setTipoModal("Modificar")
- setValorsInicials(valors);
-}
+  const modificarStorage = (valors) => {
+    setTipoModal("Modificar")
+    setValorsInicials(valors);
+  }
+
+
+  const canviEstatModal = () => {
+    setShowModal(!showModal)
+  }
 
   return (
     <>
-    <Header />
+      <Header />
       <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Magatzem</Button>
-      <table className="table">
+      <table>
         <thead>
           <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Nom</th>
-            <th scope="col">Tipus</th>
-            <th scope="col">Adreça</th>
-            <th scope="col">Modificar</th>
-            <th scope="col">Eliminar</th>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Tipus</th>
+            <th>Adreça</th>
+            <th>Modificar</th>
+            <th>Eliminar</th>
           </tr>
         </thead>
         <tbody>
           {(storages.length === 0) ?
-            <tr><td colSpan="6">No hi han magatzems</td></tr>
-            : storages.map((valors) => (
-              <tr key={valors.id}>
-                <td>{valors.id}</td>
-                <td>{valors.name}</td>
-                <td>{valors.type}</td>
-                <td>{valors.address}</td>
-                <td><Button variant="warning" onClick={() => modificarStorage(valors)}>Modificar</Button></td>
-                <td><Button variant="primary" onClick={() => eliminarStorage(valors.id)}>Eliminar</Button></td>
-              </tr>
-            ))}
+            <tr><td>No hi han magatzems</td></tr>
+            : storages.map((valors) => {
+              return (
+                <tr key={valors.id}>
+                  <td>{valors.id}</td>
+                  <td>{valors.name}</td>
+                  <td>{valors.type}</td>
+                  <td>{valors.address}</td>
+                  <td><Button variant="warning" onClick={() => modificarStorage(valors)}>Modificar</Button></td>
+                  <td><Button variant="primary" onClick={() => eliminarStorage(valors.id)}>Eliminar</Button></td>
+                </tr>)
+            })}
         </tbody>
       </table>
 
@@ -73,25 +79,36 @@ const modificarProducte = (valors) =>{
           <Formik
             initialValues={tipoModal === 'Modificar' ? valorsInicials : { name: '', type: '', address: '' }}
             validationSchema={StorageSchema}
-            onSubmit={values => grabar(values)}
+            onSubmit={values => {
+              console.log(values)
+              tipoModal==="Crear"?postData(url,"Storage", values):updateId(url,"Storage",values.id,values)  
+              canviEstatModal()
+              
+            }}
           >
-            {({ errors, touched }) => (
+            {({ values, errors, touched }) => (
               <Form>
                 <div>
                   <label htmlFor='name'>Nom</label>
-                  <Field type="text" name="name" placeholder="Nom del magatzem" autoComplete="off" />
+                  <Field type="text" name="name" placeholder="Nom del magatzem" autoComplete="off"
+                    value={values.name}
+                  />
                   {errors.name && touched.name ? <div>{errors.name}</div> : null}
                 </div>
 
                 <div>
                   <label htmlFor='type'>Tipus</label>
-                  <Field type="text" name="type" placeholder="Tipus de magatzem" autoComplete="off" />
+                  <Field type="text" name="type" placeholder="Tipus de magatzem" autoComplete="off"
+                    value={values.type}
+                  />
                   {errors.type && touched.type ? <div>{errors.type}</div> : null}
                 </div>
 
                 <div>
                   <label htmlFor='address'>Adreça</label>
-                  <Field type="text" name="address" placeholder="Adreça del magatzem" autoComplete="off" />
+                  <Field type="text" name="address" placeholder="Adreça del magatzem" autoComplete="off"
+                    value={values.address}
+                  />
                   {errors.address && touched.address ? <div>{errors.address}</div> : null}
                 </div>
 

@@ -18,7 +18,7 @@ import OrdesRecepcio from './components/OrdesRecepcio';
 import EstatsOrdre from './components/EstatsOrdre';
 import EstatsLinia from './components/EstatsLinia';
 import Lots from './components/Lots';
-import GestioMagatzem from './components/GestioMagatzem';
+import GestioMagatzem from './components/Magatzem';
 import Inventaris from './components/Inventaris';
 import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';

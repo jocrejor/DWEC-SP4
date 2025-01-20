@@ -62,6 +62,17 @@ function Transportistes() {
     setShowModal(!showModal);
   };
 
+
+const gravar = async (values)=>{
+  if(tipoModal==="Crear"){
+    await postData(url,'Carriers', values)
+  }else{
+    await updateId(url,'Product',values.id,values)
+    }
+  const data = await getData(url, "Product")
+  await setProducts(data)
+  canviEstatModal()
+}
   return (
     <>
       <div>
@@ -226,6 +237,7 @@ function Transportistes() {
                   </Button>
                   <Button variant={tipoModal === 'Modificar' ? 'success' : 'info'} type="submit">
                     {tipoModal}
+                    onSubmit={ values => { gravar(values)}} 
                   </Button>
                 </div>
               </Form>

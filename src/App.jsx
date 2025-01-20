@@ -22,6 +22,7 @@ import GestioMagatzem from './components/Magatzem';
 import Inventaris from './components/Inventaris';
 import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';
+import Carrer from './components/Carrer';
 
 function App() {
 
@@ -69,6 +70,8 @@ function App() {
        <Route path="/incidencies" element={<Incidencies/>}/>  
 
        <Route path="/moviments" element={<Moviments/>}/>  
+
+       <Route path="/carrer" element={<Carrer/>}/>
        
        <Route path="/" element={<Main/>} />
           

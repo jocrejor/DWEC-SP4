@@ -7,12 +7,13 @@ function OrderPickingReception() {
     const [orderPickingReception, setOrderPickingReception] = useState([]);
     const [orderreception, setOrderReception] = useState([]);
     const [orderLineReception, setOrderLineReception] = useState([]);
-    const [filteredLines, setFilteredLines] = useState([]);
     const [products, setProducts] = useState([]);
     const [temporalPickings, setTemporalPickings] = useState([]);
     const [spaces, setSpaces] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [tipoModal, setTipoModal] = useState("Alta");
+
+    const [orderSelected, setOrderSelected] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,12 +34,29 @@ function OrderPickingReception() {
 
             //recorrer orden reception pendent (desempaquetada)
             const orderPendent = orderReception.filter((order) => order.orderreception_status_id === "ceba");
+            
+            const tempPickings = [];
             orderPendent.map((order) => {
                 //recorrer line reception de cada orden reception
                 const lines = orderLine.filter((line) => line.order_reception_id === order.id);
                 //obtindre product.name, product.quantitat, product.space
-                lines.map((line) => {
+                lines.forEach((line) => {
                     const space = spaces.find((space) => space.product_id === line.product_id);
+                    if (space) {
+                        console.log(order.id, line.id, line.product_id, line.quantity_received, space.storage_id, space.street_id, space.selft_id, space.id);
+                        const objTemporal = {   
+                            order_reception_id: order.id,
+                            order_line_reception_id: line.id,
+                            product_id: line.product_id,
+                            quantity_received: line.quantity_received,
+                            storage_id: space.storage_id,
+                            street_id: space.street_id,
+                            selft_id: space.selft_id,
+                            space_id: space.id
+                        }
+                        tempPickings.push(objTemporal);
+                        setTemporalPickings(tempPickings);
+                    }
                 });
             });
         };
@@ -50,113 +68,42 @@ function OrderPickingReception() {
         setShowModal(!showModal);
     }
 
-    const filtrarLineReception = (id) => {
-        const lineReception = orderLineReception.filter((line) => line.order_reception_id === id);
-        setFilteredLines(lineReception);
-    } 
-
     return (
         <>
             <div>
-                <h2>Llistat Order Picking Reception</h2>
+                <h2>Llistat Order Reception</h2>
             </div>
             <Button variant="success" onClick={() => {
                 canviEstatModal();
                 setTipoModal("Alta")
-            }}>Alta Producte</Button>
+            }}>Crear Order Picking</Button>
 
             <Table striped bordered hover>
                 <thead>
-                    <th>ID</th>
-                    <th>Data Creació</th>
-                    <th>Visualitzar</th>
+                    <tr>
+                        <th>ID Order</th>
+                        <th>Producte</th>
+                        <th>Quantitat</th>
+                        <th>Magatzem / Carrer / Estantería / Espai</th>
+                        <th></th>
+                    </tr>
                 </thead>
 
                 <tbody>
-                    {orderreception.map(order => {
+                    {temporalPickings.map(temporalPicking => {
+                        const product = products.find(p => p.id === temporalPicking.product_id);
                         return (
-                            <tr key={order.id}>
-                                <td>{order.id}</td>
-                                <td>{order.estimated_reception_date}</td>
-                                <td>
-                                    <button className='btn btn-danger' onClick={() => {
-                                        setTipoModal("Visualitzar");
-                                        canviEstatModal();
-                                        filtrarLineReception(order.id);
-                                    }}>Visualitzar</button>
-                                </td>
+                            <tr key={temporalPicking.order_reception_id}>
+                                <td>{temporalPicking.order_reception_id}</td>
+                                <td>{product.name}</td>
+                                <td>{temporalPicking.quantity_received}</td>
+                                <td>{temporalPicking.storage_id} / {temporalPicking.street_id} / {temporalPicking.selft_id} / {temporalPicking.space_id}</td>
+                                <td><input type="checkbox" /></td>
                             </tr>
                         );
                     })}
                 </tbody>
             </Table>
-
-            <Modal show={showModal} onHide={canviEstatModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{tipoModal}</Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body>
-                    {tipoModal === "Alta" ? (
-                        <>
-                        <Table striped bordered hover>
-                        <thead>
-                            <th></th>
-                            <th>Producte</th>
-                            <th>Quantitat</th>
-                            <th>Ubicació</th>
-                        </thead>
-
-                        <tbody>
-                            
-                            {products.map(product => {
-                                return (
-                                    
-                                    <tr key={product.id}>
-                                        <td><input type="checkbox" /></td>
-                                        <td>{product.name}</td>
-                                        <td>Quantitat</td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </Table>
-                    <Formik>
-                        <Form>
-                            <Button variant='secondary' onClick={canviEstatModal}>Tancar</Button>
-
-                            <Button variant='danger'>Crear</Button>
-                        </Form>
-                    </Formik>
-                    </>
-                    ) : (
-                        <>
-                        {filteredLines.length > 0 ? (
-                            <Table striped bordered hover>
-                                <thead>
-                                    <th>Producte</th>
-                                    <th>Quantitat</th>
-                                </thead>
-
-                                <tbody>
-                                    {filteredLines.map(line => {
-                                        const product = products.find(product => product.id === line.product_id);
-                                        return (
-                                            <tr key={line.id}>
-                                                <td>{product.name}</td>
-                                                <td>{line.quantity_received}</td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </Table>
-                        ) : (
-                            <h3>No hi ha productes</h3>
-                        )}
-                        </>
-                    )}
-                </Modal.Body>
-            </Modal>
         </>
     );
 }

@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import {url, postData, getData, deleteData, updateId}  from '../crud'
+import {url, postData, getData, deleteData, updateId}  from '../apiAccess/crud'
 import {Formik, Form, Field} from 'formik'
 import * as yup from 'yup'
 import { Button, Modal } from 'react-bootstrap';
@@ -63,11 +63,6 @@ function OrdesEnviament() {
     setValorsLineInicials(valors)
   }
 
-  const crearOrdre = async (values) => {
-    const data = await postData(url,'OrderShipping', values)
-    console.log(data)
-    setIdOrdre(data.id)
-  }
   
   const canviEstatModal = () => {
       setShowModal(!showModal)
@@ -155,7 +150,7 @@ function OrdesEnviament() {
                 <div>
                 <h2>Capçalera</h2>
                   <label htmlFor='client_id'>Cliente</label>
-                  <Field as="select" name="client_id">
+                  <Field as="select" name="client_id" values = {values.client_id}>
                     {clientes.map(cliente => {
                       return <option key={cliente.id} value={cliente.id}>{cliente.name}</option>
                     }) }
@@ -165,7 +160,7 @@ function OrdesEnviament() {
 
                 <div>
                   <label htmlFor='carrier_id'>Transportista</label>
-                  <Field as="select" name="carrier_id">
+                  <Field as="select" name="carrier_id" values = {values.carrier_id}>
                     {carriers.map(carrier => {
                       return <option key={carrier.id} value={carrier.id}>{carrier.name}</option>
                     }) }
@@ -175,7 +170,7 @@ function OrdesEnviament() {
 
                 <div>
                   <label htmlFor='prepared_by'>Preparado por</label>
-                  <Field as="select" name="prepared_by">
+                  <Field as="select" name="prepared_by" values = {values.prepared_by}>
                     {users.map(user => {
                       return <option key={user.id} value={user.id}>{user.name}</option>
                     }) }
@@ -185,7 +180,7 @@ function OrdesEnviament() {
 
                 <div>
                   <label htmlFor='shipping_date'>Data estimada</label>
-                  <Field type="date" name="shipping_date" />
+                  <Field type="date" name="shipping_date" values = {values.shipping_date} />
                     {errors.shipping_date && touched.shipping_date ? <div>{errors.shipping_date}</div> : null}
                 </div>              
               </Form>

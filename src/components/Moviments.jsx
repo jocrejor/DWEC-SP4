@@ -1,34 +1,33 @@
 import { useState, useEffect } from 'react'
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
+import Header from './header'
 import { url,  getData} from '../apiAccess/crud'
 import { Button,Modal,ModalBody,ModalFooter } from 'react-bootstrap';
 
 function Moviments() {
   const [moviments, setMoviments] = useState([]);
-  const [selectMoviments, setSelectedProduct] = useState(null); 
+  const [selectMoviments, setSelectedMoviment] = useState(null);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = (product) => {
-    console.log(product); 
-    setSelectedProduct(product);
+    console.log(product);
+    setSelectedMoviment(product);
     setShow(true);
 };
 
 useEffect(() => {
   getData(url, "Moviment").then(data => {
-    const normalizedData = data.map(item => ({
+    const canviorigin = data.map(item => ({
       ...item,
     }));
-    setMoviments(normalizedData);
+    setMoviments(canviorigin);
   });
 }, []);
 
   return (
     <>
       <div>
-        <table style={{ marginLeft: 350, marginTop: 100 }}>
+        <table style={{ marginLeft: 350 }}>
           <thead>
             <tr>
               <th>ID</th>
@@ -45,6 +44,7 @@ useEffect(() => {
             </tr>
           </thead>
           <tbody>
+
             {moviments.map((valors) => (
               <tr key={valors.id}>
                 <td>{valors.id}</td>
@@ -69,7 +69,7 @@ useEffect(() => {
       </div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Detalles del Producto</Modal.Title>
+          <Modal.Title>Detalls del Moviment</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectMoviments ? (
@@ -100,5 +100,3 @@ useEffect(() => {
 }
 
 export default Moviments
-
-

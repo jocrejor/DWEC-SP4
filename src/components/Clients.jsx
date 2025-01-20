@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { url, postData, getData, deleteData, updateId } from './crud'
+import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
 import { Formik, Form, Field } from 'formik'
 import * as yup from 'yup'
 

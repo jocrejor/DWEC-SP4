@@ -37,7 +37,11 @@ function App() {
         <div className="row">
           <Lateral />
           <div className="col-12 col-xl-10 px-0">
-            <currentUserContext.Provider value={defaultUser}>
+
+            <Header title="Titulo" />
+
+            <Filtres />
+
             <Routes>
            
               <Route path="/login" element={<Login />} />

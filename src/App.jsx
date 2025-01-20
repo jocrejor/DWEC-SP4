@@ -32,7 +32,7 @@ function App() {
      <div className="container-fluid">
      <div className="row">
         <Lateral />
-      
+        <div className="col-12 col-xl-10 px-0">
        <Routes>
        
        <Route path="/login" element={<Login/>}/>  
@@ -80,6 +80,7 @@ function App() {
        <Route path="*" element={<Error404/>} />
 
        </Routes>
+      </div>
 
       <div>
         <Footer />

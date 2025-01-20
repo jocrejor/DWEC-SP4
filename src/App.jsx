@@ -1,11 +1,9 @@
-import { useState } from 'react'
 import './App.css'
 import Lateral from './components/Lateral'
 import Login from './components/login';
 import Logout from './components/logout';
 import Main from './components/Main'
 import { Routes,Route} from "react-router-dom";
-import Footer from './components/Footer'
 import Productes from './components/Productes';
 import Usuaris from './components/Usuaris';
 import Rols from './components/Rols';
@@ -63,7 +61,7 @@ function App() {
 
        <Route path="/lots" element={<Lots/>}/>  
 
-       <Route path="/gestioMagatzem" element={<GestioMagatzem/>}/>  
+       <Route path="/magatzem" element={<GestioMagatzem/>}/>  
 
        <Route path="/inventaris" element={<Inventaris/>}/>  
 
@@ -81,13 +79,6 @@ function App() {
 
        </Routes>
       </div>
-
-      <div>
-        <Footer />
-      </div>
-
-
-
     </div>
     </div>  
       

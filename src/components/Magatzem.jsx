@@ -40,7 +40,7 @@ function Storage() {
 
   return (
     <>
-      <Header />
+      <Header title="Gestió Magatzem"/>
       <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Magatzem</Button>
       <table>
         <thead>

@@ -17,31 +17,21 @@ function Storage() {
   const [tipoModal, setTipoModal] = useState("Crear");
   const [valorsInicials, setValorsInicials] = useState({ name: '', type: '', address: '' });
 
-  useEffect(() => {
-    (async () => {
-      const data = await getData(url, "Storage");
-      setStorage(data);
-    })();
-  }, []);><HeaderarStorage = (valors) => {
-    setTipoModal("Modificar");
-    setValorsInicials(valors);
-    canviEstatModal();
-  };
+  useEffect(async () => {
+    const data = await getData(url, "Storage")
+    setStorage(data)
+  }, [])
 
-  const canviEstatModal = () => {
-    setShowModal(!showModal);
-  };
+const eliminarStorage = (id) =>{
+  deleteData(url, "Storage", id) 
+  const newstorages = storages.filter(item => item.id != id)
+  setProducts(newstorages)
+}
 
-  const grabar = async (values) => {
-    if (tipoModal === "Crear") {
-      await postData(url, 'Storage', values);
-    } else {
-      await updateId(url, 'Storage', values.id, values);
-    }
-    const data = await getData(url, "Storage");
-    setStorage(data);
-    canviEstatModal();
-  };
+const modificarProducte = (valors) =>{
+ setTipoModal("Modificar")
+ setValorsInicials(valors);
+}
 
   return (
     <>

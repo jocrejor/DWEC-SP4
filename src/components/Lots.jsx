@@ -7,6 +7,12 @@ import { Button, Modal } from 'react-bootstrap';
 import Header from '../components/Header';
 import Filtres from '../components/Filtres';
 
+/**
+ * "orderReception": "orden11",
+ * "orderLineReception": "linea11"
+ * POR AÑADIR EN EL FORMULARIO
+ */
+
 const LotSchema = Yup.object().shape({
   name: Yup.string().min(4, 'Valor mínim de 4 caràcters.').max(50, 'El valor màxim és de 50 caràcters').required('Valor requerit'),
   product_id: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),

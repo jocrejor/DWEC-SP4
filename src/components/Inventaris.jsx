@@ -24,7 +24,7 @@ function Inventaris() {
   const [selectedInventory, setSelectedInventory] = useState(null);
   const [inventoryLines, setInventoryLines] = useState([]);
   const [products, setProducts] = useState([]);
-  const [selectedInventoryLines, setSelectedInventoryLines] = useState ([]);
+  const [selectedInventoryLines, setSelectedInventoryLines] = useState([]);
 
 
   useEffect(async () => {
@@ -33,7 +33,7 @@ function Inventaris() {
     const street = await getData(url, "Street");
     const space = await getData(url, "Space");
     const lines = await getData(url, "InventoryLine");
-    const prod  = await getData(url, "Product");
+    const prod = await getData(url, "Product");
 
     setInventory(stock);
     setStorages(store);
@@ -53,6 +53,15 @@ function Inventaris() {
   }, [selectedStoragerId, streets]);
 
 
+  useEffect(() => {
+    if (selectedInventory) {
+      console.log("HOLA")
+      const filteredInventoryLines = inventoryLines.filter(line => line.inventory_id === selectedInventory.id);
+      setSelectedInventoryLines(filteredInventoryLines);
+    } else {
+      setSelectedInventoryLines([]);
+    }
+  }, [selectedInventory])
   /**************** CREAR INVENTARIO ****************/
   const createInventory = async (values) => {
     console.log(values);
@@ -100,9 +109,10 @@ function Inventaris() {
 
   const displayInventoryModal = (values) => {
     setSelectedInventory(values);
-    const filteredInvetoryLines = inventoryLines.filter(line => line.inventory_id === values.id);
-    setInventoryLines(filteredInvetoryLines);
-    console.log(filteredInvetoryLines)
+    console.log(values.id)
+    // const filteredInventoryLines = inventoryLines.filter(line => line.inventory_id === values.id);
+    // setInventoryLines(filteredInventoryLines);
+
     changeModalStatus();
   }
 
@@ -123,7 +133,8 @@ function Inventaris() {
       <Header title='Inventaris'></Header>
       <Filtres />
       <Row>
-        <Col>
+        <Col>                                          <input type="number" name="" id="" />
+
 
           <div className='px-3 pt-3'>
             <Button variant='secondary' className='mb-3' onClick={handleShow}>Crear</Button>
@@ -212,7 +223,7 @@ function Inventaris() {
               <tbody className='text-light-blue'>
                 {
                   (inventory.length === 0) ?
-                    <div>No hay nada</div>
+                    <tr><td colSpan={6}>No hay nada</td></tr>
                     : inventory.map((values) => {
                       return (
                         <tr key={values.id}>
@@ -250,6 +261,7 @@ function Inventaris() {
               </Modal.Header>
               <Modal.Body>
 
+
                 {selectedInventory && (
                   <>
                     <Table striped bordered hover>
@@ -283,6 +295,23 @@ function Inventaris() {
                             </tr>
                           </thead>
                           <tbody>
+                            {
+                              (selectedInventoryLines.length === 0) ?
+                                <tr><td colSpan={4} className='text-center'>No hay nada</td></tr> :
+                                selectedInventoryLines.map((value) => {
+              
+                                  return (
+                                    <tr key={value.id}>
+                                      <td>{(products.find(product => product.id === value.product_id)).name}</td>
+                                      <td>{value.quantity_estimated}</td>
+                                      <td>cantidad real</td>
+                                      <td>justificacion</td>
+                                      <td></td>
+                                    </tr>
+                                  )
+                                })
+
+                            }
 
                           </tbody>
                         </Table>
@@ -300,19 +329,20 @@ function Inventaris() {
                           <tbody>
 
 
-                              {
-                                (filteredInvetoryLines === 0) ?
-                                <div>No hay nada</div> : 
-                                <tr>
-                                  <td>{fi}</td>
-                                  <td></td>
-                                  <td></td>
-                                  <td></td>
-                                  <td></td>
-                                </tr>
-                              
-                              }
-                              
+                            {
+                              (selectedInventoryLines.length === 0) ?
+                                <tr><td colSpan={5} className='text-center'>No hay nada</td></tr> :
+                                selectedInventoryLines.map((value) => {
+                                  return (
+                                    <tr key={value.id}>
+                                      <td>{value.street_id}</td>
+                                      <td>{value.selft_id}</td>
+                                      <td>{value.space_id}</td>
+                                      <td>{(products.find(product => product.id === value.product_id)).name}</td>
+                                      <td></td>
+                                    </tr>)
+                                })
+                            }
                           </tbody>
 
                         </Table>
@@ -327,8 +357,8 @@ function Inventaris() {
                     ((modalType === 'Inventariar' || modalType === 'Completar') ? <Button type='submit' className='ms-2 orange-button'>{modalType}</Button> : "")
 
                   }
-
                 </div>
+
               </Modal.Body>
             </Modal>
           </div>

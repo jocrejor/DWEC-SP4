@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Button, Modal } from 'react-bootstrap';
@@ -54,11 +54,11 @@ function Rols() {
 
   return (
     <div>
-      <h2>Perfil d'Usuaris</h2>
-      <Button variant="success" onClick={obrirModal}>
+      <h2 style={{textAlign:"center"}}>Perfil d'Usuaris</h2>
+      <Button variant="success" onClick={obrirModal} style={{ marginLeft: "17rem" }}>
         Alta Perfil d'Usuaris
       </Button>
-      <table>
+      <table style={{ marginLeft: "17rem" }}>
         <thead>
           <tr>
             <th>Id</th>

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-import { Button, Modal } from 'react-bootstrap';
+import { useState, useEffect } from 'react'
+import { Formik, Form, Field } from 'formik'
+import * as Yup from 'yup'
+import { Button, Modal } from 'react-bootstrap'
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
-const UsersSchema = Yup.object().shape({
+
+const UserSchema = Yup.object().shape({
   name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
   email: Yup.string().min(8, 'Valor mínim de 8 caracters.').max(40, 'El valor màxim és de 40 caracters').required('Valor requerit'),
   password: Yup.string().min(8, 'Valor mínim de 8 caracters.').max(20, 'El valor màxim és de 20 caracters').required('Valor requerit'),
@@ -12,22 +13,22 @@ const UsersSchema = Yup.object().shape({
 });
 
 function Usuaris() {
-  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [tipoModal, setTipoModal] = useState("Crear");
   const [valorsInicials, setValorsInicials] = useState({ name: '', email: '', password: '', role: '', image: '' });
 
   useEffect(() => {
-    async function fetchUsers() {
-      const data = await getData(url, "Users");
-      setUsers(data);
+    async function fetchUser() {
+      const data = await getData(url, "User");
+      setUser(data);
     }
-    fetchUsers();
+    fetchUser();
   }, []);
 
   const eliminarUsuari = (id) => {
-    deleteData(url, "Users", id);
-    setUsers(users.filter((user) => user.id !== id));
+    deleteData(url, "User", id);
+    setUser(user.filter((user) => user.id !== id));
   };
 
   const modificarUsuari = (valors) => {
@@ -46,9 +47,9 @@ function Usuaris() {
 
   return (
     <div>
-      <h2>Usuaris</h2>
-      <Button variant="success" onClick={obrirModal}>Alta Usuari</Button>
-      <table>
+      <h2 style={{textAlign:"center"}}>Usuaris</h2>
+      <Button variant="success" onClick={obrirModal} style={{ marginLeft: "17rem" }}>Alta Usuari</Button>
+      <table  style={{ marginLeft: "17rem" }}>
         <thead>
           <tr>
             <th>Id</th>
@@ -62,12 +63,12 @@ function Usuaris() {
           </tr>
         </thead>
         <tbody>
-          {users.length === 0 ? (
+          {user.length === 0 ? (
             <tr>
-              <td colSpan="8">No hi han perfil d'usuaris</td>
+              <td colSpan="8">No hi ha perfil d'usuaris</td>
             </tr>
           ) : (
-            users.map((user) => (
+            user.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
                 <td>{user.name}</td>
@@ -94,9 +95,9 @@ function Usuaris() {
         <Modal.Body>
           <Formik
             initialValues={tipoModal === 'Modificar' ? valorsInicials : { name: '', email: '', password: '', role: '', image: '' }}
-            validationSchema={UsersSchema}
+            validationSchema={UserSchema}
             onSubmit={(values) => {
-              tipoModal === "Crear" ? postData(url, "Users", values) : updateId(url, "Users", values.id, values);
+              tipoModal === "Crear" ? postData(url, "User", values) : updateId(url, "User", values.id, values);
               tancarModal();
             }}
           >

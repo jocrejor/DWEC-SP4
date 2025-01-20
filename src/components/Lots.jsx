@@ -16,8 +16,6 @@ const LotSchema = Yup.object().shape({
   expiration_date: Yup.string().required('Valor requerit'),
 });
 
-
-
 function Lots() {
   const [lot, setLot] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -30,6 +28,7 @@ function Lots() {
     production_date: '',
     expiration_date: '',
   });
+  const [visualizarLot, setVisualizarLot] = useState(null); // Estado para visualizar lote
 
   useEffect(() => {
     async function fetchData() {
@@ -54,12 +53,16 @@ function Lots() {
     setShowModal(!showModal);
   };
 
+  const handleVisualitzar = (valors) => {
+    setVisualizarLot(valors);
+  };
+
   return (
     <>
       <Header title="Llistat Lots" />
 
       <Filtres />
-      
+
       <div className="d-flex justify-content-end mt-3 me-3">
         <Button
           variant="success"
@@ -83,6 +86,7 @@ function Lots() {
               <th>Quantitat</th>
               <th>Data producció</th>
               <th>Data caducitat</th>
+              <th>Visualitzar</th>
               <th>Modificar</th>
               <th>Eliminar</th>
             </tr>
@@ -90,7 +94,7 @@ function Lots() {
           <tbody>
             {lot.length === 0 ? (
               <tr>
-                <td colSpan="9" className="text-center">
+                <td colSpan="10" className="text-center">
                   No hi han lots
                 </td>
               </tr>
@@ -106,6 +110,15 @@ function Lots() {
                   <td>{valors.expiration_date}</td>
                   <td>
                     <Button
+                      variant="info"
+                      className="btn-sm"
+                      onClick={() => handleVisualitzar(valors)}
+                    >
+                      <i className="bi bi-eye"></i>
+                    </Button>
+                  </td>
+                  <td>
+                    <Button
                       variant="warning"
                       className="btn-sm"
                       onClick={() => {
@@ -113,7 +126,7 @@ function Lots() {
                         canviEstatModal();
                       }}
                     >
-                      Modificar
+                      <i className="bi bi-pencil-square"></i>
                     </Button>
                   </td>
                   <td>
@@ -124,7 +137,7 @@ function Lots() {
                         eliminarLot(valors.id);
                       }}
                     >
-                      Eliminar
+                      <i className="bi bi-trash"></i>
                     </Button>
                   </td>
                 </tr>
@@ -134,6 +147,7 @@ function Lots() {
         </table>
       </div>
 
+      {/* Modal para Crear/Modificar */}
       <Modal show={showModal} onHide={canviEstatModal}>
         <Modal.Header closeButton>
           <Modal.Title>{tipoModal} Lot</Modal.Title>
@@ -154,7 +168,6 @@ function Lots() {
                 }
             }
             validationSchema={LotSchema}
-            /** SE ACTUALIZA LA TABLA AL MODIFICAR O CREAR */
             onSubmit={(values) => {
               if (tipoModal === 'Crear') {
                 postData(url, 'Lot', values).then((nuevoLote) => {
@@ -167,13 +180,6 @@ function Lots() {
               }
               canviEstatModal();
             }}
-          /** SIN ACTUALIZAR (VERSIÓN ANTERIOR) */
-          // onSubmit={(values) => {
-          //   tipoModal === 'Crear'
-          //     ? postData(url, 'Lot', values)
-          //     : updateId(url, 'Lot', values.id, values);
-          //   canviEstatModal();
-          // }}
           >
             {({ values, errors, touched }) => (
               <Form>
@@ -242,7 +248,7 @@ function Lots() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="expiration_date">Data d&apos;expiració</label>  {/* &apos; es ' */}
+                  <label htmlFor="expiration_date">Data d&apos;expiració</label>
                   <Field
                     type="date"
                     name="expiration_date"
@@ -274,8 +280,31 @@ function Lots() {
           </Formik>
         </Modal.Body>
       </Modal>
+
+      {/* Modal para Visualizar */}
+      {visualizarLot && (
+        <Modal show={!!visualizarLot} onHide={() => setVisualizarLot(null)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Detalls del Lot</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p><strong>ID:</strong> {visualizarLot.id}</p>
+            <p><strong>Nom:</strong> {visualizarLot.name}</p>
+            <p><strong>ID Producte:</strong> {visualizarLot.product_id}</p>
+            <p><strong>ID Proveïdor:</strong> {visualizarLot.supplier_id}</p>
+            <p><strong>Quantitat:</strong> {visualizarLot.quantity}</p>
+            <p><strong>Data de Producció:</strong> {visualizarLot.production_date}</p>
+            <p><strong>Data de Caducitat:</strong> {visualizarLot.expiration_date}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setVisualitzarLot(null)}>
+              Tancar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </>
   );
 }
 
-export default Lots
+export default Lots;

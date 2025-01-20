@@ -53,65 +53,79 @@ function Lots() {
 
   return (
     <>
-      <Button
-        variant="success"
-        className='btn btn-primary'
-        onClick={() => {
-          canviEstatModal();
-          setTipoModal('Crear');
-        }}
-      >
-        Alta Lots
-      </Button>
-      <table className="table table-striped">
-        <tr>
-          <th>ID</th>
-          <th>Nom</th>
-          <th>ID Product</th>
-          <th>ID Supplier</th>
-          <th>Quantitat</th>
-          <th>Data producció</th>
-          <th>Data caducitat</th>
-          <th>Modificar</th>
-          <th>Eliminar</th>
-        </tr>
-        {lot.length === 0 ? (
-          <div>No hi han lots</div>
-        ) : (
-          lot.map((valors) => (
-            <tr key={valors.id}>
-              <td>{valors.id}</td>
-              <td>{valors.name}</td>
-              <td>{valors.product_id}</td>
-              <td>{valors.supplier_id}</td>
-              <td>{valors.quantity}</td>
-              <td>{valors.production_date}</td>
-              <td>{valors.expiration_date}</td>
-              <td>
-                <Button
-                  variant="warning"
-                  onClick={() => {
-                    modificarLot(valors);
-                    canviEstatModal();
-                  }}
-                >
-                  Modificar
-                </Button>
-              </td>
-              <td>
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    eliminarLot(valors.id);
-                  }}
-                >
-                  Eliminar
-                </Button>
-              </td>
+      <div className="d-flex justify-content-end mt-3 me-3">
+        <Button
+          variant="success"
+          className="btn btn-primary"
+          onClick={() => {
+            canviEstatModal();
+            setTipoModal('Crear');
+          }}
+        >
+          Alta Lots
+        </Button>
+      </div>
+      <div className="table-responsive mx-2">
+        <table className="table table-bordered table-hover table-striped text-center mt-4">
+          <thead className="thead-dark">
+            <tr>
+              <th>ID</th>
+              <th>Nom</th>
+              <th>ID Product</th>
+              <th>ID Supplier</th>
+              <th>Quantitat</th>
+              <th>Data producció</th>
+              <th>Data caducitat</th>
+              <th>Modificar</th>
+              <th>Eliminar</th>
             </tr>
-          ))
-        )}
-      </table>
+          </thead>
+          <tbody>
+            {lot.length === 0 ? (
+              <tr>
+                <td colSpan="9" className="text-center">
+                  No hi han lots
+                </td>
+              </tr>
+            ) : (
+              lot.map((valors) => (
+                <tr key={valors.id}>
+                  <td>{valors.id}</td>
+                  <td>{valors.name}</td>
+                  <td>{valors.product_id}</td>
+                  <td>{valors.supplier_id}</td>
+                  <td>{valors.quantity}</td>
+                  <td>{valors.production_date}</td>
+                  <td>{valors.expiration_date}</td>
+                  <td>
+                    <Button
+                      variant="warning"
+                      className="btn-sm"
+                      onClick={() => {
+                        modificarLot(valors);
+                        canviEstatModal();
+                      }}
+                    >
+                      Modificar
+                    </Button>
+                  </td>
+                  <td>
+                    <Button
+                      variant="danger"
+                      className="btn-sm"
+                      onClick={() => {
+                        eliminarLot(valors.id);
+                      }}
+                    >
+                      Eliminar
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <Modal show={showModal} onHide={canviEstatModal}>
         <Modal.Header closeButton>
@@ -124,20 +138,20 @@ function Lots() {
               tipoModal === 'Modificar'
                 ? valorsInicials
                 : {
-                    name: '',
-                    product_id: '',
-                    supplier_id: '',
-                    quantity: '',
-                    production_date: '',
-                    expiration_date: '',
-                  }
+                  name: '',
+                  product_id: '',
+                  supplier_id: '',
+                  quantity: '',
+                  production_date: '',
+                  expiration_date: '',
+                }
             }
             validationSchema={LotSchema}
             /** SE ACTUALIZA LA TABLA AL MODIFICAR O CREAR */
             onSubmit={(values) => {
               if (tipoModal === 'Crear') {
                 postData(url, 'Lot', values).then((nuevoLote) => {
-                  setLot(prevLot => [...prevLot, nuevoLote]); 
+                  setLot(prevLot => [...prevLot, nuevoLote]);
                 });
               } else {
                 updateId(url, 'Lot', values.id, values).then(() => {
@@ -146,61 +160,109 @@ function Lots() {
               }
               canviEstatModal();
             }}
-            /** SIN ACTUALIZAR (VERSIÓN ANTERIOR) */
-            // onSubmit={(values) => {
-            //   tipoModal === 'Crear'
-            //     ? postData(url, 'Lot', values)
-            //     : updateId(url, 'Lot', values.id, values);
-            //   canviEstatModal();
-            // }}
+          /** SIN ACTUALIZAR (VERSIÓN ANTERIOR) */
+          // onSubmit={(values) => {
+          //   tipoModal === 'Crear'
+          //     ? postData(url, 'Lot', values)
+          //     : updateId(url, 'Lot', values.id, values);
+          //   canviEstatModal();
+          // }}
           >
             {({ values, errors, touched }) => (
               <Form>
-              <div>
-                <label htmlFor="name">Nom del lot</label>
-                <Field type="text" name="name" placeholder="Nom del lot" />
-                {errors.name && touched.name ? <div>{errors.name}</div> : null}
-              </div>
-            
-              <div>
-                <label htmlFor="product_id">ID del Producte</label>
-                <Field type="number" name="product_id" placeholder="ID del producte" />
-                {errors.product_id && touched.product_id ? <div>{errors.product_id}</div> : null}
-              </div>
-            
-              <div>
-                <label htmlFor="supplier_id">ID del Proveïdor</label>
-                <Field type="number" name="supplier_id" placeholder="ID del proveïdor" />
-                {errors.supplier_id && touched.supplier_id ? <div>{errors.supplier_id}</div> : null}
-              </div>
-            
-              <div>
-                <label htmlFor="quantity">Quantitat</label>
-                <Field type="number" name="quantity" placeholder="Quantitat del lot" />
-                {errors.quantity && touched.quantity ? <div>{errors.quantity}</div> : null}
-              </div>
-            
-              <div>
-                <label htmlFor="production_date">Data de producció</label>
-                <Field type="date" name="production_date" />
-                {errors.production_date && touched.production_date ? <div>{errors.production_date}</div> : null}
-              </div>
-            
-              <div>
-                <label htmlFor="expiration_date">Data d'expiració</label>
-                <Field type="date" name="expiration_date" />
-                {errors.expiration_date && touched.expiration_date ? <div>{errors.expiration_date}</div> : null}
-              </div>
-            
-              <div>
-                <Button variant="secondary" onClick={canviEstatModal}>
-                  Tancar
-                </Button>
-                <Button variant={tipoModal === 'Modificar' ? 'success' : 'info'} type="submit">
-                  {tipoModal}
-                </Button>
-              </div>
-            </Form>
+                <div className="form-group">
+                  <label htmlFor="name">Nom del lot</label>
+                  <Field
+                    type="text"
+                    name="name"
+                    placeholder="Nom del lot"
+                    className="form-control"
+                  />
+                  {errors.name && touched.name ? (
+                    <div className="text-danger mt-1">{errors.name}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="product_id">ID del Producte</label>
+                  <Field
+                    type="number"
+                    name="product_id"
+                    placeholder="ID del producte"
+                    className="form-control"
+                  />
+                  {errors.product_id && touched.product_id ? (
+                    <div className="text-danger mt-1">{errors.product_id}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="supplier_id">ID del Proveïdor</label>
+                  <Field
+                    type="number"
+                    name="supplier_id"
+                    placeholder="ID del proveïdor"
+                    className="form-control"
+                  />
+                  {errors.supplier_id && touched.supplier_id ? (
+                    <div className="text-danger mt-1">{errors.supplier_id}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="quantity">Quantitat</label>
+                  <Field
+                    type="number"
+                    name="quantity"
+                    placeholder="Quantitat del lot"
+                    className="form-control"
+                  />
+                  {errors.quantity && touched.quantity ? (
+                    <div className="text-danger mt-1">{errors.quantity}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="production_date">Data de producció</label>
+                  <Field
+                    type="date"
+                    name="production_date"
+                    className="form-control"
+                  />
+                  {errors.production_date && touched.production_date ? (
+                    <div className="text-danger mt-1">{errors.production_date}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="expiration_date">Data d&apos;expiració</label>  {/* &apos; es ' */}
+                  <Field
+                    type="date"
+                    name="expiration_date"
+                    className="form-control"
+                  />
+                  {errors.expiration_date && touched.expiration_date ? (
+                    <div className="text-danger mt-1">{errors.expiration_date}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group d-flex justify-content-between mt-3">
+                  <Button
+                    variant="secondary"
+                    onClick={canviEstatModal}
+                    className="btn btn-secondary"
+                  >
+                    Tancar
+                  </Button>
+                  <Button
+                    variant={tipoModal === 'Modificar' ? 'success' : 'info'}
+                    type="submit"
+                    className="btn"
+                  >
+                    {tipoModal}
+                  </Button>
+                </div>
+              </Form>
             )}
           </Formik>
         </Modal.Body>

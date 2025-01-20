@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
 import { Formik, Form, Field } from 'formik'
 import * as yup from 'yup'
-
+import Header from './Header'
 import { Button, Modal } from 'react-bootstrap';
 
 const ClientSchema = yup.object().shape({
@@ -60,9 +60,9 @@ function Client() {
   return (
     <>
       <div>
-        <h2>Llistat Clients</h2>
+        <Header title="Clients"/>
         <Button variant="success" onClick={() => { canviEstatModal(); setTipoModal("Crear") }}>Alta Client</Button>
-        <table>
+        <table className = "table">
           <thead>
             <tr>
               <th>ID</th>
@@ -71,9 +71,9 @@ function Client() {
               <th>Telèfon</th>
               <th>Adreça</th>
               <th>NIF</th>
-              <th>Eliminar</th>
-              <th>Modificar</th>
               <th>Visualitzar</th>
+              <th>Modificar</th>
+              <th>Eliminar</th>
             </tr>
           </thead>
           <tbody>
@@ -85,9 +85,9 @@ function Client() {
                 <td>{valors.phone}</td>
                 <td>{valors.address}</td>
                 <td>{valors.nif}</td>
-                <td><Button className='btn btn-danger' onClick={() => eliminarClient(valors.id)}>Eliminar</Button></td>
-                <td><Button variant='warning' onClick={() => modificarClient(valors)}>Modificar</Button></td>
                 <td><Button variant='info' onClick={() => visualizarClient(valors)}>Visualitzar</Button></td>
+                <td><Button variant='warning' onClick={() => modificarClient(valors)}>Modificar</Button></td>
+                <td><Button className='btn btn-danger' onClick={() => eliminarClient(valors.id)}>Eliminar</Button></td>
               </tr>
             ))}
           </tbody>

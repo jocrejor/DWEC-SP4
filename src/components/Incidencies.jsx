@@ -3,37 +3,35 @@ import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
 import { Button, Modal } from 'react-bootstrap';
+import { Header } from './'
 
 const IncidenciaSchema = Yup.object().shape({
-  name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 60 caracters').required('Valor requerit'),
+  date_creation: Yup.date().required('Data no vàlida'),
   description: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(200, 'El valor màxim és de 60 caracters'),
-  volume: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
-  weight: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
-  lotorserial: Yup.string().matches(/(Lot|Serial|Non)/).required('Valor requerit'),
-  sku: Yup.string().matches(/^[A-Z0-9]{5,10}$/, 'El SKU ha de tindre alfanumèrics en majúscules i números (5 i 10) ').required('Valor requerit'),
-  image_url: Yup.string().url("La url ha de ser correcta")
 })
 
 function Incidencies() {
 
-  const [products, setProducts] = useState([])
-  const [showModal, setShowModal] = useState(false)
-  const [tipoModal, setTipoModal]  = useState("Crear")
-  const [valorsInicials, setValorsInicials] = useState({ name: '', description: '', volume: 0, weight: 0, lotorserial: 'Non', sku: '', image_url: '' })
+    const [incidents, setIncident]    = useState([])
+    const [showModal, setShowModal]   = useState(false)
+    const [tipoModal, setTipoModal]   = useState("Crear")
+    const [valorsInicials, setValorsInicials] = useState({ date_creation: '', description: '', name: ''})
 
 
-  useEffect(async () => {
-    const data = await getData(url, "Product")
-    setProducts(data)
-  }, [])
+    useEffect(() => {      
+        (async () => {
+          const dataIncident = await getData(url, "Incident");
+          setIncident(dataIncident);          
+        })();
+      }, []);
 
-const eliminarProducte = (id) =>{
-  deleteData(url, "Product", id) 
-  const newproducts = products.filter(item => item.id != id)
-  setProducts(newproducts)
+const eliminarIncident = (id) =>{
+  deleteData(url, "Incident", id) 
+  const newIncident = incidents.filter(item => item.id != id)
+  setIncident(newIncident)
 }
 
-const modificarProducte = (valors) =>{
+const modificarIncident = (valors) =>{
  setTipoModal("Modificar")
  setValorsInicials(valors);
 }
@@ -43,12 +41,10 @@ const canviEstatModal = () =>{
     setShowModal(!showModal)
 }
 
-
   return (
     <>
-
-<div><h2>Llistat productes</h2></div>
-    <Button variant='success' onClick={()=>{canviEstatModal(); setTipoModal("Crear")}}>s</Button>
+    <Header Title="Incidències"/>
+    <Button variant='success' onClick={()=>{canviEstatModal(); setTipoModal("Crear")}}>Llistat ordres de recepció</Button>
       <table>
         <tr>
           <th>Data de creació</th>
@@ -57,25 +53,22 @@ const canviEstatModal = () =>{
           <th>Unitats demanades</th>
           <th>Unitats rebudes</th>
           <th>Estat</th>
-          <th>Accions</th>
           <th>Modificar</th>
           <th>Eliminar</th>
         </tr>
-        {(products.length == 0)?
+        {(incidents.length == 0)?
           <div>No hi han articles</div>
-        :products.map((valors) => {
+        :incidents.map((valors) => {
           return (
           <tr key={valors.id}>
-            <td>{valors.id}</td>
-            <td>{valors.name}</td>
+            <td></td>
             <td>{valors.description}</td>
-            <td>{valors.volume}</td>
-            <td>{valors.weight}</td>
-            <td>{valors.lotorserial}</td>
-            <td>{valors.sku}</td>
-            <td><Button variant="warning"  onClick={()=> {modificarProducte(valors);canviEstatModal(); }}>Modificar</Button></td>
-            <td><Button variant="primary"  onClick={()=> {eliminarProducte(valors.id)}}>Eliminar</Button></td>
-
+            <td>{valors.name}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><Button variant="warning"  onClick={()=> {modificarIncident(valors);canviEstatModal(); }}>Modificar</Button></td>
+            <td><Button variant="primary"  onClick={()=> {eliminarIncident(valors.id)}}>Eliminar</Button></td>
           </tr>)
         })}
       </table>
@@ -88,13 +81,12 @@ const canviEstatModal = () =>{
         <Modal.Body>
           
       <Formik
-        initialValues= {(tipoModal==='Modificar'?valorsInicials: {name: '', description: '', volume: 0, weight: 0, lotorserial: 'Non', sku: '', image_url: '' })}
+        initialValues= {(tipoModal==='Modificar'?valorsInicials: {name: '', description: '' })}
         validationSchema={IncidenciaSchema}
         onSubmit={values => {
           console.log(values)
           tipoModal==="Crear"?postData(url,"Product", values):updateId(url,"Product",values.id,values)  
-          canviEstatModal()
-          
+          canviEstatModal()         
         }}
       >
         {({
@@ -131,83 +123,6 @@ const canviEstatModal = () =>{
               {errors.description && touched.description ? <div>{errors.description}</div> : null}
             </div>
 
-            <div>
-              <label htmlFor='volume'>Volumen </label>
-              <Field
-                type="number"
-                name="volume"
-                step="0.001"
-                placeholder="0"
-                autoComplete="off"
-
-                value={values.volume}
-              />
-              {errors.volume && touched.volume ? <div>{errors.volume}</div> : null}
-            </div>
-
-
-
-            <div>
-              <label htmlFor='weight'>Pes </label>
-              <Field
-                type="number"
-                name="weight"
-                step="1"
-                placeholder="0"
-                autoComplete="off"
-
-                value={values.weight}
-              />
-              {errors.weight && touched.weight ? <div>{errors.weight}</div> : null}
-            </div>
-
-            <div>
-              <label htmlFor='lotorserial'>Control lot o serie</label>
-              <Field
-                as="select"
-                name="lotorserial"
-              >
-                <option value="">
-                  Selecciona una opció
-                </option>
-                <option value="Non">
-                  No
-                </option>
-                <option value="Lot">
-                  Lot
-                </option>
-                <option value="Serial">
-                  Serie
-                </option>
-              </Field>
-
-              {errors.lotorserial && touched.lotorserial ? <div>{errors.lotorserial}</div> : null}
-            </div>
-
-            <div>
-              <label htmlFor='sku'>SKU </label>
-              <Field
-                type="text"
-                name="sku"
-                placeholder="sku del producte"
-                autocomplete="off"
-
-                value={values.sku}
-              />
-              {errors.sku && touched.sku ? <div>{errors.sku}</div> : null}
-            </div>
-            <div>
-              <label htmlFor='image_url'>url de la imatge </label>
-              <Field
-                type="text"
-                name="image_url"
-                placeholder="url de la imatge del producte"
-                autoComplete="off"
-
-                value={values.image_url}
-              />
-              {errors.image_url && touched.image_url ? <div>{errors.image_url}</div> : null}
-            </div>
             <div>
             <Button variant="secondary" onClick={canviEstatModal}>Close</Button>
 

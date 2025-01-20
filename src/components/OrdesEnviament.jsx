@@ -73,6 +73,19 @@ function OrdesEnviament() {
       setShowModal(!showModal)
   }
 
+  const grabar = async (values)=>{
+    if(tipoModal==="Crear"){
+      const data =  await postData(url,'OrderShipping', values)
+      console.log(data)
+      setIdOrdre(data)
+    }else{
+      await updateId(url,'OrderShipping',values.id,values)
+      }
+    const data = await getData(url, "OrderShipping")
+    await setOrder(data)
+    canviEstatModal()
+  }
+
   return (
     <>
     {/** Llistat Productes */}
@@ -122,8 +135,7 @@ function OrdesEnviament() {
             validationSchema={OrderShippingSchema}
             onSubmit={values => {
               console.log(values)
-              tipoModal === "Modificar"?updateId(url,"OrderShipping",values.id,values):crearOrdre(values)
-              canviEstatModal()
+              grabar(values)
             }}
           >
           {({

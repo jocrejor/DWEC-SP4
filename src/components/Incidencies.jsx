@@ -3,7 +3,6 @@ import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
 import { Button, Modal } from 'react-bootstrap';
-import { Header } from './'
 
 const IncidenciaSchema = Yup.object().shape({
   date_creation: Yup.date().required('Data no vàlida'),
@@ -43,7 +42,7 @@ const canviEstatModal = () =>{
 
   return (
     <>
-    <Header Title="Incidències"/>
+    <div><h2>dddddd</h2></div>
     <Button variant='success' onClick={()=>{canviEstatModal(); setTipoModal("Crear")}}>Llistat ordres de recepció</Button>
       <table>
         <tr>

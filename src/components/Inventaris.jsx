@@ -22,20 +22,25 @@ function Inventaris() {
   const [modalType, setModalType] = useState('Iventariar');
   const [showInventoryModal, setShowInventoryModal] = useState(false);
   const [selectedInventory, setSelectedInventory] = useState(null);
-  const [inventoryLines, setInventoryLines] = useState([])
+  const [inventoryLines, setInventoryLines] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [selectedInventoryLines, setSelectedInventoryLines] = useState ([]);
+
 
   useEffect(async () => {
     const stock = await getData(url, "Inventory");
     const store = await getData(url, "Storage");
     const street = await getData(url, "Street");
     const space = await getData(url, "Space");
-    const lines = await getData(url, "InventoryLine")
+    const lines = await getData(url, "InventoryLine");
+    const prod  = await getData(url, "Product");
 
     setInventory(stock);
     setStorages(store);
     setStreets(street);
     setSpaces(space);
     setInventoryLines(lines);
+    setProducts(prod);
   }, []);
 
   useEffect(() => {
@@ -95,12 +100,10 @@ function Inventaris() {
 
   const displayInventoryModal = (values) => {
     setSelectedInventory(values);
-
     const filteredInvetoryLines = inventoryLines.filter(line => line.inventory_id === values.id);
     setInventoryLines(filteredInvetoryLines);
-
+    console.log(filteredInvetoryLines)
     changeModalStatus();
-
   }
 
   //********* MODAL *********
@@ -296,6 +299,20 @@ function Inventaris() {
                           </thead>
                           <tbody>
 
+
+                              {
+                                (filteredInvetoryLines === 0) ?
+                                <div>No hay nada</div> : 
+                                <tr>
+                                  <td>{fi}</td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                </tr>
+                              
+                              }
+                              
                           </tbody>
 
                         </Table>

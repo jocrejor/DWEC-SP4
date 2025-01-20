@@ -4,6 +4,9 @@ import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
 
+import Header from '../components/Header';
+import Filtres from '../components/Filtres';
+
 const LotSchema = Yup.object().shape({
   name: Yup.string().min(4, 'Valor mínim de 4 caràcters.').max(50, 'El valor màxim és de 50 caràcters').required('Valor requerit'),
   product_id: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
@@ -53,6 +56,10 @@ function Lots() {
 
   return (
     <>
+      <Header title="Llistat Lots" />
+
+      <Filtres />
+      
       <div className="d-flex justify-content-end mt-3 me-3">
         <Button
           variant="success"

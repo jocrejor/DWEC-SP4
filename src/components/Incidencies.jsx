@@ -3,7 +3,7 @@ import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
 import { Button, Modal } from 'react-bootstrap';
-import { Header } from './Header'
+import Header from './Header'
 
 const IncidenciaSchema = Yup.object().shape({
   date_creation: Yup.date().required('Data no vàlida'),

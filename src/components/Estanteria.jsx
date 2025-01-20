@@ -40,7 +40,7 @@ function Shelf() {
 
     return (
         <>
-            <Header />
+             <Header title="Gestió Magatzem"/>
             <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Estanteria</Button>
             <table>
                 <thead>
@@ -55,7 +55,7 @@ function Shelf() {
                 </thead>
                 <tbody>
                     {(shelfs.length === 0) ?
-                        <tr><td>No hi han carrers</td></tr>
+                        <tr><td>No hi han estanteries</td></tr>
                         : shelfs.map((valors) => {
                             return (
                                 <tr key={valors.id}>

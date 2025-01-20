@@ -22,6 +22,7 @@ import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';
 import Carrer from './components/Carrer';
 import Estanteria from './components/Estanteria';
+import Espai from './components/Espai';
 
 function App() {
 
@@ -73,6 +74,8 @@ function App() {
        <Route path="/carrer" element={<Carrer/>}/>
 
        <Route path="/estanteria" element={<Estanteria/>}/>
+       
+        <Route path="/espai" element={<Espai/>}/>
        
        <Route path="/" element={<Main/>} />
           

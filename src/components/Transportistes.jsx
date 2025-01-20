@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
 
-const SupplierSchema = Yup.object().shape({
+const carrierschema = Yup.object().shape({
   name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
   address: Yup.string().min(10, 'Valor mínim de 10 caracters.').max(100, 'El valor màxim és de 100 caracters').required('Valor requerit'),
   nif: Yup.string().matches(/^\w{9}$/, 'El NIF ha de tenir 9 caracters').required('Valor requerit'),
@@ -17,7 +17,10 @@ const SupplierSchema = Yup.object().shape({
 });
 
 function Transportistes() {
-  const [suppliers, setSuppliers] = useState([]);
+  const [carriers, setCarriers] = useState([]);
+  const [pais, setPais] = useState([]);
+  const [provincia, setProvince] = useState([]);
+  const [ciutat, setCity] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [tipoModal, setTipoModal] = useState('Crear');
   const [valorsInicials, setValorsInicials] = useState({
@@ -34,19 +37,23 @@ function Transportistes() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await getData(url, 'Supplier');
-      setSuppliers(data);
+      const data = await getData(url, 'Carriers');
+      const pais = await getData(url, 'State');
+      const province = await getData(url, 'Province');
+      const ciutat = await getData(url, 'City');
+      setPais (pais);
+      setCarriers(data);
     }
     fetchData();
   }, []);
 
-  const eliminarSupplier = (id) => {
-    deleteData(url, 'Supplier', id);
-    const newSuppliers = suppliers.filter((item) => item.id !== id);
-    setSuppliers(newSuppliers);
+  const deleteCarriers = (id) => {
+    deleteData(url, 'Carriers', id);
+    const newCarriers = carriers.filter((item) => item.id !== id);
+    setCarriers(newCarriers);
   };
 
-  const modificarSupplier = (valors) => {
+  const modCarriers = (valors) => {
     setTipoModal('Modificar');
     setValorsInicials(valors);
   };
@@ -58,7 +65,7 @@ function Transportistes() {
   return (
     <>
       <div>
-        <h2>Llistat proveïdors</h2>
+        <h2>Llistat Transportistes</h2>
       </div>
       <Button
         variant="success"
@@ -68,7 +75,7 @@ function Transportistes() {
           setTipoModal('Crear');
         }}
       >
-        Alta Proveïdor
+        Alta Transportistes
       </Button>
       <table>
         <tr>
@@ -85,10 +92,10 @@ function Transportistes() {
           <th>Modificar</th>
           <th>Eliminar</th>
         </tr>
-        {suppliers.length === 0 ? (
-          <div>No hi han proveïdors</div>
+        {carriers.length === 0 ? (
+          <div>No hi han transportistes</div>
         ) : (
-          suppliers.map((valors) => (
+          carriers.map((valors) => (
             <tr key={valors.id}>
               <td>{valors.id}</td>
               <td>{valors.name}</td>
@@ -104,7 +111,7 @@ function Transportistes() {
                 <Button
                   variant="warning"
                   onClick={() => {
-                    modificarSupplier(valors);
+                    modCarriers(valors);
                     canviEstatModal();
                   }}
                 >
@@ -115,7 +122,7 @@ function Transportistes() {
                 <Button
                   variant="primary"
                   onClick={() => {
-                    eliminarSupplier(valors.id);
+                    deleteCarriers(valors.id);
                   }}
                 >
                   Eliminar
@@ -128,7 +135,7 @@ function Transportistes() {
 
       <Modal show={showModal} onHide={canviEstatModal}>
         <Modal.Header closeButton>
-          <Modal.Title>{tipoModal} Proveïdor</Modal.Title>
+          <Modal.Title>{tipoModal} transportista</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -148,11 +155,11 @@ function Transportistes() {
                     cp: '',
                   }
             }
-            validationSchema={SupplierSchema}
+            validationSchema={carrierschema}
             onSubmit={(values) => {
               tipoModal === 'Crear'
-                ? postData(url, 'Supplier', values)
-                : updateId(url, 'Supplier', values.id, values);
+                ? postData(url, 'Carriers', values)
+                : updateId(url, 'Carriers', values.id, values);
               canviEstatModal();
             }}
           >
@@ -160,34 +167,35 @@ function Transportistes() {
               <Form>
                 <div>
                   <label htmlFor="name">Nom</label>
-                  <Field type="text" name="name" placeholder="Nom del proveïdor" />
+                  <Field type="text" name="name" placeholder="Nom del transportista" />
                   {errors.name && touched.name ? <div>{errors.name}</div> : null}
                 </div>
 
                 <div>
                   <label htmlFor="address">Adreça</label>
-                  <Field type="text" name="address" placeholder="Adreça del proveïdor" />
+                  <Field type="text" name="address" placeholder="Adreça del transportista" />
                   {errors.address && touched.address ? <div>{errors.address}</div> : null}
                 </div>
 
                 <div>
                   <label htmlFor="nif">NIF</label>
-                  <Field type="text" name="nif" placeholder="NIF del proveïdor" />
+                  <Field type="text" name="nif" placeholder="NIF del transportista" />
                   {errors.nif && touched.nif ? <div>{errors.nif}</div> : null}
                 </div>
 
                 <div>
                   <label htmlFor="phone">Telèfon</label>
-                  <Field type="text" name="phone" placeholder="Telèfon del proveïdor" />
+                  <Field type="text" name="phone" placeholder="Telèfon del transportista" />
                   {errors.phone && touched.phone ? <div>{errors.phone}</div> : null}
                 </div>
 
                 <div>
                   <label htmlFor="email">Email</label>
-                  <Field type="email" name="email" placeholder="Email del proveïdor" />
+                  <Field type="email" name="email" placeholder="Email del transportista" />
                   {errors.email && touched.email ? <div>{errors.email}</div> : null}
                 </div>
 
+                {/*En la tabla se ve el nom, en el alta y modifficar el id del país */}
                 <div>
                   <label htmlFor="state_id">Estat ID</label>
                   <Field type="number" name="state_id" placeholder="ID de l'estat" />

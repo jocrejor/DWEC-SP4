@@ -4,6 +4,9 @@ import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
 
+import Header from '../components/Header';
+import Filtres  from '../components/Filtres';
+
 const carrierschema = Yup.object().shape({
   name: Yup.string().min(3, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
   address: Yup.string().min(10, 'Valor mínim de 10 caracters.').max(100, 'El valor màxim és de 100 caracters').required('Valor requerit'),
@@ -83,12 +86,11 @@ function Transportistes() {
 
   return (
     <>
-      <div>
-        <h2>Llistat Transportistes</h2>
-      </div>
+     <Header title="Llistat transportistes" />
+    <Filtres />
       <Button
         variant="success"
-        className="btn btn-primary"
+        className="btn text-white"
         onClick={() => {
           canviEstatModal();
           setTipoModal('Crear');
@@ -96,10 +98,10 @@ function Transportistes() {
       >
         Alta Transportistes
       </Button>
-      <table>
+      <table className='table table-striped'>
         <thead>
           <tr>
-            <th>Id</th>
+            <th>ID</th>
             <th>Nom</th>
             <th>Adreça</th>
             <th>NIF</th>

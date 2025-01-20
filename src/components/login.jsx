@@ -40,7 +40,8 @@ function Login() {
            {
               setError("Email  o password incorrecte")
            } else {
-           localStorage.setItem("usuariActiu",JSON.stringify(usuariRegistrat))
+            
+            //localStorage.setItem("usuariActiu",JSON.stringify(usuariRegistrat))
             //console.log(usuariRegistrat)
           // enviar a inici
           navigate('/');

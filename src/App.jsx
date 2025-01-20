@@ -27,7 +27,7 @@ import OrderPickingShipping from './components/OrderPickingShipping';
 import OrderPickingReception from './components/OrderPickingReception';
 import Filtres from './components/Filtres';
 import './App.js';
-
+import {defaultUser,currentUserContext} from './contextData/Context' 
 function App() {
 
 
@@ -37,14 +37,15 @@ function App() {
         <div className="row">
           <Lateral />
           <div className="col-12 col-xl-10 px-0">
-
+            <currentUserContext.Provider value={defaultUser}>
             <Routes>
-
+           
               <Route path="/login" element={<Login />} />
 
               <Route path="/logout" element={<Logout />} />
 
               <Route path="/usuaris" element={<Usuaris />} />
+             
 
               <Route path="/rols" element={<Rols />} />
 
@@ -87,6 +88,7 @@ function App() {
               <Route path="*" element={<Error404 />} />
 
             </Routes>
+            </currentUserContext.Provider>
           </div>
 
         </div>

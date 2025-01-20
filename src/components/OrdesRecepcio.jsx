@@ -227,9 +227,6 @@ const canviEstatModal = () =>{
        </Modal.Body>
       </Modal>
       
-      
-     
-  
      
     </>
   )

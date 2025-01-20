@@ -44,7 +44,6 @@ const canviEstatModal = () =>{
     setShowModal(!showModal)
 }
 
-
   return (
     <>
 

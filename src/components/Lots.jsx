@@ -297,7 +297,7 @@ function Lots() {
             <p><strong>Data de Caducitat:</strong> {visualizarLot.expiration_date}</p>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setVisualitzarLot(null)}>
+            <Button variant="secondary" onClick={() => setVisualizarLot(null)}>
               Tancar
             </Button>
           </Modal.Footer>

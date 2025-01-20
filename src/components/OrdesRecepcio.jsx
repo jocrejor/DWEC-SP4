@@ -7,34 +7,40 @@ import { Button, Modal, Table, Spinner } from 'react-bootstrap';
 const OrderReceptionSchema = Yup.object().shape({
   supplier_id: Yup.number().required('Proveïdor requerit'),
   estimated_reception_date: Yup.date().required('Data estimada requerida'),
-  orderreception_status_id: Yup.number().required('Estat requerit'),
+  OrderLineReception: Yup.string().min(1, "Valor mínim d'1 caràcter.").max(25, 'El valor màxim és de 25 caràcters.').required('Estat requerit'),
 });
 
 function OrderReception() {
   const [orderReceptions, setOrderReceptions] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [statuses, setStatuses] = useState([]);
+  const [products, setProducts] = useState([]); // Llista de productes disponibles
+  const [selectedProducts, setSelectedProducts] = useState([]); // Llista de productes afegits amb quantitat
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [tipoModal, setTipoModal] = useState('Crear');
   const [valorsInicials, setValorsInicials] = useState({
     supplier_id: '',
     estimated_reception_date: '',
-    orderreception_status_id: '',
+    OrderLineReception: '',
   });
   const [error, setError] = useState(null);
+  const [productId, setProductId] = useState('');
+  const [quantity, setQuantity] = useState('');
 
   const fetchInitialData = async () => {
     setLoading(true);
     try {
-      const [orders, suppliersData, statusesData] = await Promise.all([
+      const [orders, suppliersData, statusesData, productsData] = await Promise.all([
         getData(url, 'OrderReception'),
         getData(url, 'Supplier'),
         getData(url, 'OrderReception_Status'),
+        getData(url, 'Product'),
       ]);
       setOrderReceptions(orders);
       setSuppliers(suppliersData);
       setStatuses(statusesData);
+      setProducts(productsData);
       setError(null);
     } catch (err) {
       setError('Error carregant les dades.');
@@ -51,11 +57,9 @@ function OrderReception() {
     if (window.confirm('Estàs segur que vols eliminar aquesta ordre?')) {
       try {
         await deleteData(url, 'OrderReception', id);
-        setOrderReceptions((prev) =>
-          prev.filter((item) => item.id !== id)
-        );
+        setOrderReceptions((prev) => prev.filter((item) => item.id !== id));
       } catch (err) {
-        setError('Error eliminant l\'ordre.');
+        setError("Error eliminant l'ordre.");
       }
     }
   };
@@ -63,25 +67,58 @@ function OrderReception() {
   const modificarOrdre = (valors) => {
     setTipoModal('Modificar');
     setValorsInicials(valors);
+    setSelectedProducts(valors.products || []); // Assignar productes existents si n'hi ha
     setShowModal(true);
   };
 
   const canviEstatModal = () => {
     setShowModal(!showModal);
+    setSelectedProducts([]); // Reiniciar la llista de productes seleccionats
+    setProductId('');
+    setQuantity('');
+  };
+
+  const afegirProducte = () => {
+    if (!productId || !quantity || isNaN(quantity) || quantity <= 0) {
+      alert('Selecciona un producte vàlid i una quantitat positiva!');
+      return;
+    }
+
+    // Trobar el producte per ID
+    const product = products.find((p) => p.id === parseInt(productId));
+    if (!product) {
+      alert('Producte no trobat!');
+      return;
+    }
+
+    // Afegir el producte a la llista de productes seleccionats
+    setSelectedProducts((prev) => [
+      ...prev,
+      { product_id: product.id, name: product.name, quantity: parseInt(quantity) },
+    ]);
+
+    // Reiniciar els camps de producte i quantitat
+    setProductId('');
+    setQuantity('');
+  };
+
+  const eliminarProducte = (index) => {
+    setSelectedProducts((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (values) => {
     try {
+      const dataToSend = { ...values, products: selectedProducts };
       if (tipoModal === 'Crear') {
-        await postData(url, 'OrderReception', values);
+        await postData(url, 'OrderReception', dataToSend);
       } else {
-        await updateId(url, 'OrderReception', values.id, values);
+        await updateId(url, 'OrderReception', values.id, dataToSend);
       }
       await fetchInitialData();
       canviEstatModal();
       setError(null);
     } catch (err) {
-      setError('Error en l\'operació.');
+      setError("Error en l'operació.");
     }
   };
 
@@ -97,7 +134,7 @@ function OrderReception() {
           setValorsInicials({
             supplier_id: '',
             estimated_reception_date: '',
-            orderreception_status_id: '',
+            OrderLineReception: '',
           });
           canviEstatModal();
         }}
@@ -126,28 +163,16 @@ function OrderReception() {
             {orderReceptions.map((valors) => (
               <tr key={valors.id}>
                 <td>{valors.id}</td>
-                <td>
-                  {suppliers.find((sup) => sup.id === valors.supplier_id)?.name}
-                </td>
+                <td>{suppliers.find((sup) => sup.id === valors.supplier_id)?.name}</td>
                 <td>{valors.estimated_reception_date}</td>
+                <td>{statuses.find((status) => status.id === valors.OrderLineReception)?.name}</td>
                 <td>
-                  {statuses.find(
-                    (status) => status.id === valors.orderreception_status_id
-                  )?.name}
-                </td>
-                <td>
-                  <Button
-                    variant="warning"
-                    onClick={() => modificarOrdre(valors)}
-                  >
+                  <Button variant="warning" onClick={() => modificarOrdre(valors)}>
                     Modificar
                   </Button>
                 </td>
                 <td>
-                  <Button
-                    variant="primary"
-                    onClick={() => eliminarOrdre(valors.id)}
-                  >
+                  <Button variant="primary" onClick={() => eliminarOrdre(valors.id)}>
                     Eliminar
                   </Button>
                 </td>
@@ -195,8 +220,8 @@ function OrderReception() {
                     )}
                 </div>
                 <div>
-                  <label htmlFor="orderreception_status_id">Estat</label>
-                  <Field as="select" id="orderreception_status_id" name="orderreception_status_id">
+                  <label htmlFor="OrderLineReception">Estat</label>
+                  <Field as="select" id="OrderLineReception" name="OrderLineReception">
                     <option value="">Selecciona un estat</option>
                     {statuses.map((status) => (
                       <option key={status.id} value={status.id}>
@@ -204,22 +229,66 @@ function OrderReception() {
                       </option>
                     ))}
                   </Field>
-                  {errors.orderreception_status_id &&
-                    touched.orderreception_status_id && (
-                      <div>{errors.orderreception_status_id}</div>
-                    )}
+                  {errors.OrderLineReception && touched.OrderLineReception && (
+                    <div>{errors.OrderLineReception}</div>
+                  )}
                 </div>
                 <div>
-                  <Button variant="secondary" onClick={canviEstatModal}>
-                    Tanca
-                  </Button>
-                  <Button
-                    variant={tipoModal === 'Modificar' ? 'success' : 'info'}
-                    type="submit"
+                  <label htmlFor="product">Producte</label>
+                  <Field
+                    as="select"
+                    id="Product"
+                    name="Product"
+                    onChange={(e) => setProductId(e.target.value)}
                   >
-                    {tipoModal}
-                  </Button>
+                    <option value="">Selecciona un Producte</option>
+                    {products.map((Product) => (
+                      <option key={Product.id} value={Product.id}>
+                        {Product.name}
+                      </option>
+                    ))}
+                  </Field>
                 </div>
+                <div>
+                  <label htmlFor="quantity">Quantitat</label>
+                  <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    min="1"
+                  />
+                </div>
+                <button type="button" onClick={afegirProducte}>
+                  Afegir Producte
+                </button>
+                <div>
+                  <h4>Productes Afegits</h4>
+                  <Table striped bordered hover>
+                    <thead>
+                      <tr>
+                        <th>Producte</th>
+                        <th>Quantitat</th>
+                        <th>Eliminar</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedProducts.map((prod, index) => (
+                        <tr key={index}>
+                          <td>{prod.name}</td>
+                          <td>{prod.quantity}</td>
+                          <td>
+                            <button onClick={() => eliminarProducte(index)}>Eliminar</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
+                <Button variant="primary" type="submit">
+                  {tipoModal === 'Crear' ? 'Crear' : 'Modificar'}
+                </Button>
               </Form>
             )}
           </Formik>

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import { url, getData } from '../apiAccess/crud';
 import Header from './Header';
-
+import { UserContext } from '../contextData/UserContext';
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -19,6 +19,7 @@ function Login() {
   const [users,setUsers] = useState({});
   const navigate = useNavigate();
 
+  const { login } = useContext(UserContext)
   
   useEffect ( async ()=>{
       const data = await getData(url,"User")
@@ -27,26 +28,24 @@ function Login() {
 
 
   const formik = useFormik({
-    initialValues: { email: '',password:""},
+    initialValues: { email: '',password:''},
     onSubmit: values => {
       
-
-      setTimeout(() => {
-      
-        //setSubmitting(false); // Reactivar el botó d'enviament
+       //setSubmitting(false); // Reactivar el botó d'enviament
       //Comprobar si esisteix l'email i la contrasenya aamb els usuaris regitrats 
         const usuariRegistrat =  users.find(users => users.email === values.email && users.password === values.password);
         if (usuariRegistrat === undefined)
            {
               setError("Email  o password incorrecte")
            } else {
-            
+            delete usuariRegistrat.password;
+            login(usuariRegistrat)
             //localStorage.setItem("usuariActiu",JSON.stringify(usuariRegistrat))
             //console.log(usuariRegistrat)
           // enviar a inici
-          navigate('/');
+          //navigate('/');
         }
-      }, 1000);
+  
       
     },
     validationSchema: SignupSchema,

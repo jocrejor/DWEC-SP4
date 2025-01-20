@@ -1,9 +1,9 @@
 
-import {useContext} from 'react'
-import { currentUserContext } from '../contextData/Context'
+import React from 'react'
+
 
 function Usuaris() {
- const usuariActual = useContext(currentUserContext)
+ const usuariActual = useContext(currentUser)
   return (
     <div>
        <h1>Usuari</h1>

@@ -1,10 +1,16 @@
 import React from 'react'
+import Header from './Header'
 
 function Main() {
 
   return (
     <>
-    <div> Main</div>
+
+    <Header title="Principal" />
+    <h2>Panel de control de StockFlow</h2>
+     <div>
+        <a href='/login'>Login</a>
+     </div> 
    </>
   )
 }

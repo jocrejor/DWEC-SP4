@@ -3,6 +3,10 @@ import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
 import { Button, Modal } from 'react-bootstrap';
+import Header from './Header';
+
+
+
 
 const ProducteSchema = Yup.object().shape({
   name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 60 caracters').required('Valor requerit'),
@@ -59,8 +63,8 @@ const grabar = async (values)=>{
   return (
     <>
 
-<div><h2>Llistat productes</h2></div>
-    <Button variant='success' onClick={()=>{canviEstatModal(); setTipoModal("Crear")}}>Alta Producte</Button>
+    <Header title="Productes" />
+    <Button variant='success' className="m-2" onClick={()=>{canviEstatModal(); setTipoModal("Crear")}}>Alta Producte</Button>
       <table className="table">
         <thead>
         <tr>

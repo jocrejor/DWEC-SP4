@@ -1,22 +1,31 @@
-import React from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import {useContext} from 'react';
+import { useNavigate } from 'react-router';
 import {Button, Container} from 'react-bootstrap';
+import { UserContext } from '../contextData/UserContext';
+import Header from './Header';
 
 
 
 function Logout () {
-    const borrarToken = ()=>{
-        localStorage.clear();
+
+    const { logout } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    const borrarUser = ()=>{
+        logout
+        navigate('/');
     }
     return(
+
         <Container>
-        <h1>Logout</h1>
+        <Header title="Logout" />
+        
         <h4 >Quieres salir de tu perfil de usuario?</h4>
     
           <Button type="submit"
                   id="enviar"
                   className="mt-2"
-                  onClick={()=> borrarToken()}
+                  onClick={()=> borrarUser()}
                   >
               Salir
           </Button>

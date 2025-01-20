@@ -33,7 +33,7 @@ export async function postData(url,endPoint, data = {}) {
     if (!response.ok) {
       throw new Error('Error en la solicitud POST');
     }
-    return  await response.json();
+    return await response.json();
 
   } catch (error) {
     console.error('Error:', error);  // Manejo de errores

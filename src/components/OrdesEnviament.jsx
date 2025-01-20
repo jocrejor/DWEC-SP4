@@ -4,7 +4,7 @@ import {Formik, Form, Field} from 'formik'
 import * as yup from 'yup'
 import { Button, Modal } from 'react-bootstrap';
 
-const ProducteSchema = yup.object().shape({
+const OrderShippingSchema = yup.object().shape({
   client_id: yup.string().required('Valor requerit'),
   carrier_id: yup.string().required('Valor requerit'),
   prepared_by: yup.string().required('Valor requerit'),
@@ -12,14 +12,23 @@ const ProducteSchema = yup.object().shape({
   ordershipping_status_id: yup.string().required('Valor requerit')
 })
 
+const OrderLineSchema = yup.object().shape({
+  product_id: yup.string().required('Valor requerit'),
+  quantity: yup.number().required('Valor requerit'),
+})
+
 function OrdesEnviament() {
   const [orders, setOrder] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [tipoModal, setTipoModal] = useState('Crear')
   const [valorsInicials, setValorsInicials] = useState({client_id: '', carrier_id: '', prepared_by: '', shipping_date: '',ordershipping_status_id:''})
+  const [valorsLineInicials, setValorsLineInicials] = useState({shipping_order_id: '',product_id: '', quantity: ''})
   const [clientes, setClientes] = useState([])
   const [carriers, setCarriers] = useState([])
   const [users, setUsers] = useState([])
+  const [products, setProducts] = useState([])
+  const [arrayProductos,setArray] = useState([])
+  const [idOrdre,setIdOrdre] = useState('')
   
   useEffect(async () => {
     const data = await getData(url,'OrderShipping')
@@ -30,6 +39,8 @@ function OrdesEnviament() {
     setCarriers(dataCarrier)
     const dataUsers = await getData(url,'User')
     setUsers(dataUsers)
+    const dataProducts = await getData(url,'Product')
+    setProducts(dataProducts)
   }, [])
 
   const eliminarOrder = (id) => {
@@ -37,11 +48,25 @@ function OrdesEnviament() {
     const newOrders = orders.filter(order => order.id !== id)
     setOrder(newOrders)
   }
+
+  const afegirProducte = (producte) => {
+    const array = [...arrayProductos]
+    array.push(producte)
+    setArray(array)
+    console.log(arrayProductos)
+  }
   
-  const modificarProducte = (valors) => {
+  const modificarOrdre = (valors) => {
     setTipoModal('Modificar')
     console.log(valors)
     setValorsInicials(valors)
+    setValorsLineInicials(valors)
+  }
+
+  const crearOrdre = async (values) => {
+    const data = await postData(url,'OrderShipping', values)
+    console.log(data)
+    setIdOrdre(data.id)
   }
   
   const canviEstatModal = () => {
@@ -52,7 +77,7 @@ function OrdesEnviament() {
     <>
     {/** Llistat Productes */}
    <div>
-     <h2>Llistat Productes</h2>
+     <h2>Llistat Ordres Enviament</h2>
      <Button variant="success" onClick={() => {canviEstatModal();setTipoModal("Crear")}}>Alta Orden</Button>
      <table>
        <tr>
@@ -72,7 +97,7 @@ function OrdesEnviament() {
              <td>{valors.prepared_by}</td>
              <td>{valors.shipping_date}</td>
              <td>{valors.ordershipping_status_id}</td>
-             <td><Button variant='warning' onClick={() => {modificarProducte(valors); canviEstatModal()}}>Modificar</Button></td>
+             <td><Button variant='warning' onClick={() => {modificarOrdre(valors); canviEstatModal()}}>Modificar</Button></td>
              <td><Button className='btn btn-primary' onClick={() => eliminarOrder(valors.id)}>Eliminar</Button></td>
            </tr>
        ))}
@@ -94,10 +119,10 @@ function OrdesEnviament() {
               shipping_date: '',
               ordershipping_status_id: 1
             })}
-            validationSchema={ProducteSchema}
+            validationSchema={OrderShippingSchema}
             onSubmit={values => {
               console.log(values)
-              tipoModal === "Modificar"?updateId(url,"OrderShipping",values.id,values):postData(url,'OrderShipping', values)
+              tipoModal === "Modificar"?updateId(url,"OrderShipping",values.id,values):crearOrdre(values)
               canviEstatModal()
             }}
           >
@@ -109,9 +134,14 @@ function OrdesEnviament() {
               /* and other goodies */
           }) => (
               <Form>
-
+                <div>
+                    <Button onClick={() => canviEstatModal()} variant="secondary">Tancar</Button>
+                    
+                    <Button variant={tipoModal=== "Crear" ? "success" : "info"} type='submit'>{tipoModal}</Button>                  
+                </div>
                 {/* NOM PRODUCTE */}
                 <div>
+                <h2>Capçalera</h2>
                   <label htmlFor='client_id'>Cliente</label>
                   <Field as="select" name="client_id">
                     {clientes.map(cliente => {
@@ -145,14 +175,68 @@ function OrdesEnviament() {
                   <label htmlFor='shipping_date'>Data estimada</label>
                   <Field type="date" name="shipping_date" />
                     {errors.shipping_date && touched.shipping_date ? <div>{errors.shipping_date}</div> : null}
+                </div>              
+              </Form>
+            )}
+          </Formik>
+
+          <Formik
+            initialValues={(tipoModal === 'Modificar' ? valorsLineInicials : {
+              shipping_order_id: '', 
+              product_id: '', 
+              quantity: '' 
+            })}
+            validationSchema={OrderLineSchema}
+            onSubmit={(values, { resetForm }) => {
+              // Agregar el producto al arrayProductos
+              afegirProducte({
+                product_id: values.product_id,
+                quantity: values.quantity,
+              });
+              resetForm(); // Limpiar el formulario después de agregar
+            }}
+          >
+          {({
+              values,
+              errors,
+              touched,
+              handleSubmit
+
+              /* and other goodies */
+          }) => (
+              <Form>
+
+                {/* NOM PRODUCTE */}
+                <div>
+                <h2>Detall</h2>              
+                <label htmlFor='product_id'>Producte</label>
+                  <Field as="select" name="product_id">
+                    <option value="">Selecciona un producte</option>
+                    {products.map(product => {
+                      return <option key={product.id} value={product.id}>{product.name}</option>
+                    }) }
+                  </Field>
+                    {errors.product_id && touched.product_id ? <div>{errors.product_id}</div> : null}
                 </div>
 
-                  <div>
-                    <Button onClick={() => canviEstatModal()} variant="secondary">Close</Button>
-                    
-                    <Button variant={tipoModal=== "Crear" ? "success" : "info"} type='submit'>{tipoModal}</Button>
-                                    
-                  </div>
+                <div>
+                  <label htmlFor='quantity'>Quantitat</label>
+                  <Field 
+                    type="text" 
+                    name="quantity"
+                    placeholder="Quantitat del producte"
+                    value = {values.quantity}
+                  >
+                  </Field>
+                    {errors.quantity && touched.quantity ? <div>{errors.quantity}</div> : null}
+                </div>
+
+                <div>              
+                <Button variant="primary" type="submit">
+                  Afegir
+                </Button>                              
+                </div>
+
               </Form>
             )}
           </Formik>

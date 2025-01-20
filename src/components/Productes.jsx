@@ -60,7 +60,7 @@ const canviEstatModal = () =>{
           <th>Control</th>
           <th>SKU</th>
           <th>Modificar</th>
-          <th>Eliminar</th>
+          <th>Eliminar</th>onSubmit
         </tr>
         {(products.length == 0)?
           <div>No hi han articles</div>

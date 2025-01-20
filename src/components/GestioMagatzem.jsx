@@ -3,33 +3,26 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
+import Header from './Header';
 
-const GestioMagatzemSchema = Yup.object().shape({
+const StorageSchema = Yup.object().shape({
   name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
   type: Yup.string().min(3, 'Valor mínim de 3 caracters.').max(30, 'El valor màxim és de 30 caracters').required('Valor requerit'),
   address: Yup.string().min(10, 'Valor mínim de 10 caracters.').max(100, 'El valor màxim és de 100 caracters').required('Valor requerit'),
 });
 
-function GestioMagatzem() {
-  const [magatzems, setMagatzems] = useState([]);
+function Storage() {
+  const [storages, setStorage] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [tipoModal, setTipoModal] = useState("Crear");
   const [valorsInicials, setValorsInicials] = useState({ name: '', type: '', address: '' });
 
   useEffect(() => {
     (async () => {
-      const data = await getData(url, "GestioMagatzem");
-      setMagatzems(data);
+      const data = await getData(url, "Storage");
+      setStorage(data);
     })();
-  }, []);
-
-  const eliminarMagatzem = (id) => {
-    deleteData(url, "GestioMagatzem", id);
-    const newMagatzems = magatzems.filter(item => item.id !== id);
-    setMagatzems(newMagatzems);
-  };
-
-  const modificarMagatzem = (valors) => {
+  }, []);><HeaderarStorage = (valors) => {
     setTipoModal("Modificar");
     setValorsInicials(valors);
     canviEstatModal();
@@ -41,18 +34,18 @@ function GestioMagatzem() {
 
   const grabar = async (values) => {
     if (tipoModal === "Crear") {
-      await postData(url, 'GestioMagatzem', values);
+      await postData(url, 'Storage', values);
     } else {
-      await updateId(url, 'GestioMagatzem', values.id, values);
+      await updateId(url, 'Storage', values.id, values);
     }
-    const data = await getData(url, "GestioMagatzem");
-    setMagatzems(data);
+    const data = await getData(url, "Storage");
+    setStorage(data);
     canviEstatModal();
   };
 
   return (
     <>
-      <div><h2>Llistat de Magatzems</h2></div>
+    <Header />
       <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Magatzem</Button>
       <table className="table">
         <thead>
@@ -66,16 +59,16 @@ function GestioMagatzem() {
           </tr>
         </thead>
         <tbody>
-          {(magatzems.length === 0) ?
+          {(storages.length === 0) ?
             <tr><td colSpan="6">No hi han magatzems</td></tr>
-            : magatzems.map((valors) => (
+            : storages.map((valors) => (
               <tr key={valors.id}>
                 <td>{valors.id}</td>
                 <td>{valors.name}</td>
                 <td>{valors.type}</td>
                 <td>{valors.address}</td>
-                <td><Button variant="warning" onClick={() => modificarMagatzem(valors)}>Modificar</Button></td>
-                <td><Button variant="primary" onClick={() => eliminarMagatzem(valors.id)}>Eliminar</Button></td>
+                <td><Button variant="warning" onClick={() => modificarStorage(valors)}>Modificar</Button></td>
+                <td><Button variant="primary" onClick={() => eliminarStorage(valors.id)}>Eliminar</Button></td>
               </tr>
             ))}
         </tbody>
@@ -89,7 +82,7 @@ function GestioMagatzem() {
         <Modal.Body>
           <Formik
             initialValues={tipoModal === 'Modificar' ? valorsInicials : { name: '', type: '', address: '' }}
-            validationSchema={GestioMagatzemSchema}
+            validationSchema={StorageSchema}
             onSubmit={values => grabar(values)}
           >
             {({ errors, touched }) => (
@@ -125,4 +118,4 @@ function GestioMagatzem() {
   );
 }
 
-export default GestioMagatzem;
+export default Storage;

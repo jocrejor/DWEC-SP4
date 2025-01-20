@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { url,  getData} from './crud'
+import { url,  getData} from '../apiAccess/crud'
 import { Button,Modal,ModalBody,ModalFooter } from 'react-bootstrap';
 
 function Moviments() {
   const [moviments, setMoviments] = useState([]);
-  const [selectedMoviments, setSelectedProduct] = useState(null); 
+  const [selectMoviments, setSelectedProduct] = useState(null); 
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -20,21 +20,19 @@ useEffect(() => {
   getData(url, "Moviment").then(data => {
     const normalizedData = data.map(item => ({
       ...item,
-      origin: item.orgin, 
     }));
     setMoviments(normalizedData);
   });
 }, []);
 
-
   return (
     <>
       <div>
-        <table>
+        <table style={{ marginLeft: 350, marginTop: 100 }}>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Producte</th>
+              <th>ID del Producte</th>
               <th>Magatzem</th>
               <th>Carrer</th>
               <th>Estanteria</th>
@@ -58,13 +56,12 @@ useEffect(() => {
                 <td>{valors.quantity}</td>
                 <td>{valors.date}</td>
                 <td>{valors.operator_id}</td>
-                <td>{valors.origin}</td>
-              
+                <td>{valors.orgin}</td>
                 <td>
-                  
           <Button variant="primary"  style={{ cursor: 'pointer' }}
-                    onClick={() => handleShow(valors)}  >Visualizar</Button>
+                    onClick={() => handleShow(valors)} >Visualizar </Button>
                 </td>
+
               </tr>
             ))}
           </tbody>
@@ -75,18 +72,18 @@ useEffect(() => {
           <Modal.Title>Detalles del Producto</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedMoviments ? (
+          {selectMoviments ? (
             <div>
-              <p><strong>ID </strong> {selectedMoviments.id}</p>
-              <p><strong>ID Producto:</strong> {selectedMoviments.product_id}</p>
-              <p><strong>Magatzem:</strong> {selectedMoviments.storage_id}</p>
-              <p><strong>Carrer:</strong> {selectedMoviments.street_id}</p>
-              <p><strong>Estanteria:</strong> {selectedMoviments.shelf_id}</p>
-              <p><strong>Espai:</strong> {selectedMoviments.space_id}</p>
-              <p><strong>Quantitat:</strong> {selectedMoviments.quantity}</p>
-              <p><strong>Data:</strong> {selectedMoviments.date}</p>
-              <p><strong>Operari:</strong> {selectedMoviments.operator_id}</p>
-              <p><strong>Origen:</strong> {selectedMoviments.orgin}</p>
+              <p><strong>ID </strong> {selectMoviments.id}</p>
+              <p><strong>ID Producto:</strong> {selectMoviments.product_id}</p>
+              <p><strong>Magatzem:</strong> {selectMoviments.storage_id}</p>
+              <p><strong>Carrer:</strong> {selectMoviments.street_id}</p>
+              <p><strong>Estanteria:</strong> {selectMoviments.shelf_id}</p>
+              <p><strong>Espai:</strong> {selectMoviments.space_id}</p>
+              <p><strong>Quantitat:</strong> {selectMoviments.quantity}</p>
+              <p><strong>Data:</strong> {selectMoviments.date}</p>
+              <p><strong>Operari:</strong> {selectMoviments.operator_id}</p>
+              <p><strong>Origen:</strong> {selectMoviments.orgin}</p>
             </div>
           ) : (
             <p>No hay detalles disponibles.</p>

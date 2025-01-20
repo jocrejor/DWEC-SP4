@@ -71,13 +71,17 @@ function OrdesEnviament() {
   const grabar = async (values)=>{
     if(tipoModal==="Crear"){
       const data =  await postData(url,'OrderShipping', values)
-      console.log(data)
-      setIdOrdre(data)
+      console.log(data.id)
+      setIdOrdre(data.id)
     }else{
       await updateId(url,'OrderShipping',values.id,values)
       }
     const data = await getData(url, "OrderShipping")
     await setOrder(data)
+    arrayProductos.map (line => {
+      line.shipping_order_id = idOrdre
+      postData(url,'OrderLineShipping', line)
+    })
     canviEstatModal()
   }
 

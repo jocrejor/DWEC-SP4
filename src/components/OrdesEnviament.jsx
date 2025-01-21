@@ -3,13 +3,15 @@ import {url, postData, getData, deleteData, updateId}  from '../apiAccess/crud'
 import {Formik, Form, Field} from 'formik'
 import * as yup from 'yup'
 import { Button, Modal } from 'react-bootstrap';
+import Header from './Header'
+import Filter from './Filtres'
 
 
 const OrderShippingSchema = yup.object().shape({
   client_id: yup.string().required('Valor requerit'),
   carrier_id: yup.string().required('Valor requerit'),
   prepared_by: yup.string().required('Valor requerit'),
-  shipping_date: yup.date().required('Valor requerit'),
+  shipping_date: yup.date().required('Data obligatoria'),
   ordershipping_status_id: yup.string().required('Valor requerit')
 })
 
@@ -127,33 +129,58 @@ function OrdesEnviament() {
   
   return (
     <>
-    {/** Llistat Productes */}
-   <div>
-     <Button variant="success" onClick={() => {canviEstatModal();setTipoModal("Crear")}}>Alta Orden</Button>
-     <table>
-       <tr>
-         <th>ID</th>
-         <th>Client</th>
-         <th>Transportista</th>
-         <th>Preparado</th>
-         <th>Data Estimada</th>
-         <th>Estat</th>
-         <th>Accions</th>
-       </tr>
-       {orders.map((valors) => (
-           <tr key={valors.id}>
-             <td>{valors.id}</td>
-             <td>{clientExistent(valors.client_id)}</td>
-             <td>{transportistaExistente(valors.carrier_id)}</td>
-             <td>{valors.prepared_by}</td>
-             <td>{valors.shipping_date}</td>
-             <td>{estatExistent(valors.ordershipping_status_id)}</td>
-             <td><Button variant='warning' onClick={() => {modificarOrdre(valors); canviEstatModal()}}>Modificar</Button></td>
-             <td><Button className='btn btn-primary' onClick={() => eliminarOrder(valors.id)}>Eliminar</Button></td>
-           </tr>
-       ))}
-     </table>
-   </div>
+    <Header title="Ordres d'Enviament" />
+    <Filter />
+    <div>
+  <Button variant="success" onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>
+    Alta Orden
+  </Button>
+  
+  <div className="table-responsive mt-3">
+    <table className="table table-bordered table-striped table-hover text-center">
+      <thead className="table-secondary">
+        <tr>
+          <th>ID</th>
+          <th>Client</th>
+          <th>Transportista</th>
+          <th>Preparado</th>
+          <th>Data Estimada</th>
+          <th>Estat</th>
+          <th>Modificar</th>
+          <th>Eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {orders.map((valors) => (
+          <tr key={valors.id}>
+            <td>{valors.id}</td>
+            <td>{clientExistent(valors.client_id)}</td>
+            <td>{transportistaExistente(valors.carrier_id)}</td>
+            <td>{valors.prepared_by}</td>
+            <td>{valors.shipping_date}</td>
+            <td>{estatExistent(valors.ordershipping_status_id)}</td>
+            <td>
+              <Button
+                variant="warning"
+                onClick={() => { modificarOrdre(valors); canviEstatModal(); }}
+              >
+                Modificar
+              </Button>
+            </td>
+            <td>
+              <Button
+                className="btn btn-danger"
+                onClick={() => eliminarOrder(valors.id)}
+              >
+                Eliminar
+              </Button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
 
    <Modal show = {showModal} >
         <Modal.Header closeButton onHide={canviEstatModal}>
@@ -194,6 +221,7 @@ function OrdesEnviament() {
                 <h2>Capçalera</h2>
                   <label htmlFor='client_id'>Cliente</label>
                   <Field as="select" name="client_id" values = {values.client_id}>
+                    <option value="">Selecciona un client:</option>
                     {clientes.map(cliente => {
                       return <option key={cliente.id} value={cliente.id}>{cliente.name}</option>
                     }) }
@@ -204,6 +232,7 @@ function OrdesEnviament() {
                 <div>
                   <label htmlFor='carrier_id'>Transportista</label>
                   <Field as="select" name="carrier_id" values = {values.carrier_id}>
+                    <option value="">Selecciona un transportista:</option>
                     {carriers.map(carrier => {
                       return <option key={carrier.id} value={carrier.id}>{carrier.name}</option>
                     }) }
@@ -214,6 +243,7 @@ function OrdesEnviament() {
                 <div>
                   <label htmlFor='prepared_by'>Preparado por</label>
                   <Field as="select" name="prepared_by" values = {values.prepared_by}>
+                    <option value="">Selecciona un usuari:</option>
                     {users.map(user => {
                       return <option key={user.id} value={user.id}>{user.name}</option>
                     }) }

@@ -3,18 +3,22 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Button, Modal } from 'react-bootstrap';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
+import Header from './Header';
 
 const UserProfileSchema = Yup.object().shape({
   name: Yup.string()
-    .min(4, 'Valor mínim de 4 caracters.')
-    .max(50, 'El valor màxim és de 50 caracters')
-    .required('Valor requerit'),
+    .min(4, 'Valor mínimo de 4 caracteres.')
+    .max(50, 'El valor máximo es de 50 caracteres')
+    .required('Valor requerido'),
 });
 
 function Rols() {
   const [userProfiles, setUserProfiles] = useState([]);
+  const [filteredProfiles, setFilteredProfiles] = useState([]); 
   const [showModal, setShowModal] = useState(false);
   const [tipoModal, setTipoModal] = useState('Crear');
+  const [selectedProfile, setSelectedProfile] = useState(null);
+  const [modalType, setModalType] = useState('Crear');
   const [valorsInicials, setValorsInicials] = useState({ name: '' });
 
   useEffect(() => {
@@ -22,8 +26,9 @@ function Rols() {
       try {
         const data = await getData(url, 'UserProfile');
         setUserProfiles(data);
+        setFilteredProfiles(data); 
       } catch (error) {
-        console.error('Error fetching user profiles:', error);
+        console.error('Error al obtener los perfiles de usuario:', error);
       }
     };
     fetchUserProfiles();
@@ -33,8 +38,9 @@ function Rols() {
     try {
       await deleteData(url, 'UserProfile', id);
       setUserProfiles((prevProfiles) => prevProfiles.filter((item) => item.id !== id));
+      setFilteredProfiles((prevProfiles) => prevProfiles.filter((item) => item.id !== id)); 
     } catch (error) {
-      console.error('Error deleting user profile:', error);
+      console.error('Error al eliminar el perfil de usuario:', error);
     }
   };
 
@@ -42,6 +48,17 @@ function Rols() {
     setTipoModal('Modificar');
     setValorsInicials(valors);
     setShowModal(true);
+  };
+
+  const visualitzarUserProfile = async (id) => {
+    try {
+      const profile = await getData(url, `UserProfile/${id}`);
+      setSelectedProfile(profile);
+      setModalType('Visualizar');
+      setShowModal(true);
+    } catch (error) {
+      console.error('Error al obtener los detalles del perfil de usuario:', error);
+    }
   };
 
   const obrirModal = () => {
@@ -54,26 +71,27 @@ function Rols() {
 
   return (
     <div>
-      <h2 style={{textAlign:"center"}}>Perfil d'Usuaris</h2>
-      <Button variant="success" onClick={obrirModal} style={{ marginLeft: "17rem" }}>
-        Alta Perfil d'Usuaris
+      <Header title="Lista de roles" />
+      <Button variant="success" onClick={obrirModal} className="mb-3">
+        Alta Perfil d'usuaris
       </Button>
-      <table style={{ marginLeft: "17rem" }}>
+      <table className="table table-striped table-bordered">
         <thead>
           <tr>
             <th>Id</th>
             <th>Nom</th>
             <th>Modificar</th>
             <th>Eliminar</th>
+            <th>Visualizar</th>
           </tr>
         </thead>
         <tbody>
-          {userProfiles.length === 0 ? (
+          {filteredProfiles.length === 0 ? (
             <tr>
-              <td colSpan="4">No hi han perfils d'usuaris</td>
+              <td colSpan="5" className="text-center">No hi ha perfils d'usuaris</td>
             </tr>
           ) : (
-            userProfiles.map((user) => (
+            filteredProfiles.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
                 <td>{user.name}</td>
@@ -81,6 +99,7 @@ function Rols() {
                   <Button
                     variant="warning"
                     onClick={() => modificarUserProfile(user)}
+                    className="btn-sm"
                   >
                     Modificar
                   </Button>
@@ -89,8 +108,18 @@ function Rols() {
                   <Button
                     variant="danger"
                     onClick={() => eliminarUserProfile(user.id)}
+                    className="btn-sm"
                   >
                     Eliminar
+                  </Button>
+                </td>
+                <td>
+                  <Button
+                    variant="info"
+                    onClick={() => visualitzarUserProfile(user.id)}
+                    className="btn-sm"
+                  >
+                    Visualizar
                   </Button>
                 </td>
               </tr>
@@ -101,45 +130,60 @@ function Rols() {
 
       <Modal show={showModal} onHide={tancarModal}>
         <Modal.Header closeButton>
-          <Modal.Title>{tipoModal} Perfil d'Usuaris</Modal.Title>
+          <Modal.Title>{tipoModal} Perfil de Usuario</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Formik
-            initialValues={tipoModal === 'Modificar' ? valorsInicials : { name: '' }}
-            validationSchema={UserProfileSchema}
-            onSubmit={async (values) => {
-              try {
-                if (tipoModal === 'Crear') {
-                  await postData(url, 'UserProfile', values);
-                } else {
-                  await updateId(url, 'UserProfile', values.id, values);
+          {modalType === 'Visualizar' ? (
+            selectedProfile ? (
+              <div>
+                <p><strong>Id:</strong> {selectedProfile.id}</p>
+                <p><strong>Nom:</strong> {selectedProfile.name}</p>
+                <Button variant="secondary" onClick={tancarModal}>
+                  Cerrar
+                </Button>
+              </div>
+            ) : (
+              <p>Cargando datos del perfil...</p>
+            )
+          ) : (
+            <Formik
+              initialValues={modalType === 'Modificar' ? valorsInicials : { name: '' }}
+              validationSchema={UserProfileSchema}
+              onSubmit={async (values) => {
+                try {
+                  if (modalType === 'Crear') {
+                    await postData(url, 'UserProfile', values);
+                  } else {
+                    await updateId(url, 'UserProfile', values.id, values);
+                  }
+                  tancarModal();
+                  const updatedProfiles = await getData(url, 'UserProfile');
+                  setUserProfiles(updatedProfiles);
+                  setFilteredProfiles(updatedProfiles); // Actualiza filteredProfiles también
+                } catch (error) {
+                  console.error('Error al guardar el perfil de usuario:', error);
                 }
-                tancarModal();
-                const updatedProfiles = await getData(url, 'UserProfile');
-                setUserProfiles(updatedProfiles);
-              } catch (error) {
-                console.error('Error saving user profile:', error);
-              }
-            }}
-          >
-            {({ errors, touched }) => (
-              <Form>
-                <div>
-                  <label htmlFor="name">Nom</label>
-                  <Field name="name" type="text" placeholder="Nom del perfil d'usuari" />
-                  {errors.name && touched.name && <div>{errors.name}</div>}
-                </div>
-                <div>
-                  <Button variant="secondary" onClick={tancarModal}>
-                    Tancar
-                  </Button>
-                  <Button variant="primary" type="submit">
-                    {tipoModal}
-                  </Button>
-                </div>
-              </Form>
-            )}
-          </Formik>
+              }}
+            >
+              {({ errors, touched }) => (
+                <Form>
+                  <div className="mb-3">
+                    <label htmlFor="name" className="form-label">Nombre</label>
+                    <Field name="name" type="text" className="form-control" placeholder="Nombre del perfil de usuario" />
+                    {errors.name && touched.name && <div className="text-danger">{errors.name}</div>}
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <Button variant="secondary" onClick={tancarModal}>
+                      Cerrar
+                    </Button>
+                    <Button variant="primary" type="submit">
+                      {modalType}
+                    </Button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          )}
         </Modal.Body>
       </Modal>
     </div>

@@ -28,7 +28,7 @@ function Rols() {
         setUserProfiles(data);
         setFilteredProfiles(data); 
       } catch (error) {
-        console.error('Error al obtener los perfiles de usuario:', error);
+        console.error('Error en obtenir els perfils de usuari:', error);
       }
     };
     fetchUserProfiles();
@@ -40,7 +40,7 @@ function Rols() {
       setUserProfiles((prevProfiles) => prevProfiles.filter((item) => item.id !== id));
       setFilteredProfiles((prevProfiles) => prevProfiles.filter((item) => item.id !== id)); 
     } catch (error) {
-      console.error('Error al eliminar el perfil de usuario:', error);
+      console.error('Error en suprimir el perfil de usuari:', error);
     }
   };
 
@@ -57,7 +57,7 @@ function Rols() {
       setModalType('Visualizar');
       setShowModal(true);
     } catch (error) {
-      console.error('Error al obtener los detalles del perfil de usuario:', error);
+      console.error('Error en obtenir els detalls del perfil de usuari:', error);
     }
   };
 
@@ -82,7 +82,7 @@ function Rols() {
             <th>Nom</th>
             <th>Modificar</th>
             <th>Eliminar</th>
-            <th>Visualizar</th>
+            <th>Visualitzar</th>
           </tr>
         </thead>
         <tbody>
@@ -119,7 +119,7 @@ function Rols() {
                     onClick={() => visualitzarUserProfile(user.id)}
                     className="btn-sm"
                   >
-                    Visualizar
+                    Visualitzar
                   </Button>
                 </td>
               </tr>
@@ -139,11 +139,11 @@ function Rols() {
                 <p><strong>Id:</strong> {selectedProfile.id}</p>
                 <p><strong>Nom:</strong> {selectedProfile.name}</p>
                 <Button variant="secondary" onClick={tancarModal}>
-                  Cerrar
+                  Tancar
                 </Button>
               </div>
             ) : (
-              <p>Cargando datos del perfil...</p>
+              <p>Carregant dades del perfil...</p>
             )
           ) : (
             <Formik
@@ -159,22 +159,22 @@ function Rols() {
                   tancarModal();
                   const updatedProfiles = await getData(url, 'UserProfile');
                   setUserProfiles(updatedProfiles);
-                  setFilteredProfiles(updatedProfiles); // Actualiza filteredProfiles también
+                  setFilteredProfiles(updatedProfiles);
                 } catch (error) {
-                  console.error('Error al guardar el perfil de usuario:', error);
+                  console.error('Error en desar el perfil de usuari:', error);
                 }
               }}
             >
               {({ errors, touched }) => (
                 <Form>
                   <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Nombre</label>
-                    <Field name="name" type="text" className="form-control" placeholder="Nombre del perfil de usuario" />
+                    <label htmlFor="name" className="form-label">Nom</label>
+                    <Field name="name" type="text" className="form-control" placeholder="Nom del perfil d'usuari" />
                     {errors.name && touched.name && <div className="text-danger">{errors.name}</div>}
                   </div>
                   <div className="d-flex justify-content-between">
                     <Button variant="secondary" onClick={tancarModal}>
-                      Cerrar
+                      Tancar
                     </Button>
                     <Button variant="primary" type="submit">
                       {modalType}

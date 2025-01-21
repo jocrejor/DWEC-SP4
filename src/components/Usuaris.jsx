@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { Button, Modal, Table, Form as BootstrapForm } from 'react-bootstrap';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import Header from './Header';
-import Filtres from './Filtres'; // Import Filtres component
+import Filtres from './Filtres'; 
 
 const UserSchema = Yup.object().shape({
   name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),

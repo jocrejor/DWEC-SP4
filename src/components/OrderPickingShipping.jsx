@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button, Table, Modal } from "react-bootstrap";
-import { url, getData, thereIsUser } from "../apiAccess/crud";
+import { url, getData } from "../apiAccess/crud";
 import { Formik, Form, Field } from "formik";
 import Header from "./Header";
 import Filtres from "./Filtres";
@@ -35,7 +35,7 @@ function OrderPickingShipping() {
       const users = await getData(url, "User");
       setUsers(users);
 
-      setCurrentUser(thereIsUser());
+      setCurrentUser(localStorage.getItem("currentUser"));
 
       const spaces = await getData(url, "Space");
       setSpaces(spaces);

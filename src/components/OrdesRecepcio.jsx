@@ -3,6 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal, Table, Spinner } from 'react-bootstrap';
+import Header from './Header'
 
 const OrderReceptionSchema = Yup.object().shape({
   supplier_id: Yup.number().required('Proveïdor requerit'),
@@ -14,8 +15,8 @@ function OrderReception() {
   const [orderReceptions, setOrderReceptions] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [statuses, setStatuses] = useState([]);
-  const [products, setProducts] = useState([]); // Llista de productes disponibles
-  const [selectedProducts, setSelectedProducts] = useState([]); // Llista de productes afegits amb quantitat
+  const [products, setProducts] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [tipoModal, setTipoModal] = useState('Crear');
@@ -124,9 +125,7 @@ function OrderReception() {
 
   return (
     <>
-      <div>
-        <h2>Llistat Ordres de Recepció</h2>
-      </div>
+      <Header title="Llistat Ordres de Recepció" />
       <Button
         variant="success"
         onClick={() => {

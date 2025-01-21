@@ -3,6 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal, Table, Spinner } from 'react-bootstrap';
+import Header from './Header'
 
 const OrderReception_StatusSchema = Yup.object().shape({
   name: Yup.string()
@@ -76,9 +77,7 @@ function OrderReception_Status() {
 
   return (
     <>
-      <div>
-        <h2>Llistat estats de línia ordres de recepció</h2>
-      </div>
+      <Header title="Llistat Estats de Línia" />
       <Button
         variant="success"
         onClick={() => {

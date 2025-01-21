@@ -1,6 +1,6 @@
 // import { useState } from 'react'
 import './App.css'
-// import Lateral from './components/Lateral'
+import Lateral from './components/Lateral'
 import Login from './components/login';
 import Logout from './components/logout';
 import Main from './components/Main'
@@ -32,7 +32,7 @@ function App() {
     <>
      <div className="container-fluid">
      <div className="row">
-        {/* <Lateral /> */}
+        <Lateral />
       
        <Routes>
        

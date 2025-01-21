@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
 import { Button, Table, Modal } from "react-bootstrap";
-import { url, getData } from "../apiAccess/crud";
+import { url, getData, thereIsUser } from "../apiAccess/crud";
+import { Formik, Form, Field } from "formik";
+import Header from "./Header";
+import Filtres from "./Filtres";
 
 function OrderPickingShipping() {
   const [orderPickingShipping, setOrderPickingShipping] = useState([]);
   const [orderShipping, setOrderShipping] = useState([]);
   const [orderLineShipping, setOrderLineShipping] = useState([]);
   const [products, setProducts] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [temporalPickings, setTemporalPickings] = useState([]);
   const [spaces, setSpaces] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [tipoModal, setTipoModal] = useState("Alta");
-
   const [orderSelected, setOrderSelected] = useState([]);
 
   useEffect(() => {
@@ -27,6 +31,11 @@ function OrderPickingShipping() {
 
       const product = await getData(url, "Product");
       setProducts(product);
+
+      const users = await getData(url, "User");
+      setUsers(users);
+
+      setCurrentUser(thereIsUser());
 
       const spaces = await getData(url, "Space");
       setSpaces(spaces);
@@ -101,59 +110,98 @@ function OrderPickingShipping() {
   return (
     <>
       <div>
-        <h2>Llistat Order Shipping</h2>
+        <Header title="Order Picking Shipping" />
+        <Filtres />
       </div>
-      <Button
-        variant="success"
-        onClick={() => {
-          crearOrderPicking();
-        }}
-      >
-        Crear Order Picking
-      </Button>
+      <div>
+        <Button
+          variant="success"
+          onClick={() => {
+            crearOrderPicking();
+          }}
+        >
+          Crear Order Picking
+        </Button>
 
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>ID Order</th>
-            <th>Producte</th>
-            <th>Quantitat</th>
-            <th>Magatzem / Carrer / Estantería / Espai</th>
-            <th></th>
-          </tr>
-        </thead>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>ID Order</th>
+              <th>Producte</th>
+              <th>Quantitat</th>
+              <th>Magatzem / Carrer / Estantería / Espai</th>
+              <th></th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {temporalPickings.map((temporalPicking) => {
-            const product = products.find(
-              (p) => p.id === temporalPicking.product_id
-            );
-            return (
-              <tr key={temporalPicking.order_line_shipping_id}>
-                <td>{temporalPicking.order_shipping_id}</td>
-                <td>{product.name}</td>
-                <td>{temporalPicking.quantity}</td>
-                <td>
-                  {temporalPicking.storage_id} / {temporalPicking.street_id} /{" "}
-                  {temporalPicking.selft_id} / {temporalPicking.space_id}
-                </td>
-                <td>
-                  <input
-                    type="checkbox"
-                    value={temporalPicking.order_line_shipping_id}
-                  />
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+          <tbody>
+            {temporalPickings.map((temporalPicking) => {
+              const product = products.find(
+                (p) => p.id === temporalPicking.product_id
+              );
+              return (
+                <tr key={temporalPicking.order_line_shipping_id}>
+                  <td>{temporalPicking.order_shipping_id}</td>
+                  <td>{product.name}</td>
+                  <td>{temporalPicking.quantity}</td>
+                  <td>
+                    {temporalPicking.storage_id} / {temporalPicking.street_id} /{" "}
+                    {temporalPicking.selft_id} / {temporalPicking.space_id}
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      value={temporalPicking.order_line_shipping_id}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </div>
 
       <Modal show={showModal} onHide={canviEstatModal}>
         <Modal.Header closeButton>
           <Modal.Title>{tipoModal}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {/* <Formik
+            initialValues={{
+              operari: currentUser ? currentUser.id : "", // Establece el valor inicial
+            }}
+          >
+            {({ values }) => (
+              <Form>
+                <label htmlFor="operari">Operari:</label>
+                <Field
+                  as="select"
+                  name="operari"
+                  value={values.operari} // Asegura que el valor corresponda al estado
+                >
+                  <option value="" disabled>
+                    Selecciona un operari
+                  </option>
+                  {users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
+                    </option>
+                  ))}
+                </Field>
+              </Form>
+            )}
+          </Formik> */}
+
+          <label htmlFor="operari">Operari:</label>
+          <select name="operari" id="operari">
+            <option value={currentUser ? currentUser : ""} selected disabled>Selecciona operari</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.name}
+              </option>
+            ))}
+          </select>
+
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -164,17 +212,26 @@ function OrderPickingShipping() {
             </thead>
 
             <tbody>
-              {orderSelected.map(order => {
-                const line = orderLineShipping.find(line => line.id === order);
-                const product = products.find(product => product.id === line.product_id);
-                const space = spaces.find(space => space.product_id === line.product_id);
+              {orderSelected.map((order) => {
+                const line = orderLineShipping.find(
+                  (line) => line.id === order
+                );
+                const product = products.find(
+                  (product) => product.id === line.product_id
+                );
+                const space = spaces.find(
+                  (space) => space.product_id === line.product_id
+                );
                 return (
                   <tr key={order}>
                     <td>{product.name}</td>
                     <td>{line.quantity}</td>
-                    <td>{space.storage_id} / {space.street_id} / {space.selft_id} / {space.id}</td>
+                    <td>
+                      {space.storage_id} / {space.street_id} / {space.selft_id}{" "}
+                      / {space.id}
+                    </td>
                   </tr>
-                )
+                );
               })}
             </tbody>
           </Table>

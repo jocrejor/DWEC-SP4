@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
 import Header from './Header';
+import { useNavigate } from 'react-router-dom';
 
 const StorageSchema = Yup.object().shape({
   name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
@@ -16,27 +17,31 @@ function Storage() {
   const [showModal, setShowModal] = useState(false);
   const [tipoModal, setTipoModal] = useState("Crear");
   const [valorsInicials, setValorsInicials] = useState({ name: '', type: '', address: '' });
+  const navigate = useNavigate(); // useNavigate hook to navigate programmatically
 
   useEffect(async () => {
-    const data = await getData(url, "Storage")
-    setStorage(data)
-  }, [])
+    const data = await getData(url, "Storage");
+    setStorage(data);
+  }, []);
 
   const eliminarStorage = (id) => {
-    deleteData(url, "Storage", id)
-    const newstorages = storages.filter(item => item.id != id)
-    setStorage(newstorages)
-  }
+    deleteData(url, "Storage", id);
+    const newstorages = storages.filter(item => item.id !== id);
+    setStorage(newstorages);
+  };
 
   const modificarStorage = (valors) => {
-    setTipoModal("Modificar")
+    setTipoModal("Modificar");
     setValorsInicials(valors);
-  }
-
+  };
 
   const canviEstatModal = () => {
-    setShowModal(!showModal)
-  }
+    setShowModal(!showModal);
+  };
+
+  const handleCarrerClick = (id) => {
+    navigate(`/carrer/${id}`); // Navigates to /carrer/:id
+  };
 
   return (
     <>
@@ -64,16 +69,17 @@ function Storage() {
                   <td>{valors.name}</td>
                   <td>{valors.type}</td>
                   <td>{valors.address}</td>
-                  <td><Button>Carrer</Button></td>
+                  <td><Button onClick={() => handleCarrerClick(valors.id)}>Carrer</Button></td> {/* Navigate to Carrer */}
                   <td><Button variant="warning" onClick={() => modificarStorage(valors)}>Modificar</Button></td>
                   <td><Button variant="primary" onClick={() => eliminarStorage(valors.id)}>Eliminar</Button></td>
-                </tr>)
+                </tr>
+              );
             })}
         </tbody>
       </table>
 
       <Modal show={showModal} onHide={canviEstatModal}>
-        <Modal.Header closeButton >
+        <Modal.Header closeButton>
           <Modal.Title>{tipoModal} Magatzem</Modal.Title>
         </Modal.Header>
 
@@ -82,35 +88,28 @@ function Storage() {
             initialValues={tipoModal === 'Modificar' ? valorsInicials : { name: '', type: '', address: '' }}
             validationSchema={StorageSchema}
             onSubmit={values => {
-              console.log(values)
-              tipoModal==="Crear"?postData(url,"Storage", values):updateId(url,"Storage",values.id,values)  
-              canviEstatModal()
-              
+              console.log(values);
+              tipoModal === "Crear" ? postData(url, "Storage", values) : updateId(url, "Storage", values.id, values);
+              canviEstatModal();
             }}
           >
             {({ values, errors, touched }) => (
               <Form>
                 <div>
                   <label htmlFor='name'>Nom</label>
-                  <Field type="text" name="name" placeholder="Nom del magatzem" autoComplete="off"
-                    value={values.name}
-                  />
+                  <Field type="text" name="name" placeholder="Nom del magatzem" autoComplete="off" value={values.name} />
                   {errors.name && touched.name ? <div>{errors.name}</div> : null}
                 </div>
 
                 <div>
                   <label htmlFor='type'>Tipus</label>
-                  <Field type="text" name="type" placeholder="Tipus de magatzem" autoComplete="off"
-                    value={values.type}
-                  />
+                  <Field type="text" name="type" placeholder="Tipus de magatzem" autoComplete="off" value={values.type} />
                   {errors.type && touched.type ? <div>{errors.type}</div> : null}
                 </div>
 
                 <div>
                   <label htmlFor='address'>Adreça</label>
-                  <Field type="text" name="address" placeholder="Adreça del magatzem" autoComplete="off"
-                    value={values.address}
-                  />
+                  <Field type="text" name="address" placeholder="Adreça del magatzem" autoComplete="off" value={values.address} />
                   {errors.address && touched.address ? <div>{errors.address}</div> : null}
                 </div>
 

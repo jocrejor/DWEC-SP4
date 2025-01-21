@@ -5,7 +5,7 @@ import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
 import { Button, Modal } from 'react-bootstrap';
 
 import Header from '../components/Header';
-import Filtres  from '../components/Filtres';
+import Filtres from '../components/Filtres';
 
 const carrierschema = Yup.object().shape({
   name: Yup.string().min(3, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
@@ -14,7 +14,7 @@ const carrierschema = Yup.object().shape({
   phone: Yup.string().matches(/^\+\d{1,3}\s\d{9}$/, 'El telèfon ha de ser correcte (+34 911234567)').required('Valor requerit'),
   email: Yup.string().email('Email no vàlid').required('Valor requerit'),
   state_id: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
-  province: Yup.string().min(3, 'Valor mínim de 3 caracters').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
+  province: Yup.string().required('Valor requerit'),
   city: Yup.string().min(3, 'Valor mínim de 3 caracters').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
   cp: Yup.string().matches(/^\d{5}$/, 'El codi postal ha de tenir 5 dígits').required('Valor requerit'),
 });
@@ -86,8 +86,8 @@ function Transportistes() {
 
   return (
     <>
-     <Header title="Llistat transportistes" />
-    <Filtres />
+      <Header title="Llistat transportistes" />
+      <Filtres />
       <Button
         variant="success"
         className="btn text-white"
@@ -140,8 +140,8 @@ function Transportistes() {
                     onClick={() => {
                       viewCarrier(valors);
                     }}
-                  > 
-                  <i className="bi bi-eye p-2"></i>
+                  >
+                    <i className="bi bi-eye p-2"></i>
                   </Button>
                 </td>
                 <td>
@@ -152,7 +152,7 @@ function Transportistes() {
                       canviEstatModal();
                     }}
                   >
-                   <i className="bi bi-pencil-square p-2"></i>
+                    <i className="bi bi-pencil-square p-2"></i>
                   </Button>
                 </td>
                 <td>
@@ -202,164 +202,193 @@ function Transportistes() {
           <Modal.Title>{tipoModal} transportista</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-  <Formik
-    initialValues={
-      tipoModal === 'Modificar'
-        ? valorsInicials
-        : {
-            name: '',
-            address: '',
-            nif: '',
-            phone: '',
-            email: '',
-            state_id: 0,
-            province: '',
-            city: '',
-            cp: '',
-          }
-    }
-    validationSchema={carrierschema}
-    onSubmit={(values) => {
-      gravar(values);
-    }}
-  >
-    {({ values, errors, touched }) => (
-      <Form>
-        <div className="form-group">
-          <label htmlFor="name">Nom</label>
-          <Field
-            id="name"
-            name="name"
-            className={`form-control ${
-              touched.name && errors.name ? 'is-invalid' : ''
-            }`}
-          />
-          {touched.name && errors.name ? (
-            <div className="invalid-feedback">{errors.name}</div>
-          ) : null}
-        </div>
-        <div className="form-group">
-          <label htmlFor="address">Adreça</label>
-          <Field
-            id="address"
-            name="address"
-            className={`form-control ${
-              touched.address && errors.address ? 'is-invalid' : ''
-            }`}
-          />
-          {touched.address && errors.address ? (
-            <div className="invalid-feedback">{errors.address}</div>
-          ) : null}
-        </div>
-        <div className="form-group">
-          <label htmlFor="nif">NIF</label>
-          <Field
-            id="nif"
-            name="nif"
-            className={`form-control ${
-              touched.nif && errors.nif ? 'is-invalid' : ''
-            }`}
-          />
-          {touched.nif && errors.nif ? (
-            <div className="invalid-feedback">{errors.nif}</div>
-          ) : null}
-        </div>
-        <div className="form-group">
-          <label htmlFor="phone">Telèfon</label>
-          <Field
-            id="phone"
-            name="phone"
-            className={`form-control ${
-              touched.phone && errors.phone ? 'is-invalid' : ''
-            }`}
-          />
-          {touched.phone && errors.phone ? (
-            <div className="invalid-feedback">{errors.phone}</div>
-          ) : null}
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <Field
-            id="email"
-            name="email"
-            type="email"
-            className={`form-control ${
-              touched.email && errors.email ? 'is-invalid' : ''
-            }`}
-          />
-          {touched.email && errors.email ? (
-            <div className="invalid-feedback">{errors.email}</div>
-          ) : null}
-        </div>
-        <div className="form-group">
-          <label htmlFor="state_id">Estat</label>
-          <Field
-            as="select"
-            id="state_id"
-            name="state_id"
-            className={`form-control ${
-              touched.state_id && errors.state_id ? 'is-invalid' : ''
-            }`}
+          <Formik
+            initialValues={
+              tipoModal === 'Modificar'
+                ? valorsInicials
+                : {
+                  name: '',
+                  address: '',
+                  nif: '',
+                  phone: '',
+                  email: '',
+                  state_id: 0,
+                  province: '',
+                  city: '',
+                  cp: '',
+                }
+            }
+            validationSchema={carrierschema}
+            onSubmit={(values) => {
+              gravar(values);
+            }}
           >
-            <option value="">Selecciona un estat</option>
-            {pais.map((state) => (
-              <option key={state.id} value={state.id}>
-                {state.name}
-              </option>
-            ))}
-          </Field>
-          {touched.state_id && errors.state_id ? (
-            <div className="invalid-feedback">{errors.state_id}</div>
-          ) : null}
-        </div>
-        <div className="form-group">
-          <label htmlFor="province">Província</label>
-          <Field
-            id="province"
-            name="province"
-            className={`form-control ${
-              touched.province && errors.province ? 'is-invalid' : ''
-            }`}
-          />
-          {touched.province && errors.province ? (
-            <div className="invalid-feedback">{errors.province}</div>
-          ) : null}
-        </div>
-        <div className="form-group">
-          <label htmlFor="city">Ciutat</label>
-          <Field
-            id="city"
-            name="city"
-            className={`form-control ${
-              touched.city && errors.city ? 'is-invalid' : ''
-            }`}
-          />
-          {touched.city && errors.city ? (
-            <div className="invalid-feedback">{errors.city}</div>
-          ) : null}
-        </div>
-        <div className="form-group">
-          <label htmlFor="cp">Codi Postal</label>
-          <Field
-            id="cp"
-            name="cp"
-            className={`form-control ${
-              touched.cp && errors.cp ? 'is-invalid' : ''
-            }`}
-          />
-          {touched.cp && errors.cp ? (
-            <div className="invalid-feedback">{errors.cp}</div>
-          ) : null}
-        </div>
-        <div className="form-group text-right">
-          <Button type="submit" variant="success">
-            {tipoModal === 'Crear' ? 'Crear' : 'Modificar'}
-          </Button>
-        </div>
-      </Form>
-    )}
-  </Formik>
-</Modal.Body>
+            {({ values, errors, touched }) => (
+              <Form>
+                <div className="form-group">
+                  <label htmlFor="name">Nom</label>
+                  <Field
+                    id="name"
+                    name="name"
+                    className={`form-control ${touched.name && errors.name ? 'is-invalid' : ''
+                      }`}
+                  />
+                  {touched.name && errors.name ? (
+                    <div className="invalid-feedback">{errors.name}</div>
+                  ) : null}
+                </div>
+                <div className="form-group">
+                  <label htmlFor="address">Adreça</label>
+                  <Field
+                    id="address"
+                    name="address"
+                    className={`form-control ${touched.address && errors.address ? 'is-invalid' : ''
+                      }`}
+                  />
+                  {touched.address && errors.address ? (
+                    <div className="invalid-feedback">{errors.address}</div>
+                  ) : null}
+                </div>
+                <div className="form-group">
+                  <label htmlFor="nif">NIF</label>
+                  <Field
+                    id="nif"
+                    name="nif"
+                    className={`form-control ${touched.nif && errors.nif ? 'is-invalid' : ''
+                      }`}
+                  />
+                  {touched.nif && errors.nif ? (
+                    <div className="invalid-feedback">{errors.nif}</div>
+                  ) : null}
+                </div>
+                <div className="form-group">
+                  <label htmlFor="phone">Telèfon</label>
+                  <Field
+                    id="phone"
+                    name="phone"
+                    className={`form-control ${touched.phone && errors.phone ? 'is-invalid' : ''
+                      }`}
+                  />
+                  {touched.phone && errors.phone ? (
+                    <div className="invalid-feedback">{errors.phone}</div>
+                  ) : null}
+                </div>
+                <div className="form-group">
+                  <label htmlFor="email">Email</label>
+                  <Field
+                    id="email"
+                    name="email"
+                    type="email"
+                    className={`form-control ${touched.email && errors.email ? 'is-invalid' : ''
+                      }`}
+                  />
+                  {touched.email && errors.email ? (
+                    <div className="invalid-feedback">{errors.email}</div>
+                  ) : null}
+                </div>
+
+                {/* A partir d'aci */}
+                <div className="form-group">
+                  <label htmlFor="state_id">Estat</label>
+                  <Field
+                    as="select"
+                    name="state_id"
+                    className={`form-control ${touched.state_id && errors.state_id ? 'is-invalid' : ''
+                      }`}
+                  >
+                    <option value="">Selecciona un estat</option>
+                    {pais.map((state) => (
+                      <option key={state.id} value={state.id}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </Field>
+                  {touched.state_id && errors.state_id ? (
+                    <div className="invalid-feedback">{errors.state_id}</div>
+                  ) : null}
+                </div>
+                <div className="form-group">
+                  <label htmlFor="province">Província</label>
+                  {values.state_id === '194' ? ( // Si es España, mostramos un select
+                    <>
+                      <Field
+                        as="select"
+                        id="province"
+                        name="province"
+                        className={`form-control ${
+                          touched.province && errors.province ? 'is-invalid' : ''
+                        }`}
+                        value={values.province.name} // Aseguramos que el valor esté sincronizado con el estado del formulario
+                      >
+                        <option value="">Selecciona una província</option>
+                        {provincia.length > 0 ? (
+                          provincia.map((prov) => (
+                            <option key={prov.id} value={prov.id}> {/* Usa 'id' como valor */}
+                              {prov.name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="">No hay provincias disponibles</option>
+                        )}
+                      </Field>
+                      {touched.province && errors.province && (
+                        <div className="invalid-feedback">{errors.province}</div>
+                      )}
+                    </>
+                  ) : (
+                    // Si no es España, mostramos un campo de texto
+                    <>
+                      <Field
+                        type="text"
+                        id="province"
+                        name="province"
+                        placeholder="Escribe la provincia"
+                        className={`form-control ${
+                          touched.province && errors.province ? 'is-invalid' : ''
+                        }`}
+                      />
+                      {touched.province && errors.province && (
+                        <div className="invalid-feedback">{errors.province}</div>
+                      )}
+                    </>
+                  )}
+                </div>
+
+
+                {/* Fins ací*/}
+                <div className="form-group">
+                  <label htmlFor="city">Ciutat</label>
+                  <Field
+                    id="city"
+                    name="city"
+                    className={`form-control ${touched.city && errors.city ? 'is-invalid' : ''
+                      }`}
+                  />
+                  {touched.city && errors.city ? (
+                    <div className="invalid-feedback">{errors.city}</div>
+                  ) : null}
+                </div>
+                <div className="form-group">
+                  <label htmlFor="cp">Codi Postal</label>
+                  <Field
+                    id="cp"
+                    name="cp"
+                    className={`form-control ${touched.cp && errors.cp ? 'is-invalid' : ''
+                      }`}
+                  />
+                  {touched.cp && errors.cp ? (
+                    <div className="invalid-feedback">{errors.cp}</div>
+                  ) : null}
+                </div>
+                <div className="form-group text-right">
+                  <Button type="submit" variant="success">
+                    {tipoModal === 'Crear' ? 'Crear' : 'Modificar'}
+                  </Button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </Modal.Body>
 
       </Modal>
     </>

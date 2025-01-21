@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-
+import Header from "./Header"
 import { url,  getData} from '../apiAccess/crud'
 import { Button,Modal,ModalBody,ModalFooter } from 'react-bootstrap';
 
@@ -27,7 +27,8 @@ useEffect(() => {
   return (
     <>
       <div>
-        <table style={{ marginLeft: 350 }}>
+      <Header  title="Moviments" />
+        <table style={{ marginLeft: 170, marginTop: 120}}>
           <thead>
             <tr>
               <th>ID</th>

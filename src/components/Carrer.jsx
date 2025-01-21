@@ -3,12 +3,13 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import Header from './Header';
+
 
 const StreetSchema = Yup.object().shape({
     name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
     storage_id: Yup.string().min(3, 'Valor mínim de 3 caracters.').max(30, 'El valor màxim és de 30 caracters').required('Valor requerit'),
+
 });
 
 function Street() {
@@ -16,36 +17,31 @@ function Street() {
     const [showModal, setShowModal] = useState(false);
     const [tipoModal, setTipoModal] = useState("Crear");
     const [valorsInicials, setValorsInicials] = useState({ name: '', storage_id: ''});
-    const navigate = useNavigate();  // Hook para navegar
 
     useEffect(async () => {
-        const data = await getData(url, "Street");
-        setStreet(data);
-    }, []);
+        const data = await getData(url, "Street")
+        setStreet(data)
+    }, [])
 
     const eliminarStreet = (id) => {
-        deleteData(url, "Street", id);
-        const newstreets = streets.filter(item => item.id != id);
-        setStreet(newstreets);
-    };
+        deleteData(url, "Street", id)
+        const newstreets = streets.filter(item => item.id != id)
+        setStreet(newstreets)
+    }
 
     const modificarStreet = (valors) => {
-        setTipoModal("Modificar");
+        setTipoModal("Modificar")
         setValorsInicials(valors);
-    };
+    }
+
 
     const canviEstatModal = () => {
-        setShowModal(!showModal);
-    };
-
-    // Función para navegar a la página del Carrer
-    const navegarCarrer = (id) => {
-        navigate(`/carrer/${id}`);  // Redirige a la ruta /carrer/:id
-    };
+        setShowModal(!showModal)
+    }
 
     return (
         <>
-            <Header title="Gestió Carrer"/>
+            <Header title="Gestió Magatzem"/>
             <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Carrer</Button>
             <table>
                 <thead>
@@ -53,7 +49,6 @@ function Street() {
                         <th>Id</th>
                         <th>Nom</th>
                         <th>ID Magatzem</th>
-                        <th>Carrer</th>  {/* Nueva columna para el botón */}
                         <th>Modificar</th>
                         <th>Eliminar</th>
                     </tr>
@@ -67,7 +62,6 @@ function Street() {
                                     <td>{valors.id}</td>
                                     <td>{valors.name}</td>
                                     <td>{valors.storage_id}</td>
-                                    <td><Button onClick={() => navegarCarrer(valors.id)}>Carrer</Button></td>  {/* Botón para redirigir */}
                                     <td><Button variant="warning" onClick={() => modificarStreet(valors)}>Modificar</Button></td>
                                     <td><Button variant="primary" onClick={() => eliminarStreet(valors.id)}>Eliminar</Button></td>
                                 </tr>)
@@ -85,16 +79,17 @@ function Street() {
                         initialValues={tipoModal === 'Modificar' ? valorsInicials : { name: '', storage_id: '' }}
                         validationSchema={StreetSchema}
                         onSubmit={values => {
-                            console.log(values);
-                            tipoModal === "Crear" ? postData(url, "Street", values) : updateId(url, "Street", values.id, values);
-                            canviEstatModal();
+                            console.log(values)
+                            tipoModal === "Crear" ? postData(url, "Street", values) : updateId(url, "Street", values.id, values)
+                            canviEstatModal()
+
                         }}
                     >
                         {({ values, errors, touched }) => (
                             <Form>
                                 <div>
                                     <label htmlFor='name'>Nom</label>
-                                    <Field type="text" name="name" placeholder="Nom del carrer" autoComplete="off"
+                                    <Field type="text" name="name" placeholder="Nom del magatzem" autoComplete="off"
                                         value={values.name}
                                     />
                                     {errors.name && touched.name ? <div>{errors.name}</div> : null}
@@ -109,7 +104,7 @@ function Street() {
                                 </div>
 
                                 <div>
-                                    <Button variant="secondary" onClick={canviEstatModal}>Cerrar</Button>
+                                    <Button variant="secondary" onClick={canviEstatModal}>Close</Button>
                                     <Button variant={tipoModal === "Modificar" ? "success" : "info"} type="submit">{tipoModal}</Button>
                                 </div>
                             </Form>

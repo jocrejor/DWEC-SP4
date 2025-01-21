@@ -44,26 +44,40 @@ const canviEstatModal = () =>{
     setShowModal(!showModal)
 }
 
+const grabar = async (values)=>{
+  if(tipoModal==="Crear"){
+    await postData(url,'Product', values)
+  }else{
+    await updateId(url,'Product',values.id,values)
+    }
+  const data = await getData(url, "Product")
+  await setProducts(data)
+  canviEstatModal()
+}
+
 
   return (
     <>
 
 <div><h2>Llistat productes</h2></div>
     <Button variant='success' onClick={()=>{canviEstatModal(); setTipoModal("Crear")}}>Alta Producte</Button>
-      <table>
+      <table className="table">
+        <thead>
         <tr>
-          <th>Id</th>
-          <th>Nom</th>
-          <th>Descripció</th>
-          <th>Volume</th>
-          <th>Pes</th>
-          <th>Control</th>
-          <th>SKU</th>
-          <th>Modificar</th>
+          <th scope="col">Id</th>
+          <th scope="col">Nom</th>
+          <th scope="col">Descripció</th>
+          <th scope="col">Volume</th>
+          <th scope="col">Pes</th>
+          <th scope="col">Control</th>
+          <th scope="col">SKU</th>
+          <th scope="col">Modificar</th>
           <th>Eliminar</th>
         </tr>
+        </thead>
+        <tbody>
         {(products.length == 0)?
-          <div>No hi han articles</div>
+          <tr><th>No hi han articles</th></tr>
         :products.map((valors) => {
           return (
           <tr key={valors.id}>
@@ -79,6 +93,7 @@ const canviEstatModal = () =>{
 
           </tr>)
         })}
+        </tbody>
       </table>
 
       <Modal show={showModal} onHide={canviEstatModal}>
@@ -91,12 +106,7 @@ const canviEstatModal = () =>{
       <Formik
         initialValues= {(tipoModal==='Modificar'?valorsInicials: {name: '', description: '', volume: 0, weight: 0, lotorserial: 'Non', sku: '', image_url: '' })}
         validationSchema={ProducteSchema}
-        onSubmit={values => {
-          console.log(values)
-          tipoModal==="Crear"?postData(url,"Product", values):updateId(url,"Product",values.id,values)  
-          canviEstatModal()
-          
-        }}
+        onSubmit={ values => { grabar(values)} }
       >
         {({
           values,
@@ -125,7 +135,6 @@ const canviEstatModal = () =>{
                 type="text"
                 name="description"
                 placeholder="Descripció del producte"
-                autoComplete="off"
 
                 value={values.description}
               />
@@ -139,8 +148,7 @@ const canviEstatModal = () =>{
                 name="volume"
                 step="0.001"
                 placeholder="0"
-                autoComplete="off"
-
+                
                 value={values.volume}
               />
               {errors.volume && touched.volume ? <div>{errors.volume}</div> : null}
@@ -155,8 +163,7 @@ const canviEstatModal = () =>{
                 name="weight"
                 step="1"
                 placeholder="0"
-                autoComplete="off"
-
+               
                 value={values.weight}
               />
               {errors.weight && touched.weight ? <div>{errors.weight}</div> : null}

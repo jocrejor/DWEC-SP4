@@ -27,6 +27,9 @@ import OrderPickingShipping from './components/OrderPickingShipping';
 import OrderPickingReception from './components/OrderPickingReception';
 import Filtres from './components/Filtres';
 
+import './App.js';
+
+
 function App() {
 
 

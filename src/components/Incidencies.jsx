@@ -12,18 +12,28 @@ const IncidenciaSchema = Yup.object().shape({
 
 function Incidencies() {
 
-    const [incidents, setIncident]    = useState([])
-    const [showModal, setShowModal]   = useState(false)
-    const [tipoModal, setTipoModal]   = useState("Crear")
-    const [valorsInicials, setValorsInicials] = useState({ date_creation: '', description: '', name: ''})
+    const [incidents, setIncident]                  = useState([])
+    const [products, setProducts]                   = useState([])
+    const [orderlineStatus, setOrderlineStatus]     = useState([])
+    const [showModal, setShowModal]                 = useState(false)
+    const [tipoModal, setTipoModal]                 = useState("Crear")
+    const [valorsInicials, setValorsInicials]       = useState({ date_creation: '', description: '', name: ''})
 
 
     useEffect(() => {      
         (async () => {
-          const dataIncident = await getData(url, "Incident");
-          setIncident(dataIncident);          
+            const dataIncident = await getData(url, "Incident")
+            setIncident(dataIncident);          
         })();
-      }, []);
+        (async () => {
+            const dataProduct = await getData(url, "Product")
+            setProducts(dataProduct)
+        })();
+        (async () => {
+            const dataOrderlineStatus = await getData(url, "OrderShipping_Status")
+            setProducts(dataOrderlineStatus)
+        })();
+    },  []);
 
 const eliminarIncident = (id) =>{
   deleteData(url, "Incident", id) 
@@ -35,7 +45,6 @@ const modificarIncident = (valors) =>{
  setTipoModal("Modificar")
  setValorsInicials(valors);
 }
-
 
 const canviEstatModal = () =>{
     setShowModal(!showModal)
@@ -61,12 +70,12 @@ const canviEstatModal = () =>{
         :incidents.map((valors) => {
           return (
           <tr key={valors.id}>
-            <td></td>
+            <td>{valors.created_at}</td>
             <td>{valors.description}</td>
-            <td>{valors.name}</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{valors.product}</td>
+            <td>{valors.quantity_ordered}</td>
+            <td>{valors.quantity_received}</td>
+            <td>{valors.status}</td>
             <td><Button variant="warning"  onClick={()=> {modificarIncident(valors);canviEstatModal(); }}>Modificar</Button></td>
             <td><Button variant="primary"  onClick={()=> {eliminarIncident(valors.id)}}>Eliminar</Button></td>
           </tr>)
@@ -81,11 +90,11 @@ const canviEstatModal = () =>{
         <Modal.Body>
           
       <Formik
-        initialValues= {(tipoModal==='Modificar'?valorsInicials: {name: '', description: '' })}
+        initialValues= {(tipoModal==='Modificar'?valorsInicials: {quantity_received: '', description: '' })}
         validationSchema={IncidenciaSchema}
         onSubmit={values => {
           console.log(values)
-          tipoModal==="Crear"?postData(url,"Product", values):updateId(url,"Product",values.id,values)  
+          tipoModal==="Crear"?postData(url,"Incident", values):updateId(url,"Incident",values.id,values)  
           canviEstatModal()         
         }}
       >
@@ -96,8 +105,9 @@ const canviEstatModal = () =>{
           /* and other goodies */
         }) => (
           <Form>
+            {/*ID Ordre de Recepció*/}
             <div>
-              <label htmlFor='name'>Nom </label>
+              <label htmlFor='name'>ID Ordre de Recepció</label>
               <Field
                 type="text" 
                 name="name"
@@ -108,9 +118,87 @@ const canviEstatModal = () =>{
               />
               {errors.name && touched.name ? <div>{errors.name}</div> : null}
             </div>
-            {/*Em senc atacat*/}
+            {/*Data creació*/}
             <div>
-              <label htmlFor='description'>Descripció </label>
+              <label htmlFor='name'>Data creació</label>
+              <Field
+                type="text" 
+                name="name"
+                placeholder="Nom del producte"
+                autoComplete="off"
+
+                value={values.name}
+              />
+              {errors.name && touched.name ? <div>{errors.name}</div> : null}
+            </div>
+            {/*Producte*/}
+            <div>
+              <label htmlFor='name'>Producte</label>
+              <Field
+                type="text" 
+                name="name"
+                placeholder="Nom del producte"
+                autoComplete="off"
+
+                value={values.name}
+              />
+              {errors.name && touched.name ? <div>{errors.name}</div> : null}
+            </div>
+            {/*Proveïdor*/}
+            <div>
+              <label htmlFor='name'>Proveïdor</label>
+              <Field
+                type="text" 
+                name="name"
+                placeholder="Nom del producte"
+                autoComplete="off"
+
+                value={values.name}
+              />
+              {errors.name && touched.name ? <div>{errors.name}</div> : null}
+            </div>
+            {/*Operari*/}
+            <div>
+              <label htmlFor='name'>Operari</label>
+              <Field
+                type="text" 
+                name="name"
+                placeholder="Nom del producte"
+                autoComplete="off"
+
+                value={values.name}
+              />
+              {errors.name && touched.name ? <div>{errors.name}</div> : null}
+            </div>
+            {/*Quantitat demanada*/}
+            <div>
+              <label htmlFor='name'>Quantitat demanada</label>
+              <Field
+                type="text" 
+                name="name"
+                placeholder="Nom del producte"
+                autoComplete="off"
+
+                value={values.name}
+              />
+              {errors.name && touched.name ? <div>{errors.name}</div> : null}
+            </div>
+            {/*Quantitat rebuda*/}
+            <div>
+              <label htmlFor='name'>Quantitat rebuda</label>
+              <Field
+                type="text" 
+                name="name"
+                placeholder="Nom del producte"
+                autoComplete="off"
+
+                value={values.name}
+              />
+              {errors.name && touched.name ? <div>{errors.name}</div> : null}
+            </div>
+            {/*Em senc atacat -- Descripcio*/}
+            <div>
+              <label htmlFor='description'>Descripció</label>
               <Field
                 as='textarea'
                 type="text"
@@ -126,8 +214,7 @@ const canviEstatModal = () =>{
             <div>
             <Button variant="secondary" onClick={canviEstatModal}>Close</Button>
 
-              <Button variant={tipoModal==="Modificar"?"success":"info"} type="submit">{tipoModal}</Button>      
-        
+              <Button variant={tipoModal==="Modificar"?"success":"info"} type="submit">{tipoModal}</Button>             
            
             </div>
           </Form>

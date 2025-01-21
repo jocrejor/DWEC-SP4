@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import './App.css'
 import Lateral from './components/Lateral'
+import Header from './components/Header';
 import Login from './components/login';
 import Logout from './components/logout';
 import Main from './components/Main'
-import { Routes,Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Footer from './components/Footer'
 import Productes from './components/Productes';
 import Usuaris from './components/Usuaris';
@@ -22,6 +23,10 @@ import GestioMagatzem from './components/GestioMagatzem';
 import Inventaris from './components/Inventaris';
 import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';
+import OrderPickingShipping from './components/OrderPickingShipping';
+import OrderPickingReception from './components/OrderPickingReception';
+import Filtres from './components/Filtres';
+import './App.js';
 
 function App() {
 
@@ -40,63 +45,62 @@ function App() {
 
        <Route path="/usuaris" element={<Usuaris/>}/>
 
-       <Route path="/rols" element={<Rols/>}/> 
+              <Route path="/rols" element={<Rols />} />
 
-       <Route path="/dadesGeografiques" element={<DadesGeografiques/>}/>
+              <Route path="/dadesGeografiques" element={<DadesGeografiques />} />
 
-       <Route path="/transportistes" element={<Transportistes/>}/>
+              <Route path="/transportistes" element={<Transportistes />} />
 
-       <Route path="/clients" element={<Clients/>}/>
+              <Route path="/clients" element={<Clients />} />
 
-       <Route path="/ordesEnviament" element={<OrdesEnviament/>}/>
+              <Route path="/ordesEnviament" element={<OrdesEnviament />} />
 
-       <Route path="/proveidors" element={<Proveidors/>}/>
+              <Route path="/proveidors" element={<Proveidors />} />
 
-       <Route path="/ordesRecepcio" element={<OrdesRecepcio/>}/>
+              <Route path="/ordesRecepcio" element={<OrdesRecepcio />} />
 
-       <Route path="/estatsOrdre" element={<EstatsOrdre/>}/>
+              <Route path="/estatsOrdre" element={<EstatsOrdre />} />
 
-       <Route path="/estatsLinia" element={<EstatsLinia/>}/>
-       
-       <Route path="/productes" element={<Productes/>}/>
+              <Route path="/estatsLinia" element={<EstatsLinia />} />
 
-       <Route path="/lots" element={<Lots/>}/>  
+              <Route path="/productes" element={<Productes />} />
 
-       <Route path="/gestioMagatzem" element={<GestioMagatzem/>}/>  
+              <Route path="/lots" element={<Lots />} />
 
-       <Route path="/inventaris" element={<Inventaris/>}/>  
+              <Route path="/gestioMagatzem" element={<GestioMagatzem />} />
 
-       <Route path="/incidencies" element={<Incidencies/>}/>  
+              <Route path="/inventaris" element={<Inventaris />} />
 
-       <Route path="/moviments" element={<Moviments/>}/>  
-       
-       <Route path="/" element={<Main/>} />
-          
-       <Route path="/404" element={<Error404/>} />
-          
-       <Route path="*" element={<Error404/>} />
+              <Route path="/incidencies" element={<Incidencies />} />
 
-       </Routes>
+              <Route path="/moviments" element={<Moviments />} />
 
-      <div>
-        <Footer />
+              <Route path="/orderPickingShipping" element={<OrderPickingShipping />} />
+
+              <Route path="/orderPickingReception" element={<OrderPickingReception />} />
+
+              <Route path="/" element={<Main />} />
+
+              <Route path="/404" element={<Error404 />} />
+
+              <Route path="*" element={<Error404 />} />
+
+            </Routes>
+          </div>
+
+        </div>
       </div>
 
-
-
-    </div>
-    </div>  
-      
     </>
   )
 }
 
-function Error404 (){
+function Error404() {
   return (
     <div>
-    <h2>ERROR 404</h2>
+      <h2>ERROR 404</h2>
     </div>
-    );
+  );
 }
 
 export default App

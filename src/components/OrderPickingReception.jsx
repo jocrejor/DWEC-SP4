@@ -34,7 +34,7 @@ function OrderPickingReception() {
 
             //recorrer orden reception pendent (desempaquetada)
             const orderPendent = orderReception.filter((order) => order.orderreception_status_id === "ceba");
-            
+
             const tempPickings = [];
             orderPendent.map((order) => {
                 //recorrer line reception de cada orden reception
@@ -44,7 +44,7 @@ function OrderPickingReception() {
                     const space = spaces.find((space) => space.product_id === line.product_id);
                     if (space) {
                         console.log(order.id, line.id, line.product_id, line.quantity_received, space.storage_id, space.street_id, space.selft_id, space.id);
-                        const objTemporal = {   
+                        const objTemporal = {
                             order_reception_id: order.id,
                             order_line_reception_id: line.id,
                             product_id: line.product_id,
@@ -70,14 +70,22 @@ function OrderPickingReception() {
     const crearOrderPickingReception = () => {
         //obtindre els productes seleccionats
         const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-        const seleccio = [];
-        
-        checkboxes.forEach((checkbox) => {
-            seleccio.push(checkbox.value);
-        });
+        if (checkboxes.length === 0) {
+            alert("No has seleccionat cap producte");
+            return;
+        } else {
+            canviEstatModal();
+            setTipoModal("Alta");
 
-        console.log(seleccio);
-        setOrderSelected(seleccio);
+            const seleccio = [];
+            checkboxes.forEach((checkbox) => {
+                seleccio.push(checkbox.value);
+            });
+
+            console.log(seleccio);
+            setOrderSelected(seleccio);
+        }
+
     }
 
     return (
@@ -86,8 +94,6 @@ function OrderPickingReception() {
                 <h2>Llistat Order Reception</h2>
             </div>
             <Button variant="success" onClick={() => {
-                canviEstatModal();
-                setTipoModal("Alta");
                 crearOrderPickingReception();
             }}>Crear Order Picking</Button>
 
@@ -111,12 +117,46 @@ function OrderPickingReception() {
                                 <td>{product.name}</td>
                                 <td>{temporalPicking.quantity_received}</td>
                                 <td>{temporalPicking.storage_id} / {temporalPicking.street_id} / {temporalPicking.selft_id} / {temporalPicking.space_id}</td>
-                                <td><input type="checkbox" value={temporalPicking.order_reception_id} /></td>
+                                <td><input type="checkbox" value={temporalPicking.order_line_reception_id} /></td>
                             </tr>
                         );
                     })}
                 </tbody>
             </Table>
+
+            <Modal show={showModal} onHide={canviEstatModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{tipoModal}</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Producte</th>
+                                <th>Quantitat</th>
+                                <th>Magatzem / Carrer / Estantería / Espai</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody>
+                            {orderSelected.map(order => {
+                                const lines = orderLineReception.find(line => line.id === order);
+                                const product = products.find(p => p.id === lines.product_id);
+                                const space = spaces.find((space) => space.product_id === lines.product_id);
+                                return (
+                                    <tr key={order}>
+                                        <td>{product.name}</td>
+                                        <td>{lines.quantity_received}</td>
+                                        <td>{space.storage_id} / {space.street_id} / {space.selft_id} / {space.id}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </Modal.Body>
+            </Modal>
         </>
     );
 }

@@ -4,6 +4,7 @@ import {Formik, Form, Field} from 'formik'
 import * as yup from 'yup'
 import { Button, Modal } from 'react-bootstrap';
 
+
 const OrderShippingSchema = yup.object().shape({
   client_id: yup.string().required('Valor requerit'),
   carrier_id: yup.string().required('Valor requerit'),
@@ -19,6 +20,7 @@ const OrderLineSchema = yup.object().shape({
 
 function OrdesEnviament() {
   const [orders, setOrder] = useState([])
+  const [status, setStatus] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [tipoModal, setTipoModal] = useState('Crear')
   const [valorsInicials, setValorsInicials] = useState({client_id: '', carrier_id: '', prepared_by: '', shipping_date: '',ordershipping_status_id:''})
@@ -28,7 +30,6 @@ function OrdesEnviament() {
   const [users, setUsers] = useState([])
   const [products, setProducts] = useState([])
   const [arrayProductos,setArray] = useState([])
-  const [idOrdre,setIdOrdre] = useState('')
   
   useEffect(async () => {
     const data = await getData(url,'OrderShipping')
@@ -41,6 +42,9 @@ function OrdesEnviament() {
     setUsers(dataUsers)
     const dataProducts = await getData(url,'Product')
     setProducts(dataProducts)
+    const dataStatus = await getData(url,'OrderShipping_Status')
+    console.log(dataStatus)
+    setStatus(dataStatus)
   }, [])
 
   const eliminarOrder = (id) => {
@@ -63,33 +67,68 @@ function OrdesEnviament() {
     setValorsLineInicials(valors)
   }
 
-  
+  const clientExistent = (id) => {
+    const existe = clientes.find(client => client.id === id)
+    if(existe){
+      return existe.name
+    }
+  }
+
+  const transportistaExistente = (id) => {
+    const existe = carriers.find(carrier => carrier.id === id)
+    if(existe){
+      return existe.name
+    }
+  }
+
+  const estatExistent = (id) => {
+    console.log(status)
+    console.log(id)
+    const existe = status.find(estat => estat.id === String(id))
+    if(existe){
+      return existe.name
+    }
+  } 
+
   const canviEstatModal = () => {
       setShowModal(!showModal)
   }
 
-  const grabar = async (values)=>{
-    if(tipoModal==="Crear"){
-      const data =  await postData(url,'OrderShipping', values)
-      console.log(data.id)
-      setIdOrdre(data.id)
-    }else{
-      await updateId(url,'OrderShipping',values.id,values)
-      }
-    const data = await getData(url, "OrderShipping")
-    await setOrder(data)
-    arrayProductos.map (line => {
-      line.shipping_order_id = idOrdre
-      postData(url,'OrderLineShipping', line)
-    })
-    canviEstatModal()
-  }
+  const grabar = async (values) => {
+      if (tipoModal === "Crear") {
+        if(arrayProductos.length > 0){
+          const data = await postData(url, "OrderShipping", values);
+          const newOrderId = data.id;
 
+          const linesWithOrderId = arrayProductos.map((line) => ({
+            ...line,
+            shipping_order_id: newOrderId,
+          }));
+
+          await Promise.all(
+            linesWithOrderId.map((line) =>
+              postData(url, "OrderLineShipping", line)
+            )
+          );
+        }else{
+          alert("Error, has d'afegir un Order Line")
+          return;
+        }
+      } 
+      else {
+        await updateId(url, "OrderShipping", values.id, values);
+      }
+      const updatedOrders = await getData(url, "OrderShipping");
+      setOrder(updatedOrders);
+
+      canviEstatModal();
+      setArray([]);    
+  };
+  
   return (
     <>
     {/** Llistat Productes */}
    <div>
-     <h2>Llistat Ordres Enviament</h2>
      <Button variant="success" onClick={() => {canviEstatModal();setTipoModal("Crear")}}>Alta Orden</Button>
      <table>
        <tr>
@@ -104,11 +143,11 @@ function OrdesEnviament() {
        {orders.map((valors) => (
            <tr key={valors.id}>
              <td>{valors.id}</td>
-             <td>{valors.client_id}</td>
-             <td>{valors.carrier_id}</td>
+             <td>{clientExistent(valors.client_id)}</td>
+             <td>{transportistaExistente(valors.carrier_id)}</td>
              <td>{valors.prepared_by}</td>
              <td>{valors.shipping_date}</td>
-             <td>{valors.ordershipping_status_id}</td>
+             <td>{estatExistent(valors.ordershipping_status_id)}</td>
              <td><Button variant='warning' onClick={() => {modificarOrdre(valors); canviEstatModal()}}>Modificar</Button></td>
              <td><Button className='btn btn-primary' onClick={() => eliminarOrder(valors.id)}>Eliminar</Button></td>
            </tr>

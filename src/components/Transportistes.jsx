@@ -107,10 +107,6 @@ function Transportistes() {
             <th>NIF</th>
             <th>Telèfon</th>
             <th>Email</th>
-            {/* <th>Estat</th>
-            <th>Província</th>
-            <th>Ciutat</th>
-            <th>CP</th> */}
             <th>Visualitzar</th>
             <th>Modificar</th>
             <th>Eliminar</th>
@@ -130,10 +126,6 @@ function Transportistes() {
                 <td>{valors.nif}</td>
                 <td>{valors.phone}</td>
                 <td>{valors.email}</td>
-                {/* <td>{valors.state_id}</td>
-                <td>{valors.province}</td>
-                <td>{valors.city}</td>
-                <td>{valors.cp}</td> */}
                 <td>
                   <Button
                     variant="outline-secondary"

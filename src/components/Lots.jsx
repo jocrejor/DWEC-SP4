@@ -14,9 +14,9 @@ const LotSchema = Yup.object().shape({
   quantity: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
   production_date: Yup.string().required('Valor requerit'),
   expiration_date: Yup.string().required('Valor requerit'),
-  orderReception: Yup.string().min(3, 'Valor mínim de 3 caràcters').max(50, 'El valor màxim és de 50 caràcters').required('Valor requerit'),
-  orderLineReception: Yup.string().min(3, 'Valor mínim de 3 caràcters').max(50, 'El valor màxim és de 50 caràcters').required('Valor requerit'),
 });
+
+
 
 function Lots() {
   const [lot, setLot] = useState([]);
@@ -29,10 +29,7 @@ function Lots() {
     quantity: '',
     production_date: '',
     expiration_date: '',
-    orderReception: '',
-    orderLineReception: '',
   });
-  const [visualizarLot, setVisualizarLot] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -53,12 +50,13 @@ function Lots() {
     setValorsInicials(valors);
   };
 
-  const canviEstatModal = () => {
-    setShowModal(!showModal);
+  const visualitzarLot = (valors) => {
+    setTipoModal('Visualitzar');
+    setValorsInicials(valors);
   };
 
-  const handleVisualitzar = (valors) => {
-    setVisualizarLot(valors);
+  const canviEstatModal = () => {
+    setShowModal(!showModal);
   };
 
   return (
@@ -90,8 +88,6 @@ function Lots() {
               <th>Quantitat</th>
               <th>Data producció</th>
               <th>Data caducitat</th>
-              <th>Order Reception</th>
-              <th>Order Line Reception</th>
               <th>Visualitzar</th>
               <th>Modificar</th>
               <th>Eliminar</th>
@@ -100,7 +96,7 @@ function Lots() {
           <tbody>
             {lot.length === 0 ? (
               <tr>
-                <td colSpan="12" className="text-center">
+                <td colSpan="9" className="text-center">
                   No hi han lots
                 </td>
               </tr>
@@ -114,13 +110,14 @@ function Lots() {
                   <td>{valors.quantity}</td>
                   <td>{valors.production_date}</td>
                   <td>{valors.expiration_date}</td>
-                  <td>{valors.orderReception}</td>
-                  <td>{valors.orderLineReception}</td>
                   <td>
                     <Button
-                      variant="info"
+                      variant="primary"
                       className="btn-sm"
-                      onClick={() => handleVisualitzar(valors)}
+                      onClick={() => {
+                        visualitzarLot(valors);
+                        canviEstatModal();
+                      }}
                     >
                       <i className="bi bi-eye"></i>
                     </Button>
@@ -155,7 +152,6 @@ function Lots() {
         </table>
       </div>
 
-      {/* Modal para Crear/Modificar */}
       <Modal show={showModal} onHide={canviEstatModal}>
         <Modal.Header closeButton>
           <Modal.Title>{tipoModal} Lot</Modal.Title>
@@ -163,58 +159,141 @@ function Lots() {
 
         <Modal.Body>
           <Formik
-            initialValues={tipoModal === 'Modificar' ? valorsInicials : valorsInicials}
+            initialValues={
+              tipoModal === 'Modificar' || tipoModal === 'Visualitzar'
+                ? valorsInicials
+                : {
+                  name: '',
+                  product_id: '',
+                  supplier_id: '',
+                  quantity: '',
+                  production_date: '',
+                  expiration_date: '',
+                }
+            }
             validationSchema={LotSchema}
+            /** SE ACTUALIZA LA TABLA AL MODIFICAR O CREAR */
             onSubmit={(values) => {
               if (tipoModal === 'Crear') {
                 postData(url, 'Lot', values).then((nuevoLote) => {
-                  setLot((prevLot) => [...prevLot, nuevoLote]);
+                  setLot(prevLot => [...prevLot, nuevoLote]);
                 });
               } else {
                 updateId(url, 'Lot', values.id, values).then(() => {
-                  setLot((prevLot) =>
-                    prevLot.map((lot) => (lot.id === values.id ? values : lot))
-                  );
+                  setLot(prevLot => prevLot.map(lot => (lot.id === values.id ? values : lot)));
                 });
               }
               canviEstatModal();
             }}
+          /** SIN ACTUALIZAR (VERSIÓN ANTERIOR) */
+          // onSubmit={(values) => {
+          //   tipoModal === 'Crear'
+          //     ? postData(url, 'Lot', values)
+          //     : updateId(url, 'Lot', values.id, values);
+          //   canviEstatModal();
+          // }}
           >
-            {({ errors, touched }) => (
+            {({ values, errors, touched }) => (
               <Form>
-                {/* Existing fields */}
-                {/* New fields */}
                 <div className="form-group">
-                  <label htmlFor="orderReception">Order Reception</label>
+                  <label htmlFor="name">Nom del lot</label>
                   <Field
                     type="text"
-                    name="orderReception"
-                    placeholder="Order Reception"
+                    name="name"
+                    placeholder="Nom del lot"
                     className="form-control"
+                    disabled={tipoModal === 'Visualitzar'}
                   />
-                  {errors.orderReception && touched.orderReception && (
-                    <div className="text-danger">{errors.orderReception}</div>
-                  )}
+                  {errors.name && touched.name ? (
+                    <div className="text-danger mt-1">{errors.name}</div>
+                  ) : null}
                 </div>
+
                 <div className="form-group">
-                  <label htmlFor="orderLineReception">Order Line Reception</label>
+                  <label htmlFor="product_id">ID del Producte</label>
                   <Field
-                    type="text"
-                    name="orderLineReception"
-                    placeholder="Order Line Reception"
+                    type="number"
+                    name="product_id"
+                    placeholder="ID del producte"
                     className="form-control"
+                    disabled={tipoModal === 'Visualitzar'}
                   />
-                  {errors.orderLineReception && touched.orderLineReception && (
-                    <div className="text-danger">{errors.orderLineReception}</div>
-                  )}
+                  {errors.product_id && touched.product_id ? (
+                    <div className="text-danger mt-1">{errors.product_id}</div>
+                  ) : null}
                 </div>
+
+                <div className="form-group">
+                  <label htmlFor="supplier_id">ID del Proveïdor</label>
+                  <Field
+                    type="number"
+                    name="supplier_id"
+                    placeholder="ID del proveïdor"
+                    className="form-control"
+                    disabled={tipoModal === 'Visualitzar'}
+                  />
+                  {errors.supplier_id && touched.supplier_id ? (
+                    <div className="text-danger mt-1">{errors.supplier_id}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="quantity">Quantitat</label>
+                  <Field
+                    type="number"
+                    name="quantity"
+                    placeholder="Quantitat del lot"
+                    className="form-control"
+                    disabled={tipoModal === 'Visualitzar'}
+                  />
+                  {errors.quantity && touched.quantity ? (
+                    <div className="text-danger mt-1">{errors.quantity}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="production_date">Data de producció</label>
+                  <Field
+                    type="date"
+                    name="production_date"
+                    className="form-control"
+                    disabled={tipoModal === 'Visualitzar'}
+                  />
+                  {errors.production_date && touched.production_date ? (
+                    <div className="text-danger mt-1">{errors.production_date}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="expiration_date">Data d&apos;expiració</label>  {/* &apos; es ' */}
+                  <Field
+                    type="date"
+                    name="expiration_date"
+                    className="form-control"
+                    disabled={tipoModal === 'Visualitzar'}
+                  />
+                  {errors.expiration_date && touched.expiration_date ? (
+                    <div className="text-danger mt-1">{errors.expiration_date}</div>
+                  ) : null}
+                </div>
+
                 <div className="form-group d-flex justify-content-between mt-3">
-                  <Button variant="secondary" onClick={canviEstatModal}>
+                  <Button
+                    variant="secondary"
+                    onClick={canviEstatModal}
+                    className="btn btn-secondary"
+                  >
                     Tancar
                   </Button>
-                  <Button variant={tipoModal === 'Modificar' ? 'success' : 'info'} type="submit">
-                    {tipoModal}
-                  </Button>
+                  {tipoModal !== 'Visualitzar' && (
+                    <Button
+                      variant={tipoModal === 'Modificar' ? 'success' : 'info'}
+                      type="submit"
+                      className="btn"
+                    >
+                      {tipoModal}
+                    </Button>
+                  )}
                 </div>
               </Form>
             )}
@@ -225,4 +304,4 @@ function Lots() {
   );
 }
 
-export default Lots;
+export default Lots

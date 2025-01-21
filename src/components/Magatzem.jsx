@@ -17,7 +17,7 @@ function Storage() {
   const [showModal, setShowModal] = useState(false);
   const [tipoModal, setTipoModal] = useState("Crear");
   const [valorsInicials, setValorsInicials] = useState({ name: '', type: '', address: '' });
-  const navigate = useNavigate(); // useNavigate hook to navigate programmatically
+  const navigate = useNavigate(); 
 
   useEffect(async () => {
     const data = await getData(url, "Storage");
@@ -40,7 +40,7 @@ function Storage() {
   };
 
   const handleCarrerClick = (id) => {
-    navigate(`/carrer/${id}`); // Navigates to /carrer/:id
+    navigate(`/carrer/${id}`); 
   };
 
   return (

@@ -63,9 +63,21 @@ function OrderPickingReception() {
         fetchData();
     }, []);
 
-
     const canviEstatModal = () => {
         setShowModal(!showModal);
+    }
+
+    const crearOrderPickingReception = () => {
+        //obtindre els productes seleccionats
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        const seleccio = [];
+        
+        checkboxes.forEach((checkbox) => {
+            seleccio.push(checkbox.value);
+        });
+
+        console.log(seleccio);
+        setOrderSelected(seleccio);
     }
 
     return (
@@ -75,7 +87,8 @@ function OrderPickingReception() {
             </div>
             <Button variant="success" onClick={() => {
                 canviEstatModal();
-                setTipoModal("Alta")
+                setTipoModal("Alta");
+                crearOrderPickingReception();
             }}>Crear Order Picking</Button>
 
             <Table striped bordered hover>
@@ -98,7 +111,7 @@ function OrderPickingReception() {
                                 <td>{product.name}</td>
                                 <td>{temporalPicking.quantity_received}</td>
                                 <td>{temporalPicking.storage_id} / {temporalPicking.street_id} / {temporalPicking.selft_id} / {temporalPicking.space_id}</td>
-                                <td><input type="checkbox" /></td>
+                                <td><input type="checkbox" value={temporalPicking.order_reception_id} /></td>
                             </tr>
                         );
                     })}
@@ -107,7 +120,6 @@ function OrderPickingReception() {
         </>
     );
 }
-
 
 export default OrderPickingReception;
 

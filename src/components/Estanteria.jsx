@@ -71,7 +71,7 @@ function Shelf() {
                                     <td>{valors.name}</td>
                                     <td>{valors.storage_id}</td>
                                     <td>{valors.steet_id}</td>
-                                    <td><Button onClick={() => handleCarrerClick(valors.id)}>Estanteria</Button></td> 
+                                    <td><Button onClick={() => handleCarrerClick(valors.id)}>Espai</Button></td> 
                                     <td><Button variant="warning" onClick={() => modificarShelf(valors)}>Modificar</Button></td>
                                     <td><Button variant="primary" onClick={() => eliminarShelf(valors.id)}>Eliminar</Button></td>
                                 </tr>)

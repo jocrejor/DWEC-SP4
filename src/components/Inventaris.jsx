@@ -1,4 +1,5 @@
 import React from 'react'
+import { Navigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
@@ -26,6 +27,7 @@ function Inventaris() {
   const [products, setProducts] = useState([]);
   const [selectedInventoryLines, setSelectedInventoryLines] = useState([]);
 
+  const {id} = useParams();
 
   useEffect(async () => {
     const stock = await getData(url, "Inventory");
@@ -237,7 +239,7 @@ function Inventaris() {
                           <td>
                             {
                               (values.inventory_status === 'Pendent') ?
-                                <a className='text-decoration-none text-orange cursor-pointer' onClick={() => { displayInventoryModal(values); setModalType('Inventariar') }}>Inventariar</a> :
+                                <a className='text-decoration-none text-orange cursor-pointer' onClick={() => {<Navigate to='/inventariar/'/>} }>Inventariar</a> :
                                 (values.inventory_status === 'Fent-se') ?
                                   <a className='text-decoration-none text-orange cursor-pointer' onClick={() => { displayInventoryModal(values); setModalType('Completar') }}>Completar</a> :
                                   ""
@@ -302,7 +304,7 @@ function Inventaris() {
               
                                   return (
                                     <tr key={value.id}>
-                                      <td>{(products.find(product => product.id === value.product_id)).name}</td>
+                                      <td>{(products.find(product => product.id === value.product_id))?.name}</td>
                                       <td>{value.quantity_estimated}</td>
                                       <td>cantidad real</td>
                                       <td>justificacion</td>
@@ -338,7 +340,7 @@ function Inventaris() {
                                       <td>{value.street_id}</td>
                                       <td>{value.selft_id}</td>
                                       <td>{value.space_id}</td>
-                                      <td>{(products.find(product => product.id === value.product_id)).name}</td>
+                                      <td>{(products.find(product => product.id === value.product_id))?.name}</td>
                                       <td></td>
                                     </tr>)
                                 })

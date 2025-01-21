@@ -68,7 +68,10 @@ function App() {
 
                 <Route path="/gestioMagatzem" element={<GestioMagatzem />} />
 
-                <Route path="/inventaris" element={<Inventaris />} />
+                <Route path="/inventaris" element={<Inventaris />} >
+                    <Route path="inventariar/:id" element={<Inventaris />} />
+                    <Route path="completarInventari/:id" element={<Inventaris />} />
+                </Route>
 
                 <Route path="/incidencies" element={<Incidencies />} />
 
@@ -82,7 +85,7 @@ function App() {
 
               </Routes>
 
-              
+
             </div>
           </div>
         </div>

@@ -7,12 +7,6 @@ import { Button, Modal } from 'react-bootstrap';
 import Header from '../components/Header';
 import Filtres from '../components/Filtres';
 
-/**
- * "orderReception": "orden11",
- * "orderLineReception": "linea11"
- * POR AÑADIR EN EL FORMULARIO
- */
-
 const LotSchema = Yup.object().shape({
   name: Yup.string().min(4, 'Valor mínim de 4 caràcters.').max(50, 'El valor màxim és de 50 caràcters').required('Valor requerit'),
   product_id: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
@@ -20,6 +14,8 @@ const LotSchema = Yup.object().shape({
   quantity: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
   production_date: Yup.string().required('Valor requerit'),
   expiration_date: Yup.string().required('Valor requerit'),
+  orderReception: Yup.string().min(3, 'Valor mínim de 3 caràcters').max(50, 'El valor màxim és de 50 caràcters').required('Valor requerit'),
+  orderLineReception: Yup.string().min(3, 'Valor mínim de 3 caràcters').max(50, 'El valor màxim és de 50 caràcters').required('Valor requerit'),
 });
 
 function Lots() {
@@ -33,8 +29,10 @@ function Lots() {
     quantity: '',
     production_date: '',
     expiration_date: '',
+    orderReception: '',
+    orderLineReception: '',
   });
-  const [visualizarLot, setVisualizarLot] = useState(null); // Estado para visualizar lote
+  const [visualizarLot, setVisualizarLot] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -92,6 +90,8 @@ function Lots() {
               <th>Quantitat</th>
               <th>Data producció</th>
               <th>Data caducitat</th>
+              <th>Order Reception</th>
+              <th>Order Line Reception</th>
               <th>Visualitzar</th>
               <th>Modificar</th>
               <th>Eliminar</th>
@@ -100,7 +100,7 @@ function Lots() {
           <tbody>
             {lot.length === 0 ? (
               <tr>
-                <td colSpan="10" className="text-center">
+                <td colSpan="12" className="text-center">
                   No hi han lots
                 </td>
               </tr>
@@ -114,6 +114,8 @@ function Lots() {
                   <td>{valors.quantity}</td>
                   <td>{valors.production_date}</td>
                   <td>{valors.expiration_date}</td>
+                  <td>{valors.orderReception}</td>
+                  <td>{valors.orderLineReception}</td>
                   <td>
                     <Button
                       variant="info"
@@ -161,123 +163,56 @@ function Lots() {
 
         <Modal.Body>
           <Formik
-            initialValues={
-              tipoModal === 'Modificar'
-                ? valorsInicials
-                : {
-                  name: '',
-                  product_id: '',
-                  supplier_id: '',
-                  quantity: '',
-                  production_date: '',
-                  expiration_date: '',
-                }
-            }
+            initialValues={tipoModal === 'Modificar' ? valorsInicials : valorsInicials}
             validationSchema={LotSchema}
             onSubmit={(values) => {
               if (tipoModal === 'Crear') {
                 postData(url, 'Lot', values).then((nuevoLote) => {
-                  setLot(prevLot => [...prevLot, nuevoLote]);
+                  setLot((prevLot) => [...prevLot, nuevoLote]);
                 });
               } else {
                 updateId(url, 'Lot', values.id, values).then(() => {
-                  setLot(prevLot => prevLot.map(lot => (lot.id === values.id ? values : lot)));
+                  setLot((prevLot) =>
+                    prevLot.map((lot) => (lot.id === values.id ? values : lot))
+                  );
                 });
               }
               canviEstatModal();
             }}
           >
-            {({ values, errors, touched }) => (
+            {({ errors, touched }) => (
               <Form>
+                {/* Existing fields */}
+                {/* New fields */}
                 <div className="form-group">
-                  <label htmlFor="name">Nom del lot</label>
+                  <label htmlFor="orderReception">Order Reception</label>
                   <Field
                     type="text"
-                    name="name"
-                    placeholder="Nom del lot"
+                    name="orderReception"
+                    placeholder="Order Reception"
                     className="form-control"
                   />
-                  {errors.name && touched.name ? (
-                    <div className="text-danger mt-1">{errors.name}</div>
-                  ) : null}
+                  {errors.orderReception && touched.orderReception && (
+                    <div className="text-danger">{errors.orderReception}</div>
+                  )}
                 </div>
-
                 <div className="form-group">
-                  <label htmlFor="product_id">ID del Producte</label>
+                  <label htmlFor="orderLineReception">Order Line Reception</label>
                   <Field
-                    type="number"
-                    name="product_id"
-                    placeholder="ID del producte"
+                    type="text"
+                    name="orderLineReception"
+                    placeholder="Order Line Reception"
                     className="form-control"
                   />
-                  {errors.product_id && touched.product_id ? (
-                    <div className="text-danger mt-1">{errors.product_id}</div>
-                  ) : null}
+                  {errors.orderLineReception && touched.orderLineReception && (
+                    <div className="text-danger">{errors.orderLineReception}</div>
+                  )}
                 </div>
-
-                <div className="form-group">
-                  <label htmlFor="supplier_id">ID del Proveïdor</label>
-                  <Field
-                    type="number"
-                    name="supplier_id"
-                    placeholder="ID del proveïdor"
-                    className="form-control"
-                  />
-                  {errors.supplier_id && touched.supplier_id ? (
-                    <div className="text-danger mt-1">{errors.supplier_id}</div>
-                  ) : null}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="quantity">Quantitat</label>
-                  <Field
-                    type="number"
-                    name="quantity"
-                    placeholder="Quantitat del lot"
-                    className="form-control"
-                  />
-                  {errors.quantity && touched.quantity ? (
-                    <div className="text-danger mt-1">{errors.quantity}</div>
-                  ) : null}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="production_date">Data de producció</label>
-                  <Field
-                    type="date"
-                    name="production_date"
-                    className="form-control"
-                  />
-                  {errors.production_date && touched.production_date ? (
-                    <div className="text-danger mt-1">{errors.production_date}</div>
-                  ) : null}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="expiration_date">Data d&apos;expiració</label>
-                  <Field
-                    type="date"
-                    name="expiration_date"
-                    className="form-control"
-                  />
-                  {errors.expiration_date && touched.expiration_date ? (
-                    <div className="text-danger mt-1">{errors.expiration_date}</div>
-                  ) : null}
-                </div>
-
                 <div className="form-group d-flex justify-content-between mt-3">
-                  <Button
-                    variant="secondary"
-                    onClick={canviEstatModal}
-                    className="btn btn-secondary"
-                  >
+                  <Button variant="secondary" onClick={canviEstatModal}>
                     Tancar
                   </Button>
-                  <Button
-                    variant={tipoModal === 'Modificar' ? 'success' : 'info'}
-                    type="submit"
-                    className="btn"
-                  >
+                  <Button variant={tipoModal === 'Modificar' ? 'success' : 'info'} type="submit">
                     {tipoModal}
                   </Button>
                 </div>
@@ -286,29 +221,6 @@ function Lots() {
           </Formik>
         </Modal.Body>
       </Modal>
-
-      {/* Modal para Visualizar */}
-      {visualizarLot && (
-        <Modal show={!!visualizarLot} onHide={() => setVisualizarLot(null)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Detalls del Lot</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p><strong>ID:</strong> {visualizarLot.id}</p>
-            <p><strong>Nom:</strong> {visualizarLot.name}</p>
-            <p><strong>ID Producte:</strong> {visualizarLot.product_id}</p>
-            <p><strong>ID Proveïdor:</strong> {visualizarLot.supplier_id}</p>
-            <p><strong>Quantitat:</strong> {visualizarLot.quantity}</p>
-            <p><strong>Data de Producció:</strong> {visualizarLot.production_date}</p>
-            <p><strong>Data de Caducitat:</strong> {visualizarLot.expiration_date}</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setVisualizarLot(null)}>
-              Tancar
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
     </>
   );
 }

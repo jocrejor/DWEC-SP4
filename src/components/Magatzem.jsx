@@ -69,7 +69,7 @@ function Storage() {
                   <td>{valors.name}</td>
                   <td>{valors.type}</td>
                   <td>{valors.address}</td>
-                  <td><Button onClick={() => handleCarrerClick(valors.id)}>Carrer</Button></td> {/* Navigate to Carrer */}
+                  <td><Button onClick={() => handleCarrerClick(valors.id)}>Carrer</Button></td> 
                   <td><Button variant="warning" onClick={() => modificarStorage(valors)}>Modificar</Button></td>
                   <td><Button variant="primary" onClick={() => eliminarStorage(valors.id)}>Eliminar</Button></td>
                 </tr>

@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
 import Header from './Header';
+import { useNavigate } from 'react-router-dom';
 
 const ShelfSchema = Yup.object().shape({
     name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
@@ -16,6 +17,7 @@ function Shelf() {
     const [showModal, setShowModal] = useState(false);
     const [tipoModal, setTipoModal] = useState("Crear");
     const [valorsInicials, setValorsInicials] = useState({ name: '', storage_id: '', steet_id: '' });
+    const navigate = useNavigate(); 
 
     useEffect(async () => {
         const data = await getData(url, "Shelf")
@@ -38,6 +40,11 @@ function Shelf() {
         setShowModal(!showModal)
     }
 
+    const handleCarrerClick = (id) => {
+        navigate(`/espai/${id}`); 
+      };
+
+
     return (
         <>
              <Header title="Gestió Magatzem"/>
@@ -49,6 +56,7 @@ function Shelf() {
                         <th>Nom</th>
                         <th>ID Magatzem</th>
                         <th>ID Carrer</th>
+                        <th>Espai</th>
                         <th>Modificar</th>
                         <th>Eliminar</th>
                     </tr>
@@ -63,6 +71,7 @@ function Shelf() {
                                     <td>{valors.name}</td>
                                     <td>{valors.storage_id}</td>
                                     <td>{valors.steet_id}</td>
+                                    <td><Button onClick={() => handleCarrerClick(valors.id)}>Estanteria</Button></td> 
                                     <td><Button variant="warning" onClick={() => modificarShelf(valors)}>Modificar</Button></td>
                                     <td><Button variant="primary" onClick={() => eliminarShelf(valors.id)}>Eliminar</Button></td>
                                 </tr>)

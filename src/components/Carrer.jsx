@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
 import Header from './Header';
-
+import { useNavigate } from 'react-router-dom';
 
 const StreetSchema = Yup.object().shape({
     name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
@@ -17,6 +17,7 @@ function Street() {
     const [showModal, setShowModal] = useState(false);
     const [tipoModal, setTipoModal] = useState("Crear");
     const [valorsInicials, setValorsInicials] = useState({ name: '', storage_id: ''});
+    const navigate = useNavigate(); 
 
     useEffect(async () => {
         const data = await getData(url, "Street")
@@ -39,6 +40,10 @@ function Street() {
         setShowModal(!showModal)
     }
 
+    const handleCarrerClick = (id) => {
+        navigate(`/estanteria/${id}`); 
+      };
+
     return (
         <>
             <Header title="Gestió Magatzem"/>
@@ -49,6 +54,7 @@ function Street() {
                         <th>Id</th>
                         <th>Nom</th>
                         <th>ID Magatzem</th>
+                        <th>Estanteria</th>
                         <th>Modificar</th>
                         <th>Eliminar</th>
                     </tr>
@@ -62,6 +68,7 @@ function Street() {
                                     <td>{valors.id}</td>
                                     <td>{valors.name}</td>
                                     <td>{valors.storage_id}</td>
+                                    <td><Button onClick={() => handleCarrerClick(valors.id)}>Estanteria</Button></td> 
                                     <td><Button variant="warning" onClick={() => modificarStreet(valors)}>Modificar</Button></td>
                                     <td><Button variant="primary" onClick={() => eliminarStreet(valors.id)}>Eliminar</Button></td>
                                 </tr>)

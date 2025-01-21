@@ -79,6 +79,9 @@ function App() {
 
               <Route path="/carrer/:id" element={<Carrer />} />
 
+              <Route path="/estanteria/:id" element={<Estanteria />} />
+
+              <Route path="/espai/:id" element={<Espai />} />
 
               <Route path="/" element={<Main />} />
 

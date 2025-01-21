@@ -86,7 +86,7 @@ function OrderReception() {
     }
 
     // Trobar el producte per ID
-    const product = products.find((p) => p.id === parseInt(productId));
+    const product = products.find((p) => p.id === productId);
     if (!product) {
       alert('Producte no trobat!');
       return;

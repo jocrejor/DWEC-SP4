@@ -4,14 +4,14 @@ import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal, Table, Spinner } from 'react-bootstrap';
 
-const OrderLineReception_StatusSchema = Yup.object().shape({
+const OrderReception_StatusSchema = Yup.object().shape({
   name: Yup.string()
     .min(1, "Valor mínim d'1 caràcter.")
     .max(25, 'El valor màxim és de 25 caràcters.')
     .required('Valor requerit'),
 });
 
-function OrderLineReception_Status() {
+function OrderReception_Status() {
   const [ordersLineReceptionStatus, setOrdersLineReceptionStatus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -22,7 +22,7 @@ function OrderLineReception_Status() {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const data = await getData(url, 'OrderLineReception_Status');
+      const data = await getData(url, 'OrderReception_Status');
       setOrdersLineReceptionStatus(data);
       setError(null);
     } catch (err) {
@@ -39,7 +39,7 @@ function OrderLineReception_Status() {
   const eliminarEstatLinia = async (id) => {
     if (window.confirm('Estàs segur que vols eliminar aquest estat?')) {
       try {
-        await deleteData(url, 'OrderLineReception_Status', id);
+        await deleteData(url, 'OrderReception_Status', id);
         setOrdersLineReceptionStatus((prev) =>
           prev.filter((item) => item.id !== id)
         );
@@ -62,9 +62,9 @@ function OrderLineReception_Status() {
   const handleSubmit = async (values) => {
     try {
       if (tipoModal === 'Crear') {
-        await postData(url, 'OrderLineReception_Status', values);
+        await postData(url, 'OrderReception_Status', values);
       } else {
-        await updateId(url, 'OrderLineReception_Status', values.id, values);
+        await updateId(url, 'OrderReception_Status', values.id, values);
       }
       await fetchOrders();
       canviEstatModal();
@@ -138,7 +138,7 @@ function OrderLineReception_Status() {
         <Modal.Body>
           <Formik
             initialValues={valorsInicials}
-            validationSchema={OrderLineReception_StatusSchema}
+            validationSchema={OrderReception_StatusSchema}
             onSubmit={handleSubmit}
           >
             {({ errors, touched }) => (
@@ -149,7 +149,7 @@ function OrderLineReception_Status() {
                     id="name"
                     type="text"
                     name="name"
-                    placeholder="Nom del producte"
+                    placeholder="Nom del estat de línia"
                     autoComplete="off"
                   />
                   {errors.name && touched.name && <div>{errors.name}</div>}
@@ -174,4 +174,4 @@ function OrderLineReception_Status() {
   );
 }
 
-export default OrderLineReception_Status;
+export default OrderReception_Status;

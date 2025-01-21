@@ -7,7 +7,7 @@ import { Button, Modal, Table, Spinner } from 'react-bootstrap';
 const OrderReceptionSchema = Yup.object().shape({
   supplier_id: Yup.number().required('Proveïdor requerit'),
   estimated_reception_date: Yup.date().required('Data estimada requerida'),
-  OrderLineReception: Yup.string().min(1, "Valor mínim d'1 caràcter.").max(25, 'El valor màxim és de 25 caràcters.').required('Estat requerit'),
+  OrderLineReception_Status: Yup.string().min(1, "Valor mínim d'1 caràcter.").max(25, 'El valor màxim és de 25 caràcters.').required('Estat requerit'),
 });
 
 function OrderReception() {
@@ -22,7 +22,7 @@ function OrderReception() {
   const [valorsInicials, setValorsInicials] = useState({
     supplier_id: '',
     estimated_reception_date: '',
-    OrderLineReception: '',
+    OrderLineReception_Status: '',
   });
   const [error, setError] = useState(null);
   const [productId, setProductId] = useState('');
@@ -134,7 +134,7 @@ function OrderReception() {
           setValorsInicials({
             supplier_id: '',
             estimated_reception_date: '',
-            OrderLineReception: '',
+            OrderLineReception_Status: '',
           });
           canviEstatModal();
         }}
@@ -165,7 +165,7 @@ function OrderReception() {
                 <td>{valors.id}</td>
                 <td>{suppliers.find((sup) => sup.id === valors.supplier_id)?.name}</td>
                 <td>{valors.estimated_reception_date}</td>
-                <td>{statuses.find((status) => status.id === valors.OrderLineReception)?.name}</td>
+                <td>{statuses.find((status) => status.id === valors.OrderLineReception_Status)?.name}</td>
                 <td>
                   <Button variant="warning" onClick={() => modificarOrdre(valors)}>
                     Modificar
@@ -220,8 +220,8 @@ function OrderReception() {
                     )}
                 </div>
                 <div>
-                  <label htmlFor="OrderLineReception">Estat</label>
-                  <Field as="select" id="OrderLineReception" name="OrderLineReception">
+                  <label htmlFor="OrderLineReception_Status">Estat</label>
+                  <Field as="select" id="OrderLineReception_Status" name="OrderLineReception_Status">
                     <option value="">Selecciona un estat</option>
                     {statuses.map((status) => (
                       <option key={status.id} value={status.id}>
@@ -229,8 +229,8 @@ function OrderReception() {
                       </option>
                     ))}
                   </Field>
-                  {errors.OrderLineReception && touched.OrderLineReception && (
-                    <div>{errors.OrderLineReception}</div>
+                  {errors.OrderLineReception_Status && touched.OrderLineReception_Status && (
+                    <div>{errors.OrderLineReception_Status}</div>
                   )}
                 </div>
                 <div>

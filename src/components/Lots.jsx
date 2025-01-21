@@ -14,6 +14,8 @@ const LotSchema = Yup.object().shape({
   quantity: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
   production_date: Yup.string().required('Valor requerit'),
   expiration_date: Yup.string().required('Valor requerit'),
+  orderReception: Yup.string().required('Valor requerit'),
+  orderLineReception: Yup.string().required('Valor requerit'),
 });
 
 
@@ -29,6 +31,8 @@ function Lots() {
     quantity: '',
     production_date: '',
     expiration_date: '',
+    orderReception: '',
+    orderLineReception: '',
   });
 
   useEffect(() => {
@@ -88,6 +92,8 @@ function Lots() {
               <th>Quantitat</th>
               <th>Data producció</th>
               <th>Data caducitat</th>
+              <th>Order Reception</th>
+              <th>Order Line Reception</th>
               <th>Visualitzar</th>
               <th>Modificar</th>
               <th>Eliminar</th>
@@ -96,7 +102,7 @@ function Lots() {
           <tbody>
             {lot.length === 0 ? (
               <tr>
-                <td colSpan="9" className="text-center">
+                <td colSpan="12" className="text-center">
                   No hi han lots
                 </td>
               </tr>
@@ -110,6 +116,8 @@ function Lots() {
                   <td>{valors.quantity}</td>
                   <td>{valors.production_date}</td>
                   <td>{valors.expiration_date}</td>
+                  <td>{valors.orderReception}</td>
+                  <td>{valors.orderLineReception}</td>
                   <td>
                     <Button
                       variant="primary"
@@ -169,6 +177,8 @@ function Lots() {
                   quantity: '',
                   production_date: '',
                   expiration_date: '',
+                  orderReception: '',
+                  orderLineReception: '',
                 }
             }
             validationSchema={LotSchema}
@@ -274,6 +284,34 @@ function Lots() {
                   />
                   {errors.expiration_date && touched.expiration_date ? (
                     <div className="text-danger mt-1">{errors.expiration_date}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="orderReception">Order Reception</label>
+                  <Field
+                    type="text"
+                    name="orderReception"
+                    placeholder="Order Reception"
+                    className="form-control"
+                    disabled={tipoModal === 'Visualitzar'}
+                  />
+                  {errors.orderReception && touched.orderReception ? (
+                    <div className="text-danger mt-1">{errors.orderReception}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="orderLineReception">Order Line Reception</label>
+                  <Field
+                    type="text"
+                    name="orderLineReception"
+                    placeholder="Order Line Reception"
+                    className="form-control"
+                    disabled={tipoModal === 'Visualitzar'}
+                  />
+                  {errors.orderLineReception && touched.orderLineReception ? (
+                    <div className="text-danger mt-1">{errors.orderLineReception}</div>
                   ) : null}
                 </div>
 

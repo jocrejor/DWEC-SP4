@@ -9,8 +9,8 @@ import Filtres from '../components/Filtres';
 
 const LotSchema = Yup.object().shape({
   name: Yup.string().min(4, 'Valor mínim de 4 caràcters.').max(50, 'El valor màxim és de 50 caràcters').required('Valor requerit'),
-  product_id: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
-  supplier_id: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
+  product_id: Yup.string().min(1, 'El valor ha de ser una cadena no vacía').required('Valor requerit'),
+  supplier_id: Yup.string().min(1, 'El valor ha de ser una cadena no vacía').required('Valor requerit'),
   quantity: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
   production_date: Yup.string().required('Valor requerit'),
   expiration_date: Yup.string().required('Valor requerit'),
@@ -22,6 +22,10 @@ const LotSchema = Yup.object().shape({
 
 function Lots() {
   const [lot, setLot] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
+  const [orderReceptions, setOrderReceptions] = useState([]);
+  const [orderLineReceptions, setOrderLineReceptions] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [tipoModal, setTipoModal] = useState('Crear');
   const [valorsInicials, setValorsInicials] = useState({
@@ -38,7 +42,15 @@ function Lots() {
   useEffect(() => {
     async function fetchData() {
       const data = await getData(url, 'Lot');
+      const product = await getData(url, 'Product');
+      const supplier = await getData(url, 'Supplier');
+      const orderReceptionData = await getData(url, 'OrderReception');  // Obtener las órdenes de recepción
+      const orderLineReceptionData = await getData(url, 'OrderLineReception');  // Obtener las líneas de orden de recepción
       setLot(data);
+      setProducts(product);
+      setSuppliers(supplier);
+      setOrderReceptions(orderReceptionData);
+      setOrderLineReceptions(orderLineReceptionData);
     }
     fetchData();
   }, []);
@@ -111,8 +123,8 @@ function Lots() {
                 <tr key={valors.id}>
                   <td>{valors.id}</td>
                   <td>{valors.name}</td>
-                  <td>{valors.product_id}</td>
-                  <td>{valors.supplier_id}</td>
+                  <td>{products.find((product) => product.id === valors.product_id)?.name}</td>
+                  <td>{suppliers.find((supplier) => supplier.id === valors.supplier_id)?.name}</td>
                   <td>{valors.quantity}</td>
                   <td>{valors.production_date}</td>
                   <td>{valors.expiration_date}</td>
@@ -219,7 +231,7 @@ function Lots() {
                   ) : null}
                 </div>
 
-                <div className="form-group">
+                {/* <div className="form-group">
                   <label htmlFor="product_id">ID del Producte</label>
                   <Field
                     type="number"
@@ -242,6 +254,35 @@ function Lots() {
                     className="form-control"
                     disabled={tipoModal === 'Visualitzar'}
                   />
+                  {errors.supplier_id && touched.supplier_id ? (
+                    <div className="text-danger mt-1">{errors.supplier_id}</div>
+                  ) : null}
+                </div> */}
+                <div className="form-group">
+                  <label htmlFor="product_id">ID del Producte</label>
+                  <Field as="select" name="product_id" className="form-control" disabled={tipoModal === 'Visualitzar'}>
+                    <option value="">Selecciona un producte</option>
+                    {products.map((product) => (
+                      <option key={product.id} value={product.id}>
+                        {product.name}
+                      </option>
+                    ))}
+                  </Field>
+                  {errors.product_id && touched.product_id ? (
+                    <div className="text-danger mt-1">{errors.product_id}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="supplier_id">ID del Proveïdor</label>
+                  <Field as="select" name="supplier_id" className="form-control" disabled={tipoModal === 'Visualitzar'}>
+                    <option value="">Selecciona un proveïdor</option>
+                    {suppliers.map((supplier) => (
+                      <option key={supplier.id} value={supplier.id}>
+                        {supplier.name}
+                      </option>
+                    ))}
+                  </Field>
                   {errors.supplier_id && touched.supplier_id ? (
                     <div className="text-danger mt-1">{errors.supplier_id}</div>
                   ) : null}
@@ -287,7 +328,7 @@ function Lots() {
                   ) : null}
                 </div>
 
-                <div className="form-group">
+                {/* <div className="form-group">
                   <label htmlFor="orderReception">Order Reception</label>
                   <Field
                     type="text"
@@ -310,6 +351,36 @@ function Lots() {
                     className="form-control"
                     disabled={tipoModal === 'Visualitzar'}
                   />
+                  {errors.orderLineReception && touched.orderLineReception ? (
+                    <div className="text-danger mt-1">{errors.orderLineReception}</div>
+                  ) : null}
+                </div> */}
+
+                <div className="form-group">
+                  <label htmlFor="orderReception">Order Reception</label>
+                  <Field as="select" name="orderReception" className="form-control" disabled={tipoModal === 'Visualitzar'}>
+                    <option value="">Selecciona una orden de recepció</option>
+                    {orderReceptions.map((order) => (
+                      <option key={order.id} value={order.id}>
+                        {order.name}
+                      </option>
+                    ))}
+                  </Field>
+                  {errors.orderReception && touched.orderReception ? (
+                    <div className="text-danger mt-1">{errors.orderReception}</div>
+                  ) : null}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="orderLineReception">Order Line Reception</label>
+                  <Field as="select" name="orderLineReception" className="form-control" disabled={tipoModal === 'Visualitzar'}>
+                    <option value="">Selecciona una línea de orden de recepció</option>
+                    {orderLineReceptions.map((line) => (
+                      <option key={line.id} value={line.id}>
+                        {line.name}
+                      </option>
+                    ))}
+                  </Field>
                   {errors.orderLineReception && touched.orderLineReception ? (
                     <div className="text-danger mt-1">{errors.orderLineReception}</div>
                   ) : null}

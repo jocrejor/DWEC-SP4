@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import {Button, Container} from 'react-bootstrap';
 import { UserContext } from '../contextData/UserContext';
 import Header from './Header';
@@ -13,7 +13,7 @@ function Logout () {
 
     const borrarUser = ()=>{
         logout
-        navigate('/');
+        //navigate('/');
     }
     return(
 

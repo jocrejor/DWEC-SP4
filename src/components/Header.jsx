@@ -5,7 +5,7 @@ import { UserContext } from '../contextData/UserContext';
 function Header(props) {
   const { title } = props;
   const { currentUser } = useContext(UserContext);
-
+   console.log(currentUser)
   return (
     <div>
       <h1 className="text-center py-4 fs-4 fw-bold m-0 text-white bg-title">{title}</h1>

@@ -25,6 +25,8 @@ import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';
 import OrderPickingShipping from './components/OrderPickingShipping';
 import OrderPickingReception from './components/OrderPickingReception';
+import Province from './components/Province';
+import City from './components/City';
 
 // Context
 import { UserProvider } from './contextData/UserContext'
@@ -51,7 +53,12 @@ function App() {
 
               <Route path="/rols" element={<Rols />} />
 
-              <Route path="/dadesGeografiques" element={<DadesGeografiques />} />
+              <Route path="/dadesGeografiques" element={<DadesGeografiques />} >
+                  <Route path="provinces/:province_id" element={<Province/>} >
+                     <Route path="cities/:city_id" element={<City/>} >
+                     </Route>
+                  </Route>
+              </Route>
 
               <Route path="/transportistes" element={<Transportistes />} />
 

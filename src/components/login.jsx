@@ -2,7 +2,7 @@ import React, { useState, useEffect,useContext } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import {useNavigate} from 'react-router';
+import {useNavigate} from 'react-router-dom';
 import { url, getData } from '../apiAccess/crud';
 import Header from './Header';
 import { UserContext } from '../contextData/UserContext';
@@ -40,10 +40,8 @@ function Login() {
            } else {
             delete usuariRegistrat.password;
             login(usuariRegistrat)
-            //localStorage.setItem("usuariActiu",JSON.stringify(usuariRegistrat))
-            //console.log(usuariRegistrat)
-          // enviar a inici
-          //navigate('/');
+                // enviar a inici
+            //navigate('/');
         }
   
       

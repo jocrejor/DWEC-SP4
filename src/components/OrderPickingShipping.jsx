@@ -187,8 +187,8 @@ function OrderPickingShipping() {
 
   useEffect(() => {
       const fetchData = async () => {
-          const orderPicking = await getData(url, "OrderPickingShipping");
-          setOrderPickingShipping(orderPicking);
+          // const orderPicking = await getData(url, "OrderPickingshipping");
+          // setOrderPickingShipping(orderPicking);
 
           const orderShipping = await getData(url, "OrderShipping");
           setOrderShipping(orderShipping);
@@ -203,12 +203,12 @@ function OrderPickingShipping() {
           setSpaces(spaces);
 
           //recorrer orden Shipping pendent (desempaquetada)
-          const orderPendent = orderShipping.filter((order) => order.orderShipping_status_id === "ceba");
+          const orderPendent = orderShipping.filter((order) => order.ordershipping_status_id === 1);
           
           const tempPickings = [];
           orderPendent.map((order) => {
               //recorrer line Shipping de cada orden shipping
-              const lines = orderLine.filter((line) => line.order_shipping_id === order.id);
+              const lines = orderLine.filter((line) => line.shipping_order_id === order.id);
               //obtindre product.name, product.quantitat, product.space
               lines.forEach((line) => {
                   const space = spaces.find((space) => space.product_id === line.product_id);
@@ -218,7 +218,7 @@ function OrderPickingShipping() {
                           order_shipping_id: order.id,
                           order_line_shipping_id: line.id,
                           product_id: line.product_id,
-                          quantity_received: line.quantity_received,
+                          quantity: line.quantity,
                           storage_id: space.storage_id,
                           street_id: space.street_id,
                           selft_id: space.selft_id,
@@ -263,10 +263,10 @@ function OrderPickingShipping() {
                   {temporalPickings.map(temporalPicking => {
                       const product = products.find(p => p.id === temporalPicking.product_id);
                       return (
-                          <tr key={temporalPicking.order_shipping_id}>
+                          <tr key={temporalPicking.order_line_shipping_id}>
                               <td>{temporalPicking.order_shipping_id}</td>
                               <td>{product.name}</td>
-                              <td>{temporalPicking.quantity_received}</td>
+                              <td>{temporalPicking.quantity}</td>
                               <td>{temporalPicking.storage_id} / {temporalPicking.street_id} / {temporalPicking.selft_id} / {temporalPicking.space_id}</td>
                               <td><input type="checkbox" /></td>
                           </tr>

@@ -24,7 +24,7 @@ function Client() {
   const [cities, setCities] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
-  const [tipoModal, setTipoModal] = useState('Crear');
+  const [tipoModal, setTipoModal] = useState('Modificar');
   const [valorsInicials, setValorsInicials] = useState({
     name: '', email: '', phone: '', address: '', nif: '', state_id: '', province_id: '', city_id: '', cp: '',
   });
@@ -73,32 +73,30 @@ function Client() {
     setSelectedClient(null);
   };
 
-  // Handle State change and update provinces and cities accordingly
   const handleStateChange = (stateId, setFieldValue) => {
     const stateIdInt = parseInt(stateId);
     const filteredProvinces = provinces.filter(province => parseInt(province.state_id) === stateIdInt);
 
     setFieldValue('state_id', stateId);
-    setFieldValue('province_id', '');  // Limpiar la provincia seleccionada
-    setFieldValue('city_id', '');  // Limpiar la ciudad seleccionada
+    setFieldValue('province_id', '');
+    setFieldValue('city_id', '');
     setProvinces(filteredProvinces);
-    setCities([]);  // Limpiar las ciudades para evitar opciones incorrectas
+    setCities([]);
   };
 
-  // Handle Province change and update cities accordingly
   const handleProvinceChange = (provinceId, setFieldValue) => {
     const provinceIdInt = parseInt(provinceId);
     const filteredCities = cities.filter(city => parseInt(city.province_id) === provinceIdInt);
 
     setFieldValue('province_id', provinceId);
-    setFieldValue('city_id', '');  // Limpiar la ciudad seleccionada
-    setCities(filteredCities);  // Actualizar las ciudades disponibles
+    setFieldValue('city_id', '');
+    setCities(filteredCities);
   };
 
   const handleSubmit = async (values) => {
     if (tipoModal === 'Crear') {
       await postData(url, 'Client', values);
-    } else if (tipoModal === 'Modificar') {
+    } else {
       await updateId(url, 'Client', values.id, values);
     }
     setShowModal(false);
@@ -107,8 +105,8 @@ function Client() {
   return (
     <>
       <div>
-        <Header title="Clients" />
-        <Button variant="success" onClick={() => { canviEstatModal(); setTipoModal("Crear") }}>
+        <Header title="Clients"/>
+        <Button variant="success" onClick={() => { setTipoModal('Crear'); setShowModal(true); }}>
           Alta Client
         </Button>
         <table className="table">
@@ -182,13 +180,11 @@ function Client() {
 
       <Modal show={showModal} onHide={canviEstatModal}>
         <Modal.Header closeButton>
-          <Modal.Title>{tipoModal === 'Modificar' ? 'Modificar Client' : 'Alta Client'}</Modal.Title>
+          <Modal.Title>{tipoModal === 'Crear' ? 'Alta Client' : 'Modificar Client'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
-            initialValues={tipoModal === 'Modificar' ? valorsInicials : {
-              name: '', email: '', phone: '', address: '', nif: '', state_id: '', province_id: '', city_id: '', cp: '',
-            }}
+            initialValues={valorsInicials}
             validationSchema={ClientSchema}
             onSubmit={handleSubmit}
           >
@@ -226,36 +222,30 @@ function Client() {
                 </div>
                 <div>
                   <label htmlFor="state_id">Estat</label>
-                  <Field as="select" name="state_id" onChange={(e) => handleStateChange(e.target.value, setFieldValue)} value={values.state_id}>
-                    <option value="">Selecciona Estat</option>
+                  <Field as="select" name="state_id" onChange={e => handleStateChange(e.target.value, setFieldValue)}>
+                    <option value="">Selecciona un estat</option>
                     {states.map(state => (
-                      <option key={state.id} value={state.id}>
-                        {state.name}
-                      </option>
+                      <option key={state.id} value={state.id}>{state.name}</option>
                     ))}
                   </Field>
                   {errors.state_id && touched.state_id && <div>{errors.state_id}</div>}
                 </div>
                 <div>
                   <label htmlFor="province_id">Província</label>
-                  <Field as="select" name="province_id" onChange={(e) => handleProvinceChange(e.target.value, setFieldValue)} value={values.province_id}>
-                    <option value="">Selecciona Província</option>
-                    {provinces.filter(province => parseInt(province.state_id) === parseInt(values.state_id)).map(province => (
-                      <option key={province.id} value={province.id}>
-                        {province.name}
-                      </option>
+                  <Field as="select" name="province_id" onChange={e => handleProvinceChange(e.target.value, setFieldValue)}>
+                    <option value="">Selecciona una província</option>
+                    {provinces.map(province => (
+                      <option key={province.id} value={province.id}>{province.name}</option>
                     ))}
                   </Field>
                   {errors.province_id && touched.province_id && <div>{errors.province_id}</div>}
                 </div>
                 <div>
                   <label htmlFor="city_id">Ciutat</label>
-                  <Field as="select" name="city_id" value={values.city_id}>
-                    <option value="">Selecciona Ciutat</option>
-                    {cities.filter(city => parseInt(city.province_id) === parseInt(values.province_id)).map(city => (
-                      <option key={city.id} value={city.id}>
-                        {city.name}
-                      </option>
+                  <Field as="select" name="city_id">
+                    <option value="">Selecciona una ciutat</option>
+                    {cities.map(city => (
+                      <option key={city.id} value={city.id}>{city.name}</option>
                     ))}
                   </Field>
                   {errors.city_id && touched.city_id && <div>{errors.city_id}</div>}
@@ -265,18 +255,11 @@ function Client() {
                   <Field name="cp" />
                   {errors.cp && touched.cp && <div>{errors.cp}</div>}
                 </div>
-                <div>
-                  <Button type="submit">{tipoModal === 'Modificar' ? 'Modificar' : 'Crear'}</Button>
-                </div>
+                <Button type="submit">{tipoModal === 'Crear' ? 'Crear' : 'Modificar'}</Button>
               </Form>
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={canviEstatModal}>
-            Tancar
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   );

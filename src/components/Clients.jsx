@@ -12,8 +12,8 @@ const ClientSchema = yup.object().shape({
   address: yup.string().min(10, 'L’adreça ha de tindre almenys 10 caracters').required('Valor Requerit.'),
   nif: yup.string().required('Valor Requerit.'),
   state_id: yup.number().required('Valor Requerit.'),
-  province: yup.string().required('Valor Requerit.'),
-  city: yup.string().required('Valor Requerit.'),
+  province_id: yup.number().required('Valor Requerit.'),
+  city_id: yup.number().required('Valor Requerit.'),
   cp: yup.string().matches(/^\d{5}$/, 'Codi postal no vàlid').required('Valor Requerit.'),
 })
 
@@ -22,40 +22,79 @@ function Client() {
   const [showModal, setShowModal] = useState(false)
   const [tipoModal, setTipoModal] = useState('Crear')
   const [valorsInicials, setValorsInicials] = useState({
-    name: '', email: '', phone: '', address: '', nif: '', state_id: '', province: '', city: '', cp: '',
+    name: '', email: '', phone: '', address: '', nif: '', state_id: '', province_id: '', city_id: '', cp: '',
   })
 
-  const [clientToView, setClientToView] = useState(null);  
-  
+  const [clientToView, setClientToView] = useState(null);
+
+  const [states, setStates] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedProvince, setSelectedProvince] = useState('');
+
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getData(url, 'Client') 
-      setClients(data)
-    }
-    fetchData()
-  }, [])
+      const clientsData = await getData(url, 'Client');
+      setClients(clientsData);
+
+      const statesData = await getData(url, 'State');
+      setStates(statesData);
+
+      if (statesData.length > 0) {
+        const provincesData = await getData(url, 'Province?state_id=' + statesData[0].id);
+        setProvinces(provincesData);
+      }
+
+      if (statesData.length > 0 && provinces.length > 0) {
+        const citiesData = await getData(url, 'City?province_id=' + provinces[0].id);
+        setCities(citiesData);
+      }
+    };
+    
+    fetchData();
+  }, []);
 
   const eliminarClient = (id) => {
-    deleteData(url, 'Client', id) 
-    const newClients = clients.filter(client => client.id !== id) 
-    setClients(newClients)
+    deleteData(url, 'Client', id);
+    const newClients = clients.filter(client => client.id !== id);
+    setClients(newClients);
   }
 
   const modificarClient = (valors) => {
-    setTipoModal('Modificar')
-    setValorsInicials(valors)
-    setShowModal(true)  
+    setTipoModal('Modificar');
+    setValorsInicials(valors);
+    setShowModal(true);
   }
 
   const canviEstatModal = () => {
-    setShowModal(!showModal)
+    setShowModal(!showModal);
   }
 
   const visualizarClient = (client) => {
     setClientToView(client);
-    setTipoModal('Visualitzar')  
-    setShowModal(true); 
+    setTipoModal('Visualitzar');
+    setShowModal(true);
   }
+
+  const handleStateChange = async (e) => {
+    const selectedStateId = e.target.value;
+    setSelectedState(selectedStateId);
+
+    const provincesData = await getData(url, 'Province?state_id=' + selectedStateId);
+    setProvinces(provincesData);
+
+    setSelectedProvince('');
+    setCities([]);
+  };
+
+  const handleProvinceChange = async (e) => {
+    const selectedProvinceId = e.target.value;
+    setSelectedProvince(selectedProvinceId);
+
+    const citiesData = await getData(url, 'City?province_id=' + selectedProvinceId);
+    setCities(citiesData);
+  };
 
   return (
     <>
@@ -125,17 +164,24 @@ function Client() {
                 address: '',
                 nif: '',
                 state_id: '',
-                province: '',
-                city: '',
+                province_id: '',
+                city_id: '',
                 cp: '',
               }}
               validationSchema={ClientSchema}
-              onSubmit={values => {
+              onSubmit={async (values) => {
                 if (tipoModal === 'Crear') {
-                  postData(url, 'Client', values)  
+                  // Hacer la llamada a la API para crear el cliente
+                  const newClient = await postData(url, 'Client', values);
+
+                  // Si la creación es exitosa, añadir el nuevo cliente a la lista
+                  setClients([...clients, newClient]);
                 } else if (tipoModal === 'Modificar') {
-                  updateId(url, 'Client', values.id, values) 
+                  // Llamada a la API para modificar el cliente
+                  await updateId(url, 'Client', values.id, values);
                 }
+
+                // Cerrar el modal después de guardar
                 setShowModal(false);
               }}
             >
@@ -207,38 +253,35 @@ function Client() {
 
                   <div>
                     <label htmlFor='state_id'>Estat</label>
-                    <Field
-                      type="number"
-                      name="state_id"
-                      placeholder="ID de l'estat"
-                      autoComplete="off"
-                      value={values.state_id}
-                    />
+                    <Field as="select" name="state_id" onChange={handleStateChange} value={selectedState}>
+                      <option value="">Seleccionar Estat</option>
+                      {states.map(state => (
+                        <option key={state.id} value={state.id}>{state.name}</option>
+                      ))}
+                    </Field>
                     {errors.state_id && touched.state_id ? <div>{errors.state_id}</div> : null}
                   </div>
 
                   <div>
-                    <label htmlFor='province'>Província</label>
-                    <Field
-                      type="text"
-                      name="province"
-                      placeholder="Província"
-                      autoComplete="off"
-                      value={values.province}
-                    />
-                    {errors.province && touched.province ? <div>{errors.province}</div> : null}
+                    <label htmlFor='province_id'>Província</label>
+                    <Field as="select" name="province_id" onChange={handleProvinceChange} value={selectedProvince}>
+                      <option value="">Seleccionar Província</option>
+                      {provinces.map(province => (
+                        <option key={province.id} value={province.id}>{province.name}</option>
+                      ))}
+                    </Field>
+                    {errors.province_id && touched.province_id ? <div>{errors.province_id}</div> : null}
                   </div>
 
                   <div>
-                    <label htmlFor='city'>Ciutat</label>
-                    <Field
-                      type="text"
-                      name="city"
-                      placeholder="Ciutat"
-                      autoComplete="off"
-                      value={values.city}
-                    />
-                    {errors.city && touched.city ? <div>{errors.city}</div> : null}
+                    <label htmlFor='city_id'>Ciutat</label>
+                    <Field as="select" name="city_id" value={values.city_id}>
+                      <option value="">Seleccionar Ciutat</option>
+                      {cities.map(city => (
+                        <option key={city.id} value={city.id}>{city.name}</option>
+                      ))}
+                    </Field>
+                    {errors.city_id && touched.city_id ? <div>{errors.city_id}</div> : null}
                   </div>
 
                   <div>
@@ -273,4 +316,4 @@ function Client() {
   )
 }
 
-export default Client
+export default Client;

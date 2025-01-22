@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
-import { url, postData, getData, deleteData, updateId } from "./crud";
+import { url, postData, getData, deleteData, updateId } from "../apiAccess/crud";
 import { Button, Table, Modal } from "react-bootstrap";
 
 function OrderPickingReception() {

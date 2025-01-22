@@ -6,26 +6,50 @@ function Filtres() {
             <div className="row bg-grey pt-3 px-2 mx-0">
                 <div className="col-12 col-md-6 col-xl-4">
                     <div className="mb-3 text-light-blue">
-                        <label for="nombre" className="form-label">Nom</label>
-                        <input type="text" className="form-control" id="nombre" />
+                        <label for="nombre" className="form-label">Magatzem</label>
+                        <input type="text" placeholder='Ex: 01' className="form-control" id="nombre" />
                     </div>
                 </div>
                 <div className="col-12 col-md-6 col-xl-4">
                     <div className="mb-3 text-light-blue">
-                        <label for="dni-nif" className="form-label">DNI/NIF</label>
-                        <input type="text" className="form-control" id="dni-nif" />
+                        <label for="carrer" className="form-label">Carrer</label>
+                        <input type="text" placeholder='Ex: 02' className="form-control" id="carrer" />
                     </div>
                 </div>
                 <div className="col-12 col-md-6 col-xl-4">
                     <div className="mb-3 text-light-blue">
-                        <label for="telefono" className="form-label">Telèfon</label>
-                        <input type="text" className="form-control" id="telefono" />
+                        <label for="estanteria" className="form-label">Estanteria</label>
+                        <input type="text" placeholder='Ex: 03' className="form-control" id="telefono" />
                     </div>
                 </div>
                 <div className="col-12 col-md-6 col-xl-4">
                     <div className="mb-3 text-light-blue">
-                        <label for="email" className="form-label">Correu</label>
-                        <input type="email" className="form-control" id="email" />
+                        <label for="espai" className="form-label">Espai</label>
+                        <input type="email" placeholder='Ex: 04' className="form-control" id="espai" />
+                    </div>
+                </div>
+                <div className="col-12 col-md-6 col-xl-4">
+                    <div className="mb-3 text-light-blue">
+                        <label for="producte" className="form-label">Producte</label>
+                        <input type="email" placeholder='Ex: Producto uno' className="form-control" id="producte" />
+                    </div>
+                </div>
+                <div className="col-12 col-md-6 col-xl-4">
+                    <div className="mb-3 text-light-blue">
+                        <label for="data" className="form-label">Data</label>
+                        <input type="date" placeholder='Ex: Reception' className="form-control" id="data" />
+                    </div>
+                </div>
+                <div className="col-12 col-md-6 col-xl-4">
+                    <div className="mb-3 text-light-blue">
+                        <label for="operari" className="form-label">Operari</label>
+                        <input type="email" placeholder='Ex: 1' className="form-control" id="operari" />
+                    </div>
+                </div>
+                <div className="col-12 col-md-6 col-xl-4">
+                    <div className="mb-3 text-light-blue">
+                        <label for="origen" className="form-label">Origen</label>
+                        <input type="email" placeholder='Ex: Reception' className="form-control" id="origen" />
                     </div>
                 </div>
                 <div className="col-xl-4"></div>

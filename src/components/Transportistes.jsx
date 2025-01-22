@@ -15,7 +15,7 @@ const carrierschema = Yup.object().shape({
   email: Yup.string().email('Email no vàlid').required('Valor requerit'),
   state_id: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
   province: Yup.string().required('Valor requerit'),
-  city: Yup.string().min(3, 'Valor mínim de 3 caracters').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
+  city: Yup.string().required('Valor requerit'),
   cp: Yup.string().matches(/^\d{5}$/, 'El codi postal ha de tenir 5 dígits').required('Valor requerit'),
 });
 
@@ -326,6 +326,7 @@ function Transportistes() {
                       {touched.province && errors.province && (
                         <div className="invalid-feedback">{errors.province}</div>
                       )}
+
                     </>
                   ) : (
                     // Si no es España, mostramos un campo de texto
@@ -342,24 +343,45 @@ function Transportistes() {
                       {touched.province && errors.province && (
                         <div className="invalid-feedback">{errors.province}</div>
                       )}
+                      
                     </>
                   )}
                 </div>
-
-
-                {/* Fins ací*/}
-                <div className="form-group">
-                  <label htmlFor="city">Ciutat</label>
-                  <Field
-                    id="city"
-                    name="city"
-                    className={`form-control ${touched.city && errors.city ? 'is-invalid' : ''
-                      }`}
-                  />
-                  {touched.city && errors.city ? (
-                    <div className="invalid-feedback">{errors.city}</div>
-                  ) : null}
-                </div>
+                {values.state_id === '194' && values.province ? (
+  <div className="form-group">
+    <label htmlFor="city">Ciutat</label>
+    <Field
+      as="select"
+      id="city"
+      name="city"
+      className={`form-control ${touched.city && errors.city ? 'is-invalid' : ''}`}
+    >
+      <option value="">Selecciona una ciutat</option>
+      {ciutat.map((ciudad) => (
+        <option key={ciudad.id} value={ciudad.name}>
+          {ciudad.name}
+        </option>
+      ))}
+    </Field>
+    {touched.city && errors.city && (
+      <div className="invalid-feedback">{errors.city}</div>
+    )}
+  </div>
+) : (
+  <div className="form-group">
+    <label htmlFor="city">Ciutat</label>
+    <Field
+      type="text"
+      id="city"
+      name="city"
+      placeholder="Escriu la ciutat"
+      className={`form-control ${touched.city && errors.city ? 'is-invalid' : ''}`}
+    />
+    {touched.city && errors.city && (
+      <div className="invalid-feedback">{errors.city}</div>
+    )}
+  </div>
+)}
                 <div className="form-group">
                   <label htmlFor="cp">Codi Postal</label>
                   <Field

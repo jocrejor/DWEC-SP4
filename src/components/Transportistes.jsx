@@ -177,7 +177,7 @@ function Transportistes() {
             <p><b>NIF:</b> {valorsInicials.nif}</p>
             <p><b>Telèfon:</b> {valorsInicials.phone}</p>
             <p><b>Email:</b> {valorsInicials.email}</p>
-            <p><b>Estat:</b> {valorsInicials.state_id}</p>
+            <p><b>Estat:</b> {valorsInicials.state_id}</p> {/*la vd q no sé per que no va el state_name*/}
             <p><b>Província:</b> {valorsInicials.province}</p>
             <p><b>Ciutat:</b> {valorsInicials.city}</p>
             <p><b>Codi Postal:</b> {valorsInicials.cp}</p>

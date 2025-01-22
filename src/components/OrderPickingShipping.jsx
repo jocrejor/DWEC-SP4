@@ -166,32 +166,6 @@ function OrderPickingShipping() {
           <Modal.Title>{tipoModal}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* <Formik
-            initialValues={{
-              operari: currentUser ? currentUser.id : "", // Establece el valor inicial
-            }}
-          >
-            {({ values }) => (
-              <Form>
-                <label htmlFor="operari">Operari:</label>
-                <Field
-                  as="select"
-                  name="operari"
-                  value={values.operari} // Asegura que el valor corresponda al estado
-                >
-                  <option value="" disabled>
-                    Selecciona un operari
-                  </option>
-                  {users.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.name}
-                    </option>
-                  ))}
-                </Field>
-              </Form>
-            )}
-          </Formik> */}
-
           <label htmlFor="operari">Operari:</label>
           <select name="operari" id="operari">
             <option value={currentUser ? currentUser : ""} selected disabled>Operari actual</option>

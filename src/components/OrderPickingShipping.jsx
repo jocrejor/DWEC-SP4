@@ -194,7 +194,7 @@ function OrderPickingShipping() {
 
           <label htmlFor="operari">Operari:</label>
           <select name="operari" id="operari">
-            <option value={currentUser ? currentUser : ""} selected disabled>Selecciona operari</option>
+            <option value={currentUser ? currentUser : ""} selected disabled>Operari actual</option>
             {users.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.name}

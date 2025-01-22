@@ -310,12 +310,12 @@ function Transportistes() {
                         className={`form-control ${
                           touched.province && errors.province ? 'is-invalid' : ''
                         }`}
-                        value={values.province.name} // Aseguramos que el valor esté sincronizado con el estado del formulario
+                        //value={values.province.name} // Aseguramos que el valor esté sincronizado con el estado del formulario
                       >
                         <option value="">Selecciona una província</option>
                         {provincia.length > 0 ? (
                           provincia.map((prov) => (
-                            <option key={prov.id} value={prov.id}> {/* Usa 'id' como valor */}
+                            <option key={prov.id} value={prov.name}> {/* Usa 'id' como valor */}
                               {prov.name}
                             </option>
                           ))

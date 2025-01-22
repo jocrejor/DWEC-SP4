@@ -22,7 +22,7 @@ function Login() {
     initialValues: { email: '',password:""},
     onSubmit: values => {
       // 
-      const url = "https://api.tendaciclista.ccpegoilesvalls.es/api/login";
+      const url = "http://node.daw.iesevalorpego.es:3001/User";
       const url2 = "http://localhost:3003/api/login";
       
       fetch(url, {

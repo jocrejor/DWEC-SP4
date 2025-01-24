@@ -6,36 +6,35 @@ import Header from './Header';
 import {url,getData} from '../apiAccess/crud'
 
 
- function EstatsOrdre() {
+function EstatsOrdre() {
 
     const columnesDataTAbles =  [{data: 'id'}, {data: 'name'}]
-    const [estat, setEstat] = useState('Lista');
+    const [data, setData] = useState([]);
 
   
     useEffect(() => {
 
         const inicialitza = async () => {
             const data = await getData(url, "OrderReception_Status")
-            setEstat(data)
+            setData(data)
           }
           inicialitza()
-          console.log(estat)
-     }, [])
+          console.log(data)
+          
+        }, [])
     
-
-     DataTable.use(DT);
-  
+   
+  DataTable.use(DT);
 return (
     <>
     <Header title="Estats Ordre" />
 
     <DataTable 
         columns = {columnesDataTAbles}
-        data={estat} 
+        data={data} 
         className="display"
         options={{
                 language: language,
-                info: false,
                 responsive: true,
                 select: true,
             }}
@@ -47,8 +46,7 @@ return (
         </tr>
     </thead>
 </DataTable>
-    
-    
+
     </>
 )
 

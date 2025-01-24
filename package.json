@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "datatables.net-dt": "^2.2.1",
+    "datatables.net-plugins": "^2.1.7",
+    "datatables.net-react": "^1.0.0",
     "formik": "^2.4.6",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.6",

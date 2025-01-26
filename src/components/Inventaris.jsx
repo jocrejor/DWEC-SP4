@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navigate, useParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
@@ -27,7 +27,7 @@ function Inventaris() {
   const [products, setProducts] = useState([]);
   const [selectedInventoryLines, setSelectedInventoryLines] = useState([]);
 
-  const {id} = useParams();
+
 
   useEffect(async () => {
     const stock = await getData(url, "Inventory");
@@ -135,9 +135,7 @@ function Inventaris() {
       <Header title='Inventaris'></Header>
       <Filtres />
       <Row>
-        <Col>                                          <input type="number" name="" id="" />
-
-
+        <Col>
           <div className='px-3 pt-3'>
             <Button variant='secondary' className='mb-3' onClick={handleShow}>Crear</Button>
 
@@ -239,9 +237,10 @@ function Inventaris() {
                           <td>
                             {
                               (values.inventory_status === 'Pendent') ?
-                                <a className='text-decoration-none text-orange cursor-pointer' onClick={() => {<Navigate to='/inventariar/'/>} }>Inventariar</a> :
+                              <a href={`/inventaris/inventariar/${values.id}`}>Inventariar</a>
+                               :
                                 (values.inventory_status === 'Fent-se') ?
-                                  <a className='text-decoration-none text-orange cursor-pointer' onClick={() => { displayInventoryModal(values); setModalType('Completar') }}>Completar</a> :
+                                  <a  href={`/inventaris/completarInventari/${values.id}`}>Completar</a> :
                                   ""
                             }
                           </td>

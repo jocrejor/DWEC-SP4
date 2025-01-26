@@ -21,8 +21,8 @@ import GestioMagatzem from './components/GestioMagatzem';
 import Inventaris from './components/Inventaris';
 import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';
-import Header from './components/Header';
-import Filtres from './components/Filtres';
+import Inventariar from './components/Inventariar.jsx';
+import CompletarInventari from './components/CompletarInventari.jsx';
 import './App.js';
 
 function App() {
@@ -68,10 +68,10 @@ function App() {
 
                 <Route path="/gestioMagatzem" element={<GestioMagatzem />} />
 
-                <Route path="/inventaris" element={<Inventaris />} >
-                    <Route path="inventariar/:id" element={<Inventaris />} />
-                    <Route path="completarInventari/:id" element={<Inventaris />} />
-                </Route>
+                <Route path="/inventaris/" element={<Inventaris />} />
+                    <Route path="/inventaris/inventariar/:id" element={<Inventariar />} />
+                    <Route path="/inventaris/completarInventari/:id" element={<CompletarInventari />} />
+                
 
                 <Route path="/incidencies" element={<Incidencies />} />
 

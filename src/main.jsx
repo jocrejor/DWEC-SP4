@@ -1,10 +1,16 @@
-import React from 'react'
-import '../common.css'
-function Main() {
+//import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import React from 'react';
 
-    return (
-        <div>Main</div>
-    )
-}
 
-export default Main
+import './index.css'
+import App from './App.jsx'
+
+import { BrowserRouter } from 'react-router-dom';
+
+
+createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+)

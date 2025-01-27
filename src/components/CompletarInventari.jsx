@@ -110,7 +110,7 @@ function CompletarInventari() {
                               <td>
                                 <Field
                                   type='number'
-                                  name='${value.id}.real_quantity'
+                                  name={`inventoryLines.${value.id}.real_quantity`}
                                   step="1"
                                   placeholder='0'
                                   autoComplete='off'
@@ -121,7 +121,7 @@ function CompletarInventari() {
                               <td>
                                 <Field
                                   as='select'
-                                  name='justificacio'
+                                  name={`inventoryLines.${value.id}.justificacio`}
                                   className='form-control'
                                 >
                                   <option>Selecciona una opció</option>
@@ -140,7 +140,7 @@ function CompletarInventari() {
                     }
                   </tbody>
                 </Table>
-                <Button variant='secondary'>Tornar</Button>
+                <Button variant='secondary' to="/inventaris">Tornar</Button>
                 <Button>Completar</Button>
               </Form>
               )}

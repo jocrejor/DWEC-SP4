@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
 import Header from './Header';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, Outlet } from 'react-router-dom';
 
 const StreetSchema = Yup.object().shape({
     name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
@@ -18,6 +18,9 @@ function Street() {
     const [tipoModal, setTipoModal] = useState("Crear");
     const [valorsInicials, setValorsInicials] = useState({ name: '', storage_id: ''});
     const navigate = useNavigate(); 
+
+    let {magatzem} = useParams();
+    console.log(magatzem);
 
     useEffect(async () => {
         const data = await getData(url, "Street")
@@ -41,12 +44,13 @@ function Street() {
     }
 
     const handleCarrerClick = (id) => {
-        navigate(`/estanteria/${id}`); 
+        navigate(`estanteria/${id}`); 
       };
 
     return (
         <>
             <Header title="Gestió Magatzem"/>
+            
             <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Carrer</Button>
             <table>
                 <thead>
@@ -75,7 +79,7 @@ function Street() {
                         })}
                 </tbody>
             </table>
-
+            <Outlet /> 
             <Modal show={showModal} onHide={canviEstatModal}>
                 <Modal.Header closeButton >
                     <Modal.Title>{tipoModal} Carrer</Modal.Title>

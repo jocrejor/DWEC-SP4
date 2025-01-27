@@ -18,7 +18,13 @@ import OrdesRecepcio from './components/OrdesRecepcio';
 import EstatsOrdre from './components/EstatsOrdre';
 import EstatsLinia from './components/EstatsLinia';
 import Lots from './components/Lots';
-import GestioMagatzem from './components/GestioMagatzem';
+
+
+import Magatzem from './components/Magatzem';
+import Carrer from './components/Carrer';
+import Estanteria from './components/Estanteria';
+import Espai from './components/Espai';
+
 import Inventaris from './components/Inventaris';
 import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';
@@ -69,7 +75,12 @@ function App() {
 
                 <Route path="/lots" element={<Lots />} />
 
-                <Route path="/gestioMagatzem" element={<GestioMagatzem />} />
+                <Route path="/Magatzem" element={<Magatzem />} >
+                  <Route path="Carrer/:magatzem" element={<Carrer />} />
+                    <Route path="Estanteria/:carrer" element={<Estanteria />} >
+                      <Route path="Espai/:estateria" element={<Espai />} />
+                      </Route>
+                </Route>
 
                 <Route path="/inventaris/" element={<Inventaris />} />
                 <Route path="/inventaris/inventariar/:id" element={<Inventariar />} />

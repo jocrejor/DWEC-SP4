@@ -3,7 +3,6 @@ import logo from '../assets/logo_footer2.png';
 import '../App'
 import Nav from 'react-bootstrap/Nav';
 
-
 function Lateral() {
     return (
         <>

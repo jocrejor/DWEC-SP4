@@ -1,12 +1,10 @@
-import { useState } from 'react'
+
 import './App.css'
 import Lateral from './components/Lateral'
-import Header from './components/Header';
 import Login from './components/login';
 import Logout from './components/logout';
 import Main from './components/Main'
-import { Routes,Route} from "react-router-dom";
-import Footer from './components/Footer'
+import { Routes, Route } from "react-router-dom";
 import Productes from './components/Productes';
 import Usuaris from './components/Usuaris';
 import Rols from './components/Rols';
@@ -23,71 +21,82 @@ import GestioMagatzem from './components/GestioMagatzem';
 import Inventaris from './components/Inventaris';
 import Incidencies from './components/Incidencies';
 import Moviments from './components/Moviments';
+import Inventariar from './components/Inventariar.jsx';
+import CompletarInventari from './components/CompletarInventari.jsx';
+import './App.js';
+import OrderPickingReception from './components/OrderPickingReception';
+import OrderPickingShipping from './components/OrderPickingShipping';
 
 function App() {
 
 
   return (
     <>
-     <div className="container-fluid">
-     <div className="row">
-        <Lateral />
-      
-       <Routes>
-       
-       <Route path="/login" element={<Login/>}/>  
+      <div className="container-fluid">
+        <div className="row">
+          <Lateral />
+          <div className="col-12 col-xl-10 px-0">
+            <div>
 
-       <Route path="/logout" element={<Logout/>}/> 
+              <Routes>
 
-       <Route path="/usuaris" element={<Usuaris/>}/>
+                <Route path="/login" element={<Login />} />
 
-       <Route path="/rols" element={<Rols/>}/> 
+                <Route path="/logout" element={<Logout />} />
 
-       <Route path="/dadesGeografiques" element={<DadesGeografiques/>}/>
+                <Route path="/usuaris" element={<Usuaris />} />
 
-       <Route path="/transportistes" element={<Transportistes/>}/>
+                <Route path="/rols" element={<Rols />} />
 
-       <Route path="/clients" element={<Clients/>}/>
+                <Route path="/dadesGeografiques" element={<DadesGeografiques />} />
 
-       <Route path="/ordesEnviament" element={<OrdesEnviament/>}/>
+                <Route path="/transportistes" element={<Transportistes />} />
 
-       <Route path="/proveidors" element={<Proveidors/>}/>
+                <Route path="/clients" element={<Clients />} />
 
-       <Route path="/ordesRecepcio" element={<OrdesRecepcio/>}/>
+                <Route path="/ordresEnviament" element={<OrdesEnviament />} />
 
-       <Route path="/estatsOrdre" element={<EstatsOrdre/>}/>
+                <Route path="/proveidors" element={<Proveidors />} />
 
-       <Route path="/estatsLinia" element={<EstatsLinia/>}/>
-       
-       <Route path="/productes" element={<Productes/>}/>
+                <Route path="/ordreRecepcio" element={<OrdesRecepcio />} />
 
-       <Route path="/lots" element={<Lots/>}/>  
+                <Route path="/estatsOrdre" element={<EstatsOrdre />} />
 
-       <Route path="/gestioMagatzem" element={<GestioMagatzem/>}/>  
+                <Route path="/estatsLinia" element={<EstatsLinia />} />
 
-       <Route path="/inventaris" element={<Inventaris/>}/>  
+                <Route path="/productes" element={<Productes />} />
 
-       <Route path="/incidencies" element={<Incidencies/>}/>  
+                <Route path="/lots" element={<Lots />} />
 
-       <Route path="/moviments" element={<Moviments/>}/>  
-       
-       <Route path="/" element={<Main/>} />
-          
-       <Route path="/404" element={<Error404/>} />
-          
-       <Route path="*" element={<Error404/>} />
+                <Route path="/gestioMagatzem" element={<GestioMagatzem />} />
 
-       </Routes>
+                <Route path="/inventaris/" element={<Inventaris />} />
+                <Route path="/inventaris/inventariar/:id" element={<Inventariar />} />
+                <Route path="/inventaris/completarInventari/:id" element={<CompletarInventari />} />
+                
 
-      <div>
-        <Footer />
+                <Route path="/incidencies" element={<Incidencies />} />
+
+                <Route path="/moviments" element={<Moviments />} />
+                
+                <Route path="/orderpickingreception" element={<OrderPickingReception />} />
+
+                <Route path="/orderpickingshipping" element={<OrderPickingShipping />} />
+
+                <Route path="/" element={<Main />} />
+
+                <Route path="/404" element={<Error404 />} />
+
+                <Route path="*" element={<Error404 />} />
+
+              </Routes>
+
+
+            </div>
+          </div>
+        </div>
       </div>
 
-
-
-    </div>
-    </div>  
-      
     </>
   )
 }

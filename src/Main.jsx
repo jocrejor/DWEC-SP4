@@ -3,7 +3,7 @@ import '../common.css'
 function Main() {
 
     return (
-        <div></div>
+        <div>Main</div>
     )
 }
 

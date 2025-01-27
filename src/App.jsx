@@ -1,6 +1,7 @@
 
 import './App.css'
 import Lateral from './components/Lateral'
+import Header from './components/Header';
 import Login from './components/login';
 import Logout from './components/logout';
 import Main from './components/Main'
@@ -102,10 +103,13 @@ function App() {
 }
 
 function Error404() {
+function Error404() {
   return (
     <div>
       <h2>ERROR 404</h2>
+      <h2>ERROR 404</h2>
     </div>
+  );
   );
 }
 

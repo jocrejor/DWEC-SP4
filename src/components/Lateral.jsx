@@ -47,5 +47,3 @@ function Lateral() {
 }
 
 export default Lateral
-
-

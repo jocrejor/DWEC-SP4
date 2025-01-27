@@ -4,7 +4,7 @@ import Lateral from './components/Lateral'
 import Header from './components/Header';
 import Login from './components/login';
 import Logout from './components/logout';
-import Main from './components/Main'
+import Home from './components/Home.jsx'
 import { Routes, Route } from "react-router-dom";
 import Productes from './components/Productes';
 import Usuaris from './components/Usuaris';
@@ -20,6 +20,7 @@ import EstatsLinia from './components/EstatsLinia';
 import Lots from './components/Lots';
 
 
+import GestioMagatzem from './components/GestioMagatzem';
 import Magatzem from './components/Magatzem';
 import Carrer from './components/Carrer';
 import Estanteria from './components/Estanteria';
@@ -75,17 +76,18 @@ function App() {
 
                 <Route path="/lots" element={<Lots />} />
 
-                <Route path="/Magatzem" element={<Magatzem />} >
-                  <Route path="Carrer/:magatzem" element={<Carrer />} />
-                    <Route path="Estanteria/:carrer" element={<Estanteria />} >
+                <Route path="/GestioMagatzem" element={<GestioMagatzem/>} >
+                   <Route path="magatzem" element={<Magatzem />} />
+                      <Route path="Carrer/:magatzem" element={<Carrer />} />
+                      <Route path="Estanteria/:carrer" element={<Estanteria />} />
                       <Route path="Espai/:estateria" element={<Espai />} />
-                      </Route>
-                </Route>
-
+                   </Route>
+                
                 <Route path="/inventaris/" element={<Inventaris />} />
                 <Route path="/inventaris/inventariar/:id" element={<Inventariar />} />
                 <Route path="/inventaris/completarInventari/:id" element={<CompletarInventari />} />
                 
+
 
                 <Route path="/incidencies" element={<Incidencies />} />
 
@@ -95,7 +97,7 @@ function App() {
 
                 <Route path="/orderpickingshipping" element={<OrderPickingShipping />} />
 
-                <Route path="/" element={<Main />} />
+                <Route path="/" element={<Home />} />
 
                 <Route path="/404" element={<Error404 />} />
 

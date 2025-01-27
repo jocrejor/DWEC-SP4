@@ -59,7 +59,7 @@ function App() {
 
                 <Route path="/proveidors" element={<Proveidors />} />
 
-                <Route path="/ordreRecepcio" element={<OrdesRecepcio />} />
+                <Route path="/ordresRecepcio" element={<OrdesRecepcio />} />
 
                 <Route path="/estatsOrdre" element={<EstatsOrdre />} />
 

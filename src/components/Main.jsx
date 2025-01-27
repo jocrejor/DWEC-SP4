@@ -4,10 +4,7 @@ function Main() {
 
   return (
     <>
-<<<<<<< HEAD
-=======
-        
->>>>>>> Andrea
+
    </>
   )
 }

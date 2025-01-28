@@ -3,8 +3,8 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
-import Header from '../Header';
-import { useNavigate, Outlet } from 'react-router-dom';
+
+import { useNavigate } from 'react-router-dom';
 
 const StorageSchema = Yup.object().shape({
   name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
@@ -19,9 +19,13 @@ function Storage() {
   const [valorsInicials, setValorsInicials] = useState({ name: '', type: '', address: '' });
   const navigate = useNavigate(); 
 
-  useEffect(async () => {
-    const data = await getData(url, "Storage");
-    setStorage(data);
+  useEffect( () => {
+    
+    const fetchData = async () => {
+      const data = await getData(url, "Storage");
+      setStorage(data);
+    }
+    fetchData();
   }, []);
 
   const eliminarStorage = (id) => {
@@ -40,13 +44,12 @@ function Storage() {
   };
 
   const handleCarrerClick = (id) => {
-    navigate(`carrer/${id}`); 
+    navigate(`../carrer/${id}`); 
   };
 
   return (
     <>
-      
-      <Header title="Gestió Magatzem"/>
+      <h1> Magatzems</h1>
       <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Magatzem</Button>
       <table>
         <thead>
@@ -78,7 +81,6 @@ function Storage() {
             })}
         </tbody>
       </table>
-      <Outlet /> 
       <Modal show={showModal} onHide={canviEstatModal}>
         <Modal.Header closeButton>
           <Modal.Title>{tipoModal} Magatzem</Modal.Title>

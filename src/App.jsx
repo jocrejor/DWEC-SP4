@@ -76,13 +76,9 @@ function App() {
 
                 <Route path="/lots" element={<Lots />} />
 
-                <Route path="/GestioMagatzem" element={<GestioMagatzem/>} >
-                   <Route path="magatzem" element={<Magatzem />} />
-                      <Route path="Carrer/:magatzem" element={<Carrer />} />
-                      <Route path="Estanteria/:carrer" element={<Estanteria />} />
-                      <Route path="Espai/:estateria" element={<Espai />} />
-                   </Route>
-                
+                <Route path="/GestioMagatzem/*" element={<GestioMagatzem/>} / >
+                   
+                                   
                 <Route path="/inventaris/" element={<Inventaris />} />
                 <Route path="/inventaris/inventariar/:id" element={<Inventariar />} />
                 <Route path="/inventaris/completarInventari/:id" element={<CompletarInventari />} />

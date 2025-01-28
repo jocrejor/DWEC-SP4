@@ -19,13 +19,16 @@ function Shelf() {
     const [valorsInicials, setValorsInicials] = useState({ name: '', storage_id: '', steet_id: '' });
     const navigate = useNavigate(); 
 
-    let {carrer}= useParams();
-    console.log(carrer);
+    let {magatzem,carrer}= useParams();
+    console.log(magatzem,carrer);
 
     
-    useEffect(async () => {
-        const data = await getData(url, "Shelf")
-        setShelf(data)
+    useEffect( () => {
+        const fetchData = async () => {
+            const data = await getData(url, "Shelf")
+            setShelf(data)
+        }
+        fetchData()
     }, [])
 
     const eliminarShelf = (id) => {
@@ -45,13 +48,14 @@ function Shelf() {
     }
 
     const handleCarrerClick = (id) => {
-        navigate(`/espai/${id}`); 
+        navigate(`../espai/${magatzem}/${carrer}/${id}`); 
       };
 
 
     return (
         <>
-             <Header title="Gestió Magatzem"/>
+             <h2>magatzem {magatzem}</h2>
+             <h2>carrer {carrer}</h2>
             <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Estanteria</Button>
             <table>
                 <thead>

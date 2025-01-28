@@ -3,7 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
-import Header from '../Header';
+import { useParams } from 'react-router-dom';
 
 const SpaceSchema = Yup.object().shape({
     name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
@@ -22,9 +22,15 @@ function Space() {
     const [tipoModal, setTipoModal] = useState("Crear");
     const [valorsInicials, setValorsInicials] = useState({ name: '', product_id: '', quantity: '', maxVol:'', maxWeight: '', storage_id: '', street_id: '', selft_id: '' });
 
-    useEffect(async () => {
+     const {magatzem,carrer,estanteria}= useParams();
+
+
+    useEffect( () => {
+        const fetchData = async () => {
         const data = await getData(url, "Space")
         setSpace(data)
+        }
+        fetchData()
     }, [])
 
     const eliminarSpace = (id) => {
@@ -45,7 +51,9 @@ function Space() {
 
     return (
         <>
-             <Header title="Gestió Magatzem"/>
+              <h2>magatzem {magatzem}</h2>
+              <h2>carrer {carrer}</h2>
+              <h2>estanteria {estanteria} </h2>
             <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Espai</Button>
             <table>
                 <thead>

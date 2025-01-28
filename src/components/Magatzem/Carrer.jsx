@@ -3,8 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { url, postData, getData, deleteData, updateId } from '../../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
-import Header from '../Header';
-import { useNavigate, useParams, Outlet } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const StreetSchema = Yup.object().shape({
     name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
@@ -22,9 +21,12 @@ function Street() {
     let {magatzem} = useParams();
     console.log(magatzem);
 
-    useEffect(async () => {
+    useEffect( () => {
+        const fetchData = async () => {
         const data = await getData(url, "Street")
         setStreet(data)
+        }
+        fetchData()
     }, [])
 
     const eliminarStreet = (id) => {
@@ -44,12 +46,12 @@ function Street() {
     }
 
     const handleCarrerClick = (id) => {
-        navigate(`estanteria/${id}`); 
+        navigate(`../estanteria/${magatzem}/${id}`); 
       };
 
     return (
         <>
-            <Header title="Gestió Magatzem"/>
+            <h1> Magatzem: {magatzem}</h1>
             
             <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Carrer</Button>
             <table>
@@ -79,7 +81,6 @@ function Street() {
                         })}
                 </tbody>
             </table>
-            <Outlet /> 
             <Modal show={showModal} onHide={canviEstatModal}>
                 <Modal.Header closeButton >
                     <Modal.Title>{tipoModal} Carrer</Modal.Title>

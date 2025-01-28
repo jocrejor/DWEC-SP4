@@ -98,6 +98,8 @@ function Inventaris() {
       console.log(newInventoryLine)
       postData(url, "InventoryLine", newInventoryLine)
     });
+    const data = await getData(url, "Inventory")
+    await setInventory(data)
   }
 
   /************* ELIMINAR INVENTARIO ***************/
@@ -237,10 +239,10 @@ function Inventaris() {
                           <td>
                             {
                               (values.inventory_status === 'Pendent') ?
-                              <a href={`/inventaris/inventariar/${values.id}`}>Inventariar</a>
+                              <a href={`/inventaris/inventariar/${values.id}`} className='text-decoration-none text-orange cursor-pointer'>Inventariar</a>
                                :
                                 (values.inventory_status === 'Fent-se') ?
-                                  <a  href={`/inventaris/completarInventari/${values.id}`}>Completar</a> :
+                                  <a  href={`/inventaris/completarInventari/${values.id}`} className='text-decoration-none text-orange cursor-pointer'>Completar</a> :
                                   ""
                             }
                           </td>

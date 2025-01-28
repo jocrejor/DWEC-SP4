@@ -9,12 +9,13 @@ import { Row, Col, Modal, Table, Button, Tab } from 'react-bootstrap/'
 import Header from './Header'
 
 const InventariarSchema = Yup.object().shape({
-  real_quantity: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit')
+  real_quantity: Yup.number('Introduce sols números').positive('El valor ha de ser positiu').required('Valor requerit')
 });
 
 
 function Inventariar() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [inventory, setInventory] = useState([]);
   const [storages, setStorages] = useState([]);
@@ -49,6 +50,12 @@ function Inventariar() {
     }
   }, [selectedInventory])
 
+  const initialValues = ()=> {
+    selectedInventoryLines.map((line) => {
+      real_quantity : 0;
+    })
+  }
+
   return (
     <>
       <Header title="Inventariar Inventari" />
@@ -75,10 +82,11 @@ function Inventariar() {
             </Table>
 
             <Formik
-              initialValues={{ real_quantity: 0 }}
+              initialValues= {initialValues()}
               validationSchema={InventariarSchema}
               onSubmit={values => {
-                console.log(values)
+                console.log(values.name)
+                
               }}>
               {({ values, errors, touched }) => (
                 <Form>
@@ -120,8 +128,8 @@ function Inventariar() {
                     </tbody>
 
                   </Table>
-                  <Button variant='secondary' type='submit'>Tornar</Button>
-                  <Button>Completar</Button>
+                  <Button variant='secondary' onClick={() => navigate('/inventaris')}>Tornar</Button>
+                  <Button>Inventariar</Button>
                 </Form>
               )}
             </Formik>

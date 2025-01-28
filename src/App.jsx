@@ -15,15 +15,16 @@ import OrdesEnviament from './components/Enviament/OrdesEnviament';
 import Proveidors from './components/Recepcio/Proveidors';
 import OrdesRecepcio from './components/Recepcio/OrdesRecepcio';
 import EstatsOrdreRecepcio from './components/Recepcio/EstatsOrdreRecepcio';
-import EstatsOrdeRecepcioLinia from './components/Recepcio/EstatsOrdreRecepcioLinia.jsx';
+import EstatsOrdreRecepcioLinia from './components/Recepcio/EstatsOrdreRecepcioLinia.jsx';
 import Lots from './components/Recepcio/Lots';
 
 
-import GestioMagatzem from './components/Administracio/DadesGeografiques';
+import GestioMagatzem from './components/Magatzem/GestioMagatzem.jsx';
 import Magatzem from './components/Magatzem/Magatzem';
 import Carrer from './components//Magatzem/Carrer';
 import Estanteria from './components/Magatzem/Estanteria';
 import Espai from './components/Magatzem/Espai';
+
 
 import Inventaris from './components/Magatzem/Inventaris';
 import Incidencies from './components/Magatzem/Incidencies';
@@ -69,7 +70,7 @@ function App() {
 
                 <Route path="/estatsOrdreRecepcio" element={<EstatsOrdreRecepcio />} />
 
-                <Route path="/estatsOrdreRecepcioLinia" element={<EstatsOrdeRecepcioLinia />} />
+                <Route path="/estatsOrdreRecepcioLinia" element={<EstatsOrdreRecepcioLinia />} />
 
                 <Route path="/productes" element={<Productes />} />
 

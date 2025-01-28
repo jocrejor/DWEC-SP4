@@ -27,8 +27,8 @@ function Lateral() {
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="/proveidors">Proveïdors</a></li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="/ordresRecepcio">Ordres de Recepció</a></li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="/orderpickingreception">Ordes de Picking R.</a></li>
-                        <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="/estatsOrdre">Estats Ordres</a></li>
-                        <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="/estatsLinia">Estats Línia</a></li>
+                        <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="/estatsOrdreRecepcio">Estats Ordres Recepció</a></li>
+                        <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="estatsOrdreRecepcioLinia">Estats Línia O. Recepció</a></li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="/productes">Productes</a></li>
                         <li className="list-group-item fondo-azul-claro"><a className="text-decoration-none text-white d-block" href="/lots">Lots</a></li>
                         <li className="list-group-item py-3 px-1 text-white fondo-azul border-top no-hover"><i className="bi bi-shop-window px-1 text-white"></i>Magatzem</li>

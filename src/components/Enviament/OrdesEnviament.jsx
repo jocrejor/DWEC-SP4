@@ -1,10 +1,10 @@
 import {useState, useEffect} from 'react'
-import {url, postData, getData, deleteData, updateId}  from '../apiAccess/crud'
+import {url, postData, getData, deleteData, updateId}  from '../../apiAccess/crud'
 import {Formik, Form, Field} from 'formik'
 import * as yup from 'yup'
 import { Button, Modal } from 'react-bootstrap';
-import Header from './Header'
-import Filter from './Filtres'
+import Header from '../Header'
+import Filter from '../Filtres'
 
 
 const OrderShippingSchema = yup.object().shape({

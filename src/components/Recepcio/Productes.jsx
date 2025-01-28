@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
+import { url, postData, getData, deleteData, updateId } from '../../apiAccess/crud'
 import { Button, Modal } from 'react-bootstrap';
 
 const ProducteSchema = Yup.object().shape({

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import Header from "./Header"
-import Filtres from "./Filtres"
-import { url,  getData} from '../apiAccess/crud'
+import Header from "../Header"
+import Filtres from "../Filtres"
+import { url,  getData} from '../../apiAccess/crud'
 import { Button,Modal,ModalBody,ModalFooter } from 'react-bootstrap';
 
 function Moviments() {

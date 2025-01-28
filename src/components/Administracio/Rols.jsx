@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Button, Modal } from 'react-bootstrap';
-import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
-import Header from './Header';
+import { url, postData, getData, deleteData, updateId } from '../../apiAccess/crud';
+import Header from '../Header';
 
 const UserProfileSchema = Yup.object().shape({
   name: Yup.string()

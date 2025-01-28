@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
+import { url, postData, getData, deleteData, updateId } from '../../apiAccess/crud';
 import { Button, Modal, Table, Spinner } from 'react-bootstrap';
-import Header from './Header'
+import Header from '../Header'
 
 const OrderLineReception_StatusSchema = Yup.object().shape({
   name: Yup.string()

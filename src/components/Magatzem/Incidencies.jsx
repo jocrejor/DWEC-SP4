@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
+import { url, postData, getData, deleteData, updateId } from '../../apiAccess/crud'
 import { Button, Modal } from 'react-bootstrap';
-import Header from './Header'
+import Header from '../Header'
 
 const IncidenciaSchema = Yup.object().shape({
     //Aso es té que llevar quan estiga ben fet, es soles un formulari de alta de prova perque Crespo no m'ha explicat on és fa l'alta i quins camps tinc que posar

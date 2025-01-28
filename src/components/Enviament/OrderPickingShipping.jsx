@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Button, Table, Modal } from "react-bootstrap";
-import { url, getData } from "../apiAccess/crud";
+import { url, getData } from "../../apiAccess/crud";
 import { Formik, Form, Field } from "formik";
-import Header from "./Header";
-import Filtres from "./Filtres";
+import Header from "../Header";
+import Filtres from "../Filtres";
 
 function OrderPickingShipping() {
   const [orderPickingShipping, setOrderPickingShipping] = useState([]);

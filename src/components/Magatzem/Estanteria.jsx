@@ -1,39 +1,40 @@
 import { useState, useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud';
+import { url, postData, getData, deleteData, updateId } from '../../apiAccess/crud';
 import { Button, Modal } from 'react-bootstrap';
-import Header from './Header';
-import { useNavigate, useParams, Outlet } from 'react-router-dom';
+import Header from '../Header';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const StreetSchema = Yup.object().shape({
+const ShelfSchema = Yup.object().shape({
     name: Yup.string().min(4, 'Valor mínim de 4 caracters.').max(50, 'El valor màxim és de 50 caracters').required('Valor requerit'),
     storage_id: Yup.string().min(3, 'Valor mínim de 3 caracters.').max(30, 'El valor màxim és de 30 caracters').required('Valor requerit'),
-
+    steet_id: Yup.string().min(3, 'Valor mínim de 3 caracters.').max(30, 'El valor màxim és de 30 caracters').required('Valor requerit'),
 });
 
-function Street() {
-    const [streets, setStreet] = useState([]);
+function Shelf() {
+    const [shelfs, setShelf] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [tipoModal, setTipoModal] = useState("Crear");
-    const [valorsInicials, setValorsInicials] = useState({ name: '', storage_id: ''});
+    const [valorsInicials, setValorsInicials] = useState({ name: '', storage_id: '', steet_id: '' });
     const navigate = useNavigate(); 
 
-    let {magatzem} = useParams();
-    console.log(magatzem);
+    let {carrer}= useParams();
+    console.log(carrer);
 
+    
     useEffect(async () => {
-        const data = await getData(url, "Street")
-        setStreet(data)
+        const data = await getData(url, "Shelf")
+        setShelf(data)
     }, [])
 
-    const eliminarStreet = (id) => {
+    const eliminarShelf = (id) => {
         deleteData(url, "Street", id)
-        const newstreets = streets.filter(item => item.id != id)
-        setStreet(newstreets)
+        const newshelfs = shelfs.filter(item => item.id != id)
+        setShelf(newshelfs)
     }
 
-    const modificarStreet = (valors) => {
+    const modificarShelf = (valors) => {
         setTipoModal("Modificar")
         setValorsInicials(valors);
     }
@@ -44,54 +45,56 @@ function Street() {
     }
 
     const handleCarrerClick = (id) => {
-        navigate(`estanteria/${id}`); 
+        navigate(`/espai/${id}`); 
       };
+
 
     return (
         <>
-            <Header title="Gestió Magatzem"/>
-            
-            <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Carrer</Button>
+             <Header title="Gestió Magatzem"/>
+            <Button variant='success' onClick={() => { canviEstatModal(); setTipoModal("Crear"); }}>Alta Estanteria</Button>
             <table>
                 <thead>
                     <tr>
                         <th>Id</th>
                         <th>Nom</th>
                         <th>ID Magatzem</th>
-                        <th>Estanteria</th>
+                        <th>ID Carrer</th>
+                        <th>Espai</th>
                         <th>Modificar</th>
                         <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {(streets.length === 0) ?
-                        <tr><td>No hi han carrers</td></tr>
-                        : streets.map((valors) => {
+                    {(shelfs.length === 0) ?
+                        <tr><td>No hi han estanteries</td></tr>
+                        : shelfs.map((valors) => {
                             return (
                                 <tr key={valors.id}>
                                     <td>{valors.id}</td>
                                     <td>{valors.name}</td>
                                     <td>{valors.storage_id}</td>
-                                    <td><Button onClick={() => handleCarrerClick(valors.id)}>Estanteria</Button></td> 
-                                    <td><Button variant="warning" onClick={() => modificarStreet(valors)}>Modificar</Button></td>
-                                    <td><Button variant="primary" onClick={() => eliminarStreet(valors.id)}>Eliminar</Button></td>
+                                    <td>{valors.steet_id}</td>
+                                    <td><Button onClick={() => handleCarrerClick(valors.id)}>Espai</Button></td> 
+                                    <td><Button variant="warning" onClick={() => modificarShelf(valors)}>Modificar</Button></td>
+                                    <td><Button variant="primary" onClick={() => eliminarShelf(valors.id)}>Eliminar</Button></td>
                                 </tr>)
                         })}
                 </tbody>
             </table>
-            <Outlet /> 
+
             <Modal show={showModal} onHide={canviEstatModal}>
                 <Modal.Header closeButton >
-                    <Modal.Title>{tipoModal} Carrer</Modal.Title>
+                    <Modal.Title>{tipoModal} Estanteria</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
                     <Formik
-                        initialValues={tipoModal === 'Modificar' ? valorsInicials : { name: '', storage_id: '' }}
-                        validationSchema={StreetSchema}
+                        initialValues={tipoModal === 'Modificar' ? valorsInicials : { name: '', storage_id: '', steet_id: '' }}
+                        validationSchema={ShelfSchema}
                         onSubmit={values => {
                             console.log(values)
-                            tipoModal === "Crear" ? postData(url, "Street", values) : updateId(url, "Street", values.id, values)
+                            tipoModal === "Crear" ? postData(url, "Shelf", values) : updateId(url, "Shelf", values.id, values)
                             canviEstatModal()
 
                         }}
@@ -115,6 +118,15 @@ function Street() {
                                 </div>
 
                                 <div>
+                                    <label htmlFor='steet_id'>ID Carrer</label>
+                                    <Field type="text" name="steet_id" placeholder="Id del carrer" autoComplete="off"
+                                        value={values.steet_id}
+                                    />
+                                    {errors.steet_id && touched.steet_id ? <div>{errors.steet_id}</div> : null}
+                                </div>
+
+
+                                <div>
                                     <Button variant="secondary" onClick={canviEstatModal}>Close</Button>
                                     <Button variant={tipoModal === "Modificar" ? "success" : "info"} type="submit">{tipoModal}</Button>
                                 </div>
@@ -127,4 +139,4 @@ function Street() {
     );
 }
 
-export default Street;
+export default Shelf;

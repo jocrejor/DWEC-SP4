@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
+import { url, postData, getData, deleteData, updateId } from '../../apiAccess/crud'
 import { Row, Col, Modal, Table, Button, Tab } from 'react-bootstrap/'
-import Header from './Header'
-import Filtres from './Filtres'
+import Header from '../Header'
+import Filtres from '../Filtres'
 
 const InventorySchema = Yup.object().shape({
   storage_id: Yup.string().required('Required'),

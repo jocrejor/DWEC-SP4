@@ -23,7 +23,6 @@ function Login() {
     onSubmit: values => {
       // 
       const url = "https://api.tendaciclista.ccpegoilesvalls.es/api/login";
-      const url2 = "http://localhost:3003/api/login";
       
       fetch(url, {
           method: 'POST',

@@ -1,39 +1,38 @@
-
+import { Routes, Route } from "react-router-dom";
 import './App.css'
 import Lateral from './components/Lateral'
-import Header from './components/Header';
 import Login from './components/login';
 import Logout from './components/logout';
 import Home from './components/Home.jsx'
-import { Routes, Route } from "react-router-dom";
-import Productes from './components/Productes';
-import Usuaris from './components/Usuaris';
-import Rols from './components/Rols';
-import DadesGeografiques from './components/DadesGeografiques';
-import Transportistes from './components/Transportistes';
-import Clients from './components/Clients';
-import OrdesEnviament from './components/OrdesEnviament';
-import Proveidors from './components/Proveidors';
-import OrdesRecepcio from './components/OrdesRecepcio';
-import EstatsOrdre from './components/EstatsOrdre';
-import EstatsLinia from './components/EstatsLinia';
-import Lots from './components/Lots';
+
+import Productes from './components/Recepcio/Productes';
+import Usuaris from './components/Administracio/Usuaris';
+import Rols from './components/Administracio/Rols';
+import DadesGeografiques from './components/Administracio/DadesGeografiques';
+import Transportistes from './components/Administracio/Transportistes';
+import Clients from './components/Enviament/Clients';
+import OrdesEnviament from './components/Enviament/OrdesEnviament';
+import Proveidors from './components/Recepcio/Proveidors';
+import OrdesRecepcio from './components/Recepcio/OrdesRecepcio';
+import EstatsOrdreRecepcio from './components/Recepcio/EstatsOrdreRecepcio';
+import EstatsOrdeRecepcioLinia from './components/Recepcio/EstatsOrdreRecepcioLinia.jsx';
+import Lots from './components/Recepcio/Lots';
 
 
-import GestioMagatzem from './components/GestioMagatzem';
-import Magatzem from './components/Magatzem';
-import Carrer from './components/Carrer';
-import Estanteria from './components/Estanteria';
-import Espai from './components/Espai';
+import GestioMagatzem from './components/Administracio/DadesGeografiques';
+import Magatzem from './components/Magatzem/Magatzem';
+import Carrer from './components//Magatzem/Carrer';
+import Estanteria from './components/Magatzem/Estanteria';
+import Espai from './components/Magatzem/Espai';
 
-import Inventaris from './components/Inventaris';
-import Incidencies from './components/Incidencies';
-import Moviments from './components/Moviments';
-import Inventariar from './components/Inventariar.jsx';
-import CompletarInventari from './components/CompletarInventari.jsx';
+import Inventaris from './components/Magatzem/Inventaris';
+import Incidencies from './components/Magatzem/Incidencies';
+import Moviments from './components/Magatzem/Moviments';
+import Inventariar from './components/Magatzem/Inventariar';
+import CompletarInventari from './components/Magatzem/CompletarInventari';
 import './App.js';
-import OrderPickingReception from './components/OrderPickingReception';
-import OrderPickingShipping from './components/OrderPickingShipping';
+import OrderPickingReception from './components/Recepcio/OrderPickingReception';
+import OrderPickingShipping from './components/Enviament/OrderPickingShipping';
 
 function App() {
 
@@ -68,9 +67,9 @@ function App() {
 
                 <Route path="/ordresRecepcio" element={<OrdesRecepcio />} />
 
-                <Route path="/estatsOrdre" element={<EstatsOrdre />} />
+                <Route path="/estatsOrdreRecepcio" element={<EstatsOrdreRecepcio />} />
 
-                <Route path="/estatsLinia" element={<EstatsLinia />} />
+                <Route path="/estatsOrdreRecepcioLinia" element={<EstatsOrdeRecepcioLinia />} />
 
                 <Route path="/productes" element={<Productes />} />
 

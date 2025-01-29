@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { useFormik } from "formik";
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string().email('Correo electrónico inválido').required('Campo obligatorio'),
@@ -10,42 +11,28 @@ const SignupSchema = Yup.object().shape({
 });
 
 function Login() {
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: { email: '', password: '' },
     validationSchema: SignupSchema,
-    onSubmit: (values) => {
-      const url = "https://api.dwes.iesevalorpego.es/users"; 
-
-      fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(values),
-        headers: {
-          'Accept': 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Error en la autenticación.');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data.token) {
-            localStorage.setItem('token', data.token);
-
-            navigate('/transportistes');
-          } else {
-            throw new Error('Token no recibido. Verifique el servidor.');
-          }
-        })
-        .catch((errorAjax) => {
-          console.error('Error:', errorAjax);
-          setError(errorAjax.message || 'Error al iniciar sesión');
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post('https://api.dwes.iesevalorpego.es/login', values, {
+          headers: { 'Content-Type': 'application/json' },
         });
+
+        if (response.data.token && response.data.id && response.data.name) {
+          localStorage.setItem('token', response.data.token);
+          localStorage.setItem(response.data.name, response.data.id);
+          navigate('/');
+        } else {
+          throw new Error('Token, Name o ID no recibido. Verifique el servidor.');
+        }
+      } catch (error) {
+        setError(error.response?.data?.message || 'Error al iniciar sesión');
+      }
     },
   });
 
@@ -65,9 +52,9 @@ function Login() {
             onBlur={formik.handleBlur}
             value={formik.values.email}
           />
-          {formik.touched.email && formik.errors.email ? (
+          {formik.touched.email && formik.errors.email && (
             <div className="text-danger">{formik.errors.email}</div>
-          ) : null}
+          )}
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Contraseña</Form.Label>
@@ -79,9 +66,9 @@ function Login() {
             onBlur={formik.handleBlur}
             value={formik.values.password}
           />
-          {formik.touched.password && formik.errors.password ? (
+          {formik.touched.password && formik.errors.password && (
             <div className="text-danger">{formik.errors.password}</div>
-          ) : null}
+          )}
         </Form.Group>
         <Form.Group className="mb-3">
           <Button variant="primary" type="submit">Enviar</Button>

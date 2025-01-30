@@ -77,8 +77,6 @@ function OrderPickingReception() {
         setShowModal(!showModal);
     }
 
-
-
     const crearOrderPickingReception = () => {
         //obtindre els productes seleccionats
         const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
@@ -126,6 +124,17 @@ function OrderPickingReception() {
         setOrderVisualitzar(orderId);
         setTipoModal("Visualitzar");
         setShowModal(true);
+    }
+
+    const completarOrderLine = async (productId, orderId) => {
+        //eliminar el producto de la order picking
+        const order = orderPickingReception.find((order) => order.id === orderId);
+        const product = order.productos.find((product) => product.product_id === productId);
+
+        //actualizar el estado de la order line reception
+        const orderLine = orderLineReception.find(line => line.product_id === productId);
+        orderLine.order_line_reception_status_id = "8160";
+        await updateId(url, "OrderLineReception", orderLine.id, orderLine);
     }
 
     return (
@@ -280,7 +289,9 @@ function OrderPickingReception() {
                                                 
                                                 return (
                                                     <tr key={producto.product_id}>
-                                                        <td> </td>
+                                                        <td><i class="bi bi-arrow-down" style={{ cursor: "pointer" }} 
+                                                            onClick={() => completarOrderLine(producto.product_id, orderVisualitzar)}></i>
+                                                        </td>
                                                         <td>{product.name}</td>
                                                         <td>{producto.quantity}</td>
                                                         <td>

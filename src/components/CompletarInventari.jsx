@@ -2,18 +2,11 @@ import React from 'react'
 import { useParams } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
 import { url, postData, getData, deleteData, updateId } from '../apiAccess/crud'
 import { Row, Col, Modal, Table, Button, Tab } from 'react-bootstrap/'
 import Header from './Header'
 import Inventaris from './Inventaris';
 
-
-const CompletarInventariSchema = Yup.object().shape({
-  real_quantity: Yup.number().positive('El valor ha de ser positiu').required('Valor requerit'),
-  justificacio: Yup.string()
-});
 
 
 
@@ -79,15 +72,6 @@ function CompletarInventari() {
               </tbody>
             </Table>
 
-            <Formik
-              initialValues={{real_quantity: 0, justificacio: ''}}
-              validationSchema={CompletarInventariSchema}
-              onSubmit={values =>{
-                console.log(values)
-              }}
-            >
-              {({values, errors, touched}) => (
-              <Form>
                 <Table>
                   <thead>
                     <tr>
@@ -108,20 +92,19 @@ function CompletarInventari() {
                               <td>{(products.find(product => product.id === value.product_id))?.name}</td>
                               <td>{value.quantity_estimated}</td>
                               <td>
-                                <Field
+                                <input
                                   type='number'
-                                  name={`inventoryLines.${value.id}.real_quantity`}
+                                  name={value.id}
                                   step="1"
                                   placeholder='0'
-                                  autoComplete='off'
                                   className='form-control'
+                    
                                 />
-                                {errors.real_quantity && touched.real_quantity ? <div>{errors.real_quantity}</div> : null }
                               </td>
                               <td>
-                                <Field
+                                <select
                                   as='select'
-                                  name={`inventoryLines.${value.id}.justificacio`}
+                                  name={value.id}
                                   className='form-control'
                                 >
                                   <option>Selecciona una opció</option>
@@ -131,8 +114,8 @@ function CompletarInventari() {
                                   <option value="Desaparegut">Desaparegut</option>
                                   <option value="Error administratiu">Error administratiu</option>
                                   <option value="Recompte cíclic">Recompte cíclic</option>
-                                </Field>
-                                {errors.justificacio && touched.justificacio ? <div>{errors.justificacio}</div> : null}
+                                </select>
+        
                               </td>
                             </tr>
                           )
@@ -141,10 +124,7 @@ function CompletarInventari() {
                   </tbody>
                 </Table>
                 <Button variant='secondary' to="/inventaris">Tornar</Button>
-                <Button>Completar</Button>
-              </Form>
-              )}
-            </Formik>
+                <Button type="submit">Completar</Button>
           </div>
         </Col>
       </Row>

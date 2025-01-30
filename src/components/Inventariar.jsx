@@ -2,15 +2,10 @@ import React from 'react'
 import { useParams } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
 import { url, updateId, getData } from '../apiAccess/crud'
 import { Row, Col, Modal, Table, Button, Tab } from 'react-bootstrap/'
 import Header from './Header'
 
-const InventariarSchema = Yup.object().shape({
-  real_quantity: Yup.number('Introduce sols números').positive('El valor ha de ser positiu').required('Valor requerit')
-});
 
 
 function Inventariar() {
@@ -50,10 +45,9 @@ function Inventariar() {
     }
   }, [selectedInventory])
 
-  const initialValues = ()=> {
-    selectedInventoryLines.map((line) => {
-      real_quantity : 0;
-    })
+  const handleInputChange= (e)=> {
+    console.log(e
+    )
   }
 
   return (
@@ -81,15 +75,6 @@ function Inventariar() {
               </tbody>
             </Table>
 
-            <Formik
-              initialValues= {initialValues()}
-              validationSchema={InventariarSchema}
-              onSubmit={values => {
-                console.log(values.name)
-                
-              }}>
-              {({ values, errors, touched }) => (
-                <Form>
                   <Table>
                     <thead>
                       <tr>
@@ -112,15 +97,14 @@ function Inventariar() {
                                 <td>{value.space_id}</td>
                                 <td>{(products.find(product => product.id === value.product_id))?.name}</td>
                                 <td>
-                                  <Field
+                                  <input
                                     type='number'
-                                    name={`inventoryLines.${value.id}.real_quantity`}
+                                    name={`q${value.id}`} 
                                     step="1"
                                     placeholder='0'
-                                    autoComplete='off'
                                     className='form-control'
+                                    onChange={handleInputChange}
                                   />
-                                  {errors.real_quantity && touched.real_quantity ? <div>{errors.real_quantity}</div> : null}
                                 </td>
                               </tr>)
                           })
@@ -129,10 +113,7 @@ function Inventariar() {
 
                   </Table>
                   <Button variant='secondary' onClick={() => navigate('/inventaris')}>Tornar</Button>
-                  <Button>Inventariar</Button>
-                </Form>
-              )}
-            </Formik>
+                  <Button type="submit">Inventariar</Button>
 
           </div>
         </Col>

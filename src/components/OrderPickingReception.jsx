@@ -103,13 +103,18 @@ function OrderPickingReception() {
         const operari = document.getElementById("operari").value;
 
         const newOrderPickingReception = {
-            user_id: operari,
+            operator_id: operari,
             create_date: new Date().toISOString(),
             productos: orderSelected.map((orderLineId) => {
                 const line = orderLineReception.find((l) => l.id === orderLineId);
+                const space = spaces.find((s) => s.product_id === line.product_id);
                 return {
                     product_id: line.product_id,
-                    quantity: line.quantity_received
+                    quantity: line.quantity_received,
+                    storage_id: space.storage_id,
+                    street_id: space.street_id,
+                    shelf_id: space.selft_id,
+                    space_id: space.id
                 };
             }),
         };
@@ -272,15 +277,14 @@ function OrderPickingReception() {
                                         <tbody>
                                             {orderPickingReception.find(order => order.id === orderVisualitzar)?.productos.map(producto => {
                                                 const product = products.find(p => p.id === producto.product_id);
-                                                const space = spaces.find(s => s.product_id === producto.product_id);
                                                 
                                                 return (
                                                     <tr key={producto.product_id}>
                                                         <td> </td>
                                                         <td>{product.name}</td>
-                                                        <td>{space.quantity}</td>
+                                                        <td>{producto.quantity}</td>
                                                         <td>
-                                                           {space.storage_id} / {space.street_id} / {space.selft_id} / {space.id}
+                                                           {producto.storage_id} / {producto.street_id} / {producto.shelf_id} / {producto.space_id}
                                                         </td>
                                                     </tr>
                                                 );

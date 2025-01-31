@@ -104,8 +104,8 @@ function Transportistes() {
         >
           Alta Transportistes
         </Button>
-        <table className='table table-striped border mt-2'>
-          <thead>
+        <table className='table table-striped text-center'>
+          <thead className="table-active border-bottom border-dark-subtle">
             <tr>
               <th>ID</th>
               <th>Nom</th>

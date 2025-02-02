@@ -6,25 +6,25 @@ function Filtres() {
             <div className="row bg-grey pt-3 px-2 mx-0">
                 <div className="col-12 col-md-6 col-xl-4">
                     <div className="mb-3 text-light-blue">
-                        <label for="nombre" className="form-label">Nom</label>
+                        <label htmlFor="nombre" className="form-label">Nom</label>
                         <input type="text" className="form-control" id="nombre" />
                     </div>
                 </div>
                 <div className="col-12 col-md-6 col-xl-4">
                     <div className="mb-3 text-light-blue">
-                        <label for="dni-nif" className="form-label">DNI/NIF</label>
+                        <label htmlFor="dni-nif" className="form-label">DNI/NIF</label>
                         <input type="text" className="form-control" id="dni-nif" />
                     </div>
                 </div>
                 <div className="col-12 col-md-6 col-xl-4">
                     <div className="mb-3 text-light-blue">
-                        <label for="telefono" className="form-label">Telèfon</label>
+                        <label htmlFor="telefono" className="form-label">Telèfon</label>
                         <input type="text" className="form-control" id="telefono" />
                     </div>
                 </div>
                 <div className="col-12 col-md-6 col-xl-4">
                     <div className="mb-3 text-light-blue">
-                        <label for="email" className="form-label">Correu</label>
+                        <label htmlFor="email" className="form-label">Correu</label>
                         <input type="email" className="form-control" id="email" />
                     </div>
                 </div>

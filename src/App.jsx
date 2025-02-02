@@ -68,7 +68,7 @@ function App() {
 
                 <Route path="/gestioMagatzem" element={<GestioMagatzem />} />
 
-                <Route path="/inventaris/" element={<Inventaris />} />
+                <Route path="/inventaris" element={<Inventaris />} />
                     <Route path="/inventaris/inventariar/:id" element={<Inventariar />} />
                     <Route path="/inventaris/completarInventari/:id" element={<CompletarInventari />} />
                 

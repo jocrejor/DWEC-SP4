@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
@@ -20,29 +20,33 @@ function Inventaris() {
   const [selectedStoragerId, setSelectedStorageId] = useState('');
   const [availableStreets, setAvailableStreets] = useState([]);
   const [spaces, setSpaces] = useState([]);
-  const [modalType, setModalType] = useState('Iventariar');
   const [showInventoryModal, setShowInventoryModal] = useState(false);
   const [selectedInventory, setSelectedInventory] = useState(null);
   const [inventoryLines, setInventoryLines] = useState([]);
   const [products, setProducts] = useState([]);
   const [selectedInventoryLines, setSelectedInventoryLines] = useState([]);
 
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const stock = await getData(url, "Inventory");
+      const store = await getData(url, "Storage");
+      const street = await getData(url, "Street");
+      const space = await getData(url, "Space");
+      const lines = await getData(url, "InventoryLine");
+      const prod = await getData(url, "Product");
 
-  useEffect(async () => {
-    const stock = await getData(url, "Inventory");
-    const store = await getData(url, "Storage");
-    const street = await getData(url, "Street");
-    const space = await getData(url, "Space");
-    const lines = await getData(url, "InventoryLine");
-    const prod = await getData(url, "Product");
+      setInventory(stock);
+      setStorages(store);
+      setStreets(street);
+      setSpaces(space);
+      setInventoryLines(lines);
+      setProducts(prod);
+    }
 
-    setInventory(stock);
-    setStorages(store);
-    setStreets(street);
-    setSpaces(space);
-    setInventoryLines(lines);
-    setProducts(prod);
+    fetchData();
+
   }, []);
 
   useEffect(() => {
@@ -57,9 +61,22 @@ function Inventaris() {
 
   useEffect(() => {
     if (selectedInventory) {
-      console.log("HOLA")
       const filteredInventoryLines = inventoryLines.filter(line => line.inventory_id === selectedInventory.id);
+      const orderedInventoryLines = filteredInventoryLines.sort((a,b) => {
+        if(a.street_id < b.street_id) return -1;
+        if(a.street_id > b.street_id) return 1;
+
+        if(a.selft < b.selft_id) return -1;
+        if(a.selft_id > b.selft_id) return 1;
+
+        if(a.space_id < b.space_id) return -1;
+        if(a.space_id > b.space_id) return 1;
+
+        return 0;
+
+      })
       setSelectedInventoryLines(filteredInventoryLines);
+      console.log(selectedInventory)
     } else {
       setSelectedInventoryLines([]);
     }
@@ -111,14 +128,7 @@ function Inventaris() {
     }
   }
 
-  const displayInventoryModal = (values) => {
-    setSelectedInventory(values);
-    console.log(values.id)
-    // const filteredInventoryLines = inventoryLines.filter(line => line.inventory_id === values.id);
-    // setInventoryLines(filteredInventoryLines);
-
-    changeModalStatus();
-  }
+  
 
   //********* MODAL *********
   const [show, setShow] = useState(false);
@@ -239,15 +249,15 @@ function Inventaris() {
                           <td>
                             {
                               (values.inventory_status === 'Pendent') ?
-                              <a href={`/inventaris/inventariar/${values.id}`} className='text-decoration-none text-orange cursor-pointer'>Inventariar</a>
-                               :
+                                <Button onClick={() => navigate(`/inventaris/inventariar/${values.id}`)} className='btn btn-primary'>Inventariar</Button>
+                                :
                                 (values.inventory_status === 'Fent-se') ?
-                                  <a  href={`/inventaris/completarInventari/${values.id}`} className='text-decoration-none text-orange cursor-pointer'>Completar</a> :
+                                  <Button onClick={() => navigate(`/inventaris/completarInventari/${values.id}`)} className='btn btn-primary'>Completar</Button> :
                                   ""
                             }
                           </td>
                           <td>
-                            <Button variant='link' onClick={() => { changeModalStatus(); setModalType('Detall') }}><i className="bi bi-eye text-light-blue"></i></Button>
+                            <Button variant='link' onClick={() => { setSelectedInventory(values);changeModalStatus()}}><i className="bi bi-eye text-light-blue"></i></Button>
                             <Button variant='link' onClick={() => deleteInventory(values.id)}><i className="bi bi-trash text-light-blue"></i></Button>
                           </td>
                         </tr>
@@ -258,9 +268,13 @@ function Inventaris() {
               </tbody>
             </Table>
 
+
+
+
+
             <Modal show={showInventoryModal} onHide={changeModalStatus} animation={true} size='xl'>
               <Modal.Header closeButton>
-                <Modal.Title className='text-light-blue'>{modalType} Inventari</Modal.Title>
+                <Modal.Title className='text-light-blue'>Detall Inventari</Modal.Title>
               </Modal.Header>
               <Modal.Body>
 
@@ -281,44 +295,12 @@ function Inventaris() {
                           <td>{selectedInventory.id}</td>
                           <td>{selectedInventory.date}</td>
                           <td>{selectedInventory.inventory_status}</td>
-                          <td>{(storages.find(storage => storage.id === selectedInventory.storage_id)).name}</td>
+                          <td>{(storages.find(storage => storage.id === selectedInventory.storage_id))?.name}</td>
                         </tr>
                       </tbody>
                     </Table>
 
-                    {
-                      ((modalType === 'Completar') ?
-                        <Table>
-                          <thead>
-                            <tr>
-                              <th scope="col" className='text-light-blue'>Producte</th>
-                              <th scope="col" className='text-light-blue'>Quantitat Estimada</th>
-                              <th scope="col" className='text-light-blue'>Quantitat Real</th>
-                              <th scope="col" className='text-light-blue'>Justificació</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {
-                              (selectedInventoryLines.length === 0) ?
-                                <tr><td colSpan={4} className='text-center'>No hay nada</td></tr> :
-                                selectedInventoryLines.map((value) => {
-              
-                                  return (
-                                    <tr key={value.id}>
-                                      <td>{(products.find(product => product.id === value.product_id))?.name}</td>
-                                      <td>{value.quantity_estimated}</td>
-                                      <td>cantidad real</td>
-                                      <td>justificacion</td>
-                                      <td></td>
-                                    </tr>
-                                  )
-                                })
-
-                            }
-
-                          </tbody>
-                        </Table>
-                        :
+                   
                         <Table>
                           <thead>
                             <tr>
@@ -326,6 +308,7 @@ function Inventaris() {
                               <th scope="col" className='text-light-blue'>Estanteria</th>
                               <th scope="col" className='text-light-blue'>Espacio</th>
                               <th scope="col" className='text-light-blue'>Producte</th>
+                              <th scope="col" className='text-light-blue'>Quantitat Estimada</th>
                               <th scope="col" className='text-light-blue'>Quantitat Real</th>
                             </tr>
                           </thead>
@@ -342,24 +325,21 @@ function Inventaris() {
                                       <td>{value.selft_id}</td>
                                       <td>{value.space_id}</td>
                                       <td>{(products.find(product => product.id === value.product_id))?.name}</td>
-                                      <td></td>
+                                      <td>{value.quantity_estimated}</td>
+                                      <td>{value.real_quantity}</td>
                                     </tr>)
                                 })
                             }
                           </tbody>
 
                         </Table>
-                      )}
+                    
 
                   </>
                 )}
 
                 <div className='py-3 text-end'>
                   <Button variant='secondary' onClick={() => changeModalStatus()}>Cerrar</Button>
-                  {
-                    ((modalType === 'Inventariar' || modalType === 'Completar') ? <Button type='submit' className='ms-2 orange-button'>{modalType}</Button> : "")
-
-                  }
                 </div>
 
               </Modal.Body>
